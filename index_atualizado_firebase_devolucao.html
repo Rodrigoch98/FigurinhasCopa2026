@@ -1,0 +1,1579 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Copa 2026 · Troca & Venda de Figurinhas</title>
+<meta name="description" content="Troca e venda de figurinhas repetidas do álbum Copa do Mundo 2026. Estoque em tempo real.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Anton&family=Sora:wght@400;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/flag-icons/7.2.3/css/flag-icons.min.css">
+<style>/* =================================================================
+   Copa 2026 — Troca & Venda de Figurinhas
+   Tema: dark navy esportivo + ouro, vidro, cartas com brilho 3D
+   ================================================================= */
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#0a0e16; --bg2:#0e1420; --bg3:#11192a;
+  --panel:rgba(255,255,255,.045); --panel2:rgba(255,255,255,.07);
+  --brd:rgba(255,255,255,.10); --brd2:rgba(255,255,255,.16);
+  --ink:#eef2f8; --muted:#94a2b8; --muted2:#6c7a92;
+  --gold:#e9b949; --gold2:#f6d98b; --gold-d:#b5871f;
+  --emerald:#2dd4a7; --emerald-d:#15876b;
+  --wa:#25d366; --wa-d:#128c3e;
+  --danger:#ff5d6c; --danger-d:#b3303d;
+  --t1:#5aa9ff; --t1b:#2b6fd0;      /* tier 1 - aço/azul */
+  --t2:#e9b949; --t2b:#a9791a;      /* tier 2 - ouro */
+  --t3:#b984ff; --t3b:#7a3fd6;      /* tier 3 - holo roxo */
+  --r:16px; --r-s:11px;
+  --shadow:0 18px 40px -16px rgba(0,0,0,.7);
+  --maxw:1180px;
+  --ff-disp:'Anton',system-ui,sans-serif;
+  --ff:'Sora',system-ui,-apple-system,Segoe UI,Roboto,sans-serif;
+}
+html{scroll-behavior:smooth}
+body{
+  font-family:var(--ff); color:var(--ink); line-height:1.55;
+  background:
+    radial-gradient(900px 600px at 12% -8%, rgba(233,185,73,.10), transparent 60%),
+    radial-gradient(800px 600px at 110% 0%, rgba(45,212,167,.08), transparent 55%),
+    linear-gradient(180deg,var(--bg),var(--bg2) 40%,var(--bg) 100%);
+  background-attachment:fixed; min-height:100vh;
+  -webkit-font-smoothing:antialiased;
+}
+img{max-width:100%;display:block}
+button{font-family:inherit;cursor:pointer;border:none;background:none;color:inherit}
+input,select{font-family:inherit}
+a{color:inherit;text-decoration:none}
+::selection{background:var(--gold);color:#1a1205}
+.wrap{max-width:var(--maxw);margin:0 auto;padding:0 20px}
+
+/* ---------- NAV ---------- */
+.nav{position:sticky;top:0;z-index:50;
+  background:rgba(8,12,20,.72);backdrop-filter:blur(14px) saturate(140%);
+  border-bottom:1px solid var(--brd)}
+.nav-in{max-width:var(--maxw);margin:0 auto;padding:11px 20px;
+  display:flex;align-items:center;gap:18px}
+.brand{display:flex;align-items:center;gap:11px;font-weight:800;letter-spacing:.2px}
+.brand .cup{font-size:26px;filter:drop-shadow(0 2px 6px rgba(233,185,73,.5))}
+.brand b{font-family:var(--ff-disp);font-weight:400;font-size:21px;letter-spacing:1px;
+  background:linear-gradient(180deg,var(--gold2),var(--gold));-webkit-background-clip:text;background-clip:text;color:transparent}
+.brand small{display:block;font-size:10.5px;color:var(--muted);font-weight:600;letter-spacing:2.2px;text-transform:uppercase;margin-top:-2px}
+.nav-links{display:flex;gap:4px;margin-left:auto}
+.nav-links a{padding:9px 13px;border-radius:10px;color:var(--muted);font-weight:600;font-size:14px;transition:.18s}
+.nav-links a:hover{color:var(--ink);background:var(--panel)}
+.nav-actions{display:flex;align-items:center;gap:9px}
+.cart-btn{position:relative;display:flex;align-items:center;gap:8px;
+  padding:9px 15px;border-radius:11px;font-weight:700;font-size:14px;
+  background:linear-gradient(180deg,var(--gold2),var(--gold));color:#1a1205;
+  box-shadow:0 6px 18px -6px rgba(233,185,73,.6);transition:.18s}
+.cart-btn:hover{transform:translateY(-1px);filter:brightness(1.05)}
+.cart-badge{min-width:21px;height:21px;padding:0 6px;border-radius:11px;
+  background:#1a1205;color:var(--gold2);font-size:12px;font-weight:800;
+  display:grid;place-items:center}
+.admin-btn{width:40px;height:40px;border-radius:11px;display:grid;place-items:center;
+  background:var(--panel);border:1px solid var(--brd);color:var(--muted);transition:.18s}
+.admin-btn:hover{color:var(--gold2);border-color:var(--brd2)}
+.burger{display:none;width:40px;height:40px;border-radius:11px;place-items:center;
+  background:var(--panel);border:1px solid var(--brd);color:var(--ink)}
+
+/* ---------- HERO ---------- */
+.hero{padding:54px 0 30px;position:relative;overflow:hidden}
+.hero-grid{display:grid;grid-template-columns:1.25fr .95fr;gap:40px;align-items:center}
+.kick{display:inline-flex;align-items:center;gap:8px;padding:6px 13px;border-radius:99px;
+  background:var(--panel);border:1px solid var(--brd2);font-size:12.5px;font-weight:700;
+  color:var(--gold2);letter-spacing:.6px;text-transform:uppercase}
+.kick .dot{width:7px;height:7px;border-radius:50%;background:var(--emerald);box-shadow:0 0 0 4px rgba(45,212,167,.18);animation:pulse 2s infinite}
+@keyframes pulse{50%{opacity:.4}}
+.hero h1{font-family:var(--ff-disp);font-weight:400;line-height:.97;letter-spacing:.5px;
+  font-size:clamp(40px,6.4vw,76px);margin:18px 0 14px;text-transform:uppercase}
+.hero h1 .g{background:linear-gradient(120deg,var(--gold2),var(--gold) 55%,#fff4d6);-webkit-background-clip:text;background-clip:text;color:transparent}
+.hero p.lead{font-size:clamp(15px,1.7vw,18px);color:var(--muted);max-width:48ch}
+.hero-cta{display:flex;flex-wrap:wrap;gap:12px;margin-top:26px}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:9px;
+  padding:13px 22px;border-radius:13px;font-weight:700;font-size:15px;transition:.18s;
+  border:1px solid transparent}
+.btn-gold{background:linear-gradient(180deg,var(--gold2),var(--gold));color:#1a1205;
+  box-shadow:0 10px 26px -10px rgba(233,185,73,.7)}
+.btn-gold:hover{transform:translateY(-2px)}
+.btn-ghost{background:var(--panel);border-color:var(--brd2);color:var(--ink)}
+.btn-ghost:hover{background:var(--panel2);border-color:var(--gold-d)}
+.btn-wa{background:linear-gradient(180deg,#2ee06f,var(--wa));color:#06340f;
+  box-shadow:0 10px 26px -10px rgba(37,211,102,.7)}
+.btn-wa:hover{transform:translateY(-2px);filter:brightness(1.04)}
+.btn-emerald{background:linear-gradient(180deg,var(--emerald),var(--emerald-d));color:#03251c;
+  box-shadow:0 8px 22px -10px rgba(45,212,167,.7)}
+.btn-emerald:hover{transform:translateY(-2px)}
+.btn-block{width:100%}
+.btn:disabled{opacity:.45;cursor:not-allowed;transform:none!important;box-shadow:none}
+
+/* hero stats */
+.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:13px}
+.stat{background:linear-gradient(180deg,var(--panel2),var(--panel));border:1px solid var(--brd);
+  border-radius:var(--r);padding:18px 16px;position:relative;overflow:hidden}
+.stat::after{content:"";position:absolute;inset:0 0 auto 0;height:2px;
+  background:linear-gradient(90deg,transparent,var(--gold),transparent);opacity:.6}
+.stat .n{font-family:var(--ff-disp);font-weight:400;font-size:38px;line-height:1;
+  background:linear-gradient(180deg,#fff,var(--gold2));-webkit-background-clip:text;background-clip:text;color:transparent}
+.stat .l{font-size:12px;color:var(--muted);font-weight:600;letter-spacing:.4px;margin-top:7px;text-transform:uppercase}
+.stat.em .n{background:linear-gradient(180deg,#fff,var(--emerald));-webkit-background-clip:text;background-clip:text;color:transparent}
+.album-bar{margin-top:14px;height:11px;border-radius:99px;background:rgba(255,255,255,.08);overflow:hidden;border:1px solid var(--brd)}
+.album-bar>i{display:block;height:100%;border-radius:99px;
+  background:linear-gradient(90deg,var(--gold),var(--gold2));box-shadow:0 0 12px rgba(233,185,73,.5)}
+.album-cap{display:flex;justify-content:space-between;font-size:12.5px;color:var(--muted);margin-top:8px;font-weight:600}
+
+/* ---------- SECTION ---------- */
+section.block{padding:42px 0;scroll-margin-top:78px}
+.sec-head{display:flex;align-items:flex-end;justify-content:space-between;gap:16px;margin-bottom:24px;flex-wrap:wrap}
+.sec-head h2{font-family:var(--ff-disp);font-weight:400;font-size:clamp(26px,3.6vw,40px);
+  letter-spacing:.5px;text-transform:uppercase;line-height:1}
+.sec-head h2 .g{background:linear-gradient(120deg,var(--gold2),var(--gold));-webkit-background-clip:text;background-clip:text;color:transparent}
+.sec-head p{color:var(--muted);font-size:14.5px;margin-top:6px;max-width:60ch}
+.divider{height:1px;background:linear-gradient(90deg,transparent,var(--brd2),transparent);margin:0}
+
+/* ---------- FILTERS ---------- */
+.filters{display:flex;flex-wrap:wrap;gap:11px;align-items:center;margin-bottom:22px;
+  background:var(--panel);border:1px solid var(--brd);border-radius:var(--r);padding:14px}
+.field{position:relative;display:flex;align-items:center}
+.field svg{position:absolute;left:12px;color:var(--muted2);pointer-events:none}
+.field input,.field select{background:var(--bg3);border:1px solid var(--brd);color:var(--ink);
+  border-radius:11px;padding:11px 13px;font-size:14px;outline:none;transition:.18s}
+.field input{padding-left:38px;min-width:230px}
+.field select{padding-right:30px;cursor:pointer;min-width:170px;appearance:none}
+.field input:focus,.field select:focus{border-color:var(--gold-d);background:#0c1320}
+.field.sel::after{content:"▾";position:absolute;right:12px;color:var(--muted2);pointer-events:none;font-size:12px}
+.toggle{display:inline-flex;align-items:center;gap:9px;font-size:13.5px;font-weight:600;color:var(--muted);cursor:pointer;user-select:none;
+  background:var(--bg3);border:1px solid var(--brd);border-radius:11px;padding:10px 13px;transition:.18s}
+.toggle:hover{border-color:var(--brd2);color:var(--ink)}
+.toggle input{display:none}
+.toggle .sw{width:38px;height:21px;border-radius:99px;background:rgba(255,255,255,.14);position:relative;transition:.2s;flex:none}
+.toggle .sw::after{content:"";position:absolute;top:2px;left:2px;width:17px;height:17px;border-radius:50%;background:#fff;transition:.2s}
+.toggle input:checked+.sw{background:var(--emerald)}
+.toggle input:checked+.sw::after{transform:translateX(17px)}
+.chip-count{margin-left:auto;font-size:13px;color:var(--muted);font-weight:600}
+.chip-count b{color:var(--gold2)}
+
+/* ---------- TEAM GROUP ---------- */
+.team-group{margin-bottom:30px}
+.team-head{display:flex;align-items:center;gap:12px;margin-bottom:14px;
+  padding-bottom:11px;border-bottom:1px solid var(--brd)}
+.team-flag{width:34px;height:25px;border-radius:5px;overflow:hidden;flex:none;
+  box-shadow:0 2px 8px rgba(0,0,0,.5);border:1px solid rgba(255,255,255,.18);background:#222}
+.team-flag .fi{width:100%;height:100%;background-size:cover;background-position:center;display:block}
+.team-emblem{width:34px;height:34px;border-radius:9px;flex:none;display:grid;place-items:center;font-size:19px;
+  background:linear-gradient(135deg,rgba(233,185,73,.25),rgba(233,185,73,.05));border:1px solid var(--gold-d)}
+.team-emblem.coca{background:linear-gradient(135deg,rgba(255,75,90,.3),rgba(255,75,90,.05));border-color:#b3303d}
+.team-head h3{font-weight:800;font-size:18px;letter-spacing:.2px}
+.team-head .tc{font-size:12px;color:var(--muted);font-weight:600;background:var(--panel);
+  padding:3px 9px;border-radius:8px;border:1px solid var(--brd)}
+.team-head .tspare{margin-left:auto;font-size:12.5px;color:var(--muted);font-weight:600}
+.team-head .tspare b{color:var(--gold2)}
+
+/* ---------- CARD GRID ---------- */
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(165px,1fr));gap:16px}
+.card-wrap{perspective:900px}
+.card{position:relative;border-radius:var(--r);overflow:hidden;cursor:default;
+  transform-style:preserve-3d;transition:transform .12s ease,box-shadow .2s;
+  border:1px solid var(--brd2);box-shadow:var(--shadow);will-change:transform}
+.card .face{position:relative;aspect-ratio:.72;padding:14px 13px 12px;display:flex;flex-direction:column;
+  background:linear-gradient(160deg,#1a2336,#0d1422)}
+/* tipo backgrounds */
+.card[data-tipo="jogador"] .face{background:linear-gradient(160deg,#1b2c46,#0c1626)}
+.card[data-tipo="br"] .face{background:linear-gradient(160deg,#0f3b2a,#0c2118)}
+.card[data-tipo="estrela"] .face{background:linear-gradient(160deg,#3a2a52,#140f22)}
+.card[data-tipo="escudo"] .face,.card[data-tipo="time"] .face{background:linear-gradient(160deg,#3a2f12,#16110a)}
+.card[data-tipo="fwc"] .face{background:linear-gradient(160deg,#2a1640,#0d1530 60%,#06212c)}
+.card[data-tipo="coca"] .face{background:linear-gradient(160deg,#4a151c,#1a0a0c)}
+.card .sheen{position:absolute;inset:0;pointer-events:none;mix-blend-mode:overlay;
+  background:linear-gradient(105deg,transparent 30%,rgba(255,255,255,.55) 48%,transparent 62%);
+  transform:translateX(-120%);transition:transform .5s}
+.card:hover .sheen{transform:translateX(120%)}
+.card .glare{position:absolute;inset:0;pointer-events:none;opacity:0;transition:opacity .2s;
+  background:radial-gradient(220px circle at var(--mx,50%) var(--my,30%),rgba(255,255,255,.28),transparent 60%)}
+.card[data-tipo="fwc"]::before,.card[data-tipo="escudo"]::before,.card[data-tipo="time"]::before{
+  content:"";position:absolute;inset:0;pointer-events:none;opacity:.5;mix-blend-mode:color-dodge;
+  background:linear-gradient(115deg,transparent 20%,rgba(120,200,255,.25),rgba(233,185,73,.25),rgba(185,132,255,.25),transparent 80%);
+  background-size:200% 200%;animation:holo 6s linear infinite}
+@keyframes holo{0%{background-position:0% 0%}100%{background-position:200% 200%}}
+.card .top{display:flex;align-items:center;justify-content:space-between;z-index:2}
+.cnum{font-family:var(--ff-disp);font-weight:400;font-size:15px;letter-spacing:.5px;color:#fff;opacity:.85}
+.tier-rib{font-size:10px;font-weight:800;letter-spacing:.4px;padding:3px 8px;border-radius:99px;text-transform:uppercase}
+.tier-1{background:linear-gradient(180deg,var(--t1),var(--t1b));color:#04122b}
+.tier-2{background:linear-gradient(180deg,var(--t2),var(--t2b));color:#1c1304}
+.tier-3{background:linear-gradient(180deg,var(--t3),var(--t3b));color:#fff}
+.card .emblem{flex:1;display:grid;place-items:center;z-index:2}
+.card .emblem .flagbig{width:74px;height:54px;border-radius:8px;overflow:hidden;
+  box-shadow:0 6px 18px rgba(0,0,0,.55);border:1px solid rgba(255,255,255,.25);background:#222}
+.card .emblem .flagbig .fi{width:100%;height:100%;background-size:cover;background-position:center;display:block}
+.card .emblem .ic{font-size:46px;filter:drop-shadow(0 6px 14px rgba(0,0,0,.5))}
+.card[data-tipo="fwc"] .ic{filter:drop-shadow(0 0 14px rgba(185,132,255,.7))}
+.card .bottom{z-index:2}
+.card .cname{font-size:13px;font-weight:700;color:#fff;letter-spacing:.2px;line-height:1.15}
+.card .clabel{font-size:11px;color:rgba(255,255,255,.6);font-weight:600;margin-top:2px}
+.card .price{display:flex;align-items:center;justify-content:space-between;margin-top:10px;gap:6px}
+.card .price .v{font-weight:800;font-size:15px;color:var(--gold2)}
+.card .price .pw{font-size:10.5px;color:rgba(255,255,255,.55);font-weight:700}
+.card .stockline{display:flex;align-items:center;gap:6px;margin-top:9px;font-size:11px;font-weight:700;color:rgba(255,255,255,.7)}
+.card .stockline .qd{width:7px;height:7px;border-radius:50%;background:var(--emerald);box-shadow:0 0 8px var(--emerald)}
+.card.out .qd{background:var(--danger);box-shadow:none}
+.card-actions{display:grid;grid-template-columns:1fr 1fr;gap:7px;margin-top:10px;z-index:2}
+.mini{padding:9px 6px;border-radius:9px;font-weight:700;font-size:12.5px;transition:.15s;border:1px solid transparent;display:flex;align-items:center;justify-content:center;gap:5px}
+.mini.buy{background:linear-gradient(180deg,var(--gold2),var(--gold));color:#1a1205}
+.mini.buy:hover{filter:brightness(1.06)}
+.mini.trade{background:rgba(45,212,167,.14);border-color:rgba(45,212,167,.5);color:var(--emerald)}
+.mini.trade:hover{background:rgba(45,212,167,.24)}
+.card.out{filter:grayscale(.55) brightness(.7)}
+.card.out .card-actions{display:none}
+.out-tag{margin-top:10px;text-align:center;font-weight:800;font-size:12.5px;color:var(--danger);
+  background:rgba(255,93,108,.12);border:1px solid rgba(255,93,108,.4);border-radius:9px;padding:9px;z-index:2}
+.in-cart-badge{position:absolute;top:10px;left:10px;z-index:3;background:var(--emerald);color:#03251c;
+  font-size:10.5px;font-weight:800;padding:3px 8px;border-radius:99px;box-shadow:0 4px 12px rgba(0,0,0,.4)}
+.empty{padding:50px 20px;text-align:center;color:var(--muted);border:1px dashed var(--brd2);border-radius:var(--r)}
+.empty .big{font-size:34px;margin-bottom:8px}
+
+/* ---------- FALTAM list ---------- */
+.falt-legend{display:flex;flex-wrap:wrap;gap:14px;margin-bottom:20px;font-size:13px;color:var(--muted);font-weight:600}
+.falt-legend span{display:inline-flex;align-items:center;gap:7px}
+.lg-dot{width:11px;height:11px;border-radius:50%}
+.lg-need{background:var(--emerald)} .lg-res{background:var(--gold)} .lg-got{background:var(--muted2)}
+.falt-team{margin-bottom:18px}
+.falt-team .fh{display:flex;align-items:center;gap:10px;margin-bottom:11px}
+.falt-team .fh .team-flag{width:28px;height:21px}
+.falt-team .fh h4{font-size:15px;font-weight:800}
+.falt-pills{display:flex;flex-wrap:wrap;gap:8px}
+.fpill{display:inline-flex;align-items:center;gap:7px;padding:7px 12px;border-radius:10px;font-size:13px;font-weight:700;
+  background:var(--panel);border:1px solid var(--brd);transition:.15s}
+.fpill .d{width:8px;height:8px;border-radius:50%}
+.fpill.need .d{background:var(--emerald);box-shadow:0 0 7px var(--emerald)}
+.fpill.reservada{opacity:.8;border-style:dashed}
+.fpill.reservada .d{background:var(--gold)}
+.fpill.obtida{opacity:.45;text-decoration:line-through}
+.fpill.obtida .d{background:var(--muted2)}
+.fpill .pw{font-size:10px;color:var(--muted);font-weight:700}
+.fpill .st{font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:.3px}
+.fpill.reservada .st{color:var(--gold2)} .fpill.obtida .st{color:var(--muted2)}
+
+/* ---------- COMO COMPRAR ---------- */
+.steps{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:16px;margin-bottom:26px}
+.step{background:linear-gradient(180deg,var(--panel2),var(--panel));border:1px solid var(--brd);border-radius:var(--r);padding:22px 20px;position:relative}
+.step .nn{font-family:var(--ff-disp);font-weight:400;font-size:30px;width:50px;height:50px;border-radius:13px;display:grid;place-items:center;
+  background:linear-gradient(135deg,var(--gold2),var(--gold-d));color:#1a1205;margin-bottom:14px;box-shadow:0 8px 20px -8px rgba(233,185,73,.6)}
+.step h4{font-size:16px;font-weight:800;margin-bottom:7px}
+.step p{font-size:13.5px;color:var(--muted)}
+.tiers{background:linear-gradient(180deg,var(--panel2),var(--panel));border:1px solid var(--brd);border-radius:var(--r);overflow:hidden;margin-bottom:24px}
+.tiers .th{padding:16px 20px;border-bottom:1px solid var(--brd);display:flex;align-items:center;gap:10px}
+.tiers .th h4{font-size:16px;font-weight:800}
+.trow{display:grid;grid-template-columns:auto 1fr auto auto;gap:14px;align-items:center;padding:15px 20px;border-bottom:1px solid var(--brd)}
+.trow:last-child{border-bottom:none}
+.trow .ti{width:40px;height:40px;border-radius:11px;display:grid;place-items:center;font-size:20px;flex:none}
+.trow .ti.t1{background:linear-gradient(135deg,var(--t1),var(--t1b))}
+.trow .ti.t2{background:linear-gradient(135deg,var(--t2),var(--t2b))}
+.trow .ti.t3{background:linear-gradient(135deg,var(--t3),var(--t3b))}
+.trow .desc b{font-size:14.5px;display:block}
+.trow .desc small{color:var(--muted);font-size:12.5px}
+.trow .pr{font-weight:800;color:var(--gold2);font-size:16px;text-align:right;white-space:nowrap}
+.trow .pw{font-weight:700;color:var(--emerald);font-size:13px;text-align:right;white-space:nowrap}
+.note{display:flex;gap:13px;align-items:flex-start;background:rgba(233,185,73,.08);border:1px solid var(--gold-d);
+  border-radius:var(--r);padding:17px 19px;font-size:13.5px;color:var(--gold2)}
+.note .ni{font-size:22px;flex:none}
+.note b{color:#fff}
+
+/* ---------- CONTATO ---------- */
+.contact-card{background:linear-gradient(180deg,var(--panel2),var(--panel));border:1px solid var(--brd);border-radius:var(--r);
+  padding:30px;display:grid;grid-template-columns:1fr auto;gap:26px;align-items:center}
+.contact-info h3{font-size:22px;font-weight:800;margin-bottom:4px}
+.contact-info .role{color:var(--gold2);font-weight:700;font-size:14px;margin-bottom:18px}
+.cline{display:flex;align-items:center;gap:12px;padding:9px 0;font-size:14.5px}
+.cline .ci{width:40px;height:40px;border-radius:11px;display:grid;place-items:center;background:var(--panel);border:1px solid var(--brd);color:var(--gold2);flex:none}
+.cline .cl{color:var(--muted);font-size:12px;font-weight:600;text-transform:uppercase;letter-spacing:.4px}
+.cline .cv{font-weight:700}
+
+/* ---------- TOAST ---------- */
+.toasts{position:fixed;right:18px;bottom:18px;z-index:120;display:flex;flex-direction:column;gap:10px;max-width:340px}
+.toast{background:rgba(16,22,34,.96);border:1px solid var(--brd2);border-left:4px solid var(--gold);
+  border-radius:12px;padding:13px 16px;font-size:13.5px;font-weight:600;box-shadow:0 14px 34px -10px rgba(0,0,0,.7);
+  animation:slidein .25s ease;backdrop-filter:blur(8px);display:flex;gap:10px;align-items:flex-start}
+.toast.ok{border-left-color:var(--emerald)} .toast.err{border-left-color:var(--danger)} .toast.warn{border-left-color:var(--gold)}
+.toast .tx{font-size:18px;flex:none;line-height:1}
+@keyframes slidein{from{transform:translateX(120%);opacity:0}}
+
+/* ---------- DRAWER / MODAL ---------- */
+.scrim{position:fixed;inset:0;z-index:90;background:rgba(4,7,12,.72);backdrop-filter:blur(4px);
+  opacity:0;visibility:hidden;transition:.25s}
+.scrim.show{opacity:1;visibility:visible}
+.drawer{position:fixed;top:0;right:0;height:100%;width:min(460px,100%);z-index:100;
+  background:linear-gradient(180deg,var(--bg2),var(--bg));border-left:1px solid var(--brd2);
+  box-shadow:-30px 0 60px -20px rgba(0,0,0,.8);transform:translateX(100%);transition:transform .3s cubic-bezier(.4,0,.2,1);
+  display:flex;flex-direction:column}
+.drawer.show{transform:none}
+.drawer-head{padding:20px;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid var(--brd);flex:none}
+.drawer-head h3{font-family:var(--ff-disp);font-weight:400;font-size:24px;letter-spacing:.5px;display:flex;align-items:center;gap:10px}
+.xbtn{width:38px;height:38px;border-radius:10px;display:grid;place-items:center;background:var(--panel);border:1px solid var(--brd);color:var(--muted);transition:.15s}
+.xbtn:hover{color:var(--ink);border-color:var(--brd2)}
+.drawer-body{flex:1;overflow-y:auto;padding:18px 20px}
+.drawer-foot{padding:18px 20px;border-top:1px solid var(--brd);flex:none;background:rgba(0,0,0,.2)}
+
+/* cart items */
+.citem{display:flex;gap:12px;padding:13px;border:1px solid var(--brd);border-radius:13px;margin-bottom:11px;background:var(--panel)}
+.citem .ct{width:46px;height:62px;border-radius:8px;flex:none;display:grid;place-items:center;overflow:hidden;border:1px solid var(--brd2);position:relative}
+.citem .ct .fi{width:100%;height:100%;background-size:cover;background-position:center}
+.citem .ct .ce{font-size:24px}
+.citem .ci-main{flex:1;min-width:0}
+.citem .ci-main .cc{font-weight:800;font-size:15px;display:flex;align-items:center;gap:8px}
+.citem .ci-main .cs{font-size:12px;color:var(--muted);font-weight:600}
+.mode-tag{font-size:10px;font-weight:800;padding:2px 7px;border-radius:6px;text-transform:uppercase;letter-spacing:.3px}
+.mode-tag.buy{background:rgba(233,185,73,.16);color:var(--gold2)}
+.mode-tag.trade{background:rgba(45,212,167,.16);color:var(--emerald)}
+.give-list{margin-top:8px;display:flex;flex-wrap:wrap;gap:5px}
+.give-list .gv{font-size:11px;font-weight:700;background:rgba(45,212,167,.12);border:1px solid rgba(45,212,167,.4);color:var(--emerald);padding:2px 7px;border-radius:6px}
+.citem .ci-side{display:flex;flex-direction:column;align-items:flex-end;justify-content:space-between;flex:none}
+.qty{display:flex;align-items:center;gap:8px;background:var(--bg3);border:1px solid var(--brd);border-radius:9px;padding:3px}
+.qty button{width:26px;height:26px;border-radius:7px;display:grid;place-items:center;font-weight:800;font-size:16px;color:var(--gold2);background:var(--panel)}
+.qty button:hover{background:var(--panel2)} .qty b{min-width:18px;text-align:center;font-weight:800}
+.rm{font-size:12px;color:var(--danger);font-weight:700;background:none}
+.rm:hover{text-decoration:underline}
+.citem .ci-side .pv{font-weight:800;color:var(--gold2);font-size:15px}
+
+/* trade power meter */
+.meter{margin:14px 0 4px}
+.meter .mlab{display:flex;justify-content:space-between;font-size:12.5px;font-weight:700;margin-bottom:6px}
+.meter .mlab .ok{color:var(--emerald)} .meter .mlab .no{color:var(--danger)}
+.meter .bar{height:10px;border-radius:99px;background:rgba(255,255,255,.08);overflow:hidden;border:1px solid var(--brd)}
+.meter .bar>i{display:block;height:100%;border-radius:99px;background:linear-gradient(90deg,var(--emerald-d),var(--emerald));transition:width .25s}
+.meter .bar>i.full{background:linear-gradient(90deg,var(--emerald),#7df5d6)}
+
+/* cart summary */
+.csum{background:var(--panel);border:1px solid var(--brd);border-radius:13px;padding:15px;margin-bottom:14px}
+.csum .row{display:flex;justify-content:space-between;font-size:13.5px;padding:5px 0;color:var(--muted)}
+.csum .row.tot{border-top:1px solid var(--brd);margin-top:7px;padding-top:11px;font-size:17px;font-weight:800;color:var(--ink)}
+.csum .row.tot .v{color:var(--gold2)}
+.csum .row .v{font-weight:700;color:var(--ink)}
+
+/* form */
+.form-grp{margin-bottom:13px}
+.form-grp label{display:block;font-size:12.5px;font-weight:700;color:var(--muted);margin-bottom:6px}
+.form-grp label .req{color:var(--gold)}
+.form-grp input,.form-grp select{width:100%;background:var(--bg3);border:1px solid var(--brd);color:var(--ink);
+  border-radius:11px;padding:12px 14px;font-size:14px;outline:none;transition:.18s}
+.form-grp input:focus,.form-grp select:focus{border-color:var(--gold-d);background:#0c1320}
+.form-grp input.bad,.form-grp select.bad{border-color:var(--danger)}
+.form-grp .err-msg{font-size:11.5px;color:var(--danger);margin-top:5px;font-weight:600;display:none}
+.form-grp.show-err .err-msg{display:block}
+.owner-box{background:rgba(45,212,167,.07);border:1px solid rgba(45,212,167,.3);border-radius:12px;padding:13px 15px;margin-bottom:14px;font-size:13px}
+.owner-box .t{font-weight:800;color:var(--emerald);font-size:12px;text-transform:uppercase;letter-spacing:.4px;margin-bottom:7px}
+.owner-box .l{color:var(--muted);font-weight:600}
+.owner-box b{color:var(--ink)}
+
+/* trade picker modal */
+.modal{position:fixed;inset:0;z-index:110;display:none;align-items:center;justify-content:center;padding:18px}
+.modal.show{display:flex}
+.modal-card{background:linear-gradient(180deg,var(--bg2),var(--bg));border:1px solid var(--brd2);border-radius:20px;
+  width:min(620px,100%);max-height:90vh;display:flex;flex-direction:column;box-shadow:0 30px 70px -20px rgba(0,0,0,.85)}
+.modal-head{padding:20px 22px;border-bottom:1px solid var(--brd);flex:none}
+.modal-head h3{font-size:20px;font-weight:800;display:flex;align-items:center;gap:11px}
+.modal-head p{color:var(--muted);font-size:13px;margin-top:5px}
+.want-chip{display:inline-flex;align-items:center;gap:8px;background:var(--panel);border:1px solid var(--brd2);border-radius:10px;padding:6px 11px;font-weight:800;font-size:13px}
+.modal-body{flex:1;overflow-y:auto;padding:16px 22px}
+.modal-foot{padding:16px 22px;border-top:1px solid var(--brd);flex:none}
+.pick-search{margin-bottom:14px}
+.pick-team{margin-bottom:14px}
+.pick-team .ph{font-size:12.5px;font-weight:800;color:var(--muted);margin-bottom:8px;display:flex;align-items:center;gap:8px}
+.pick-grid{display:flex;flex-wrap:wrap;gap:8px}
+.pick{display:inline-flex;align-items:center;gap:8px;padding:8px 12px;border-radius:10px;font-size:13px;font-weight:700;
+  background:var(--panel);border:1px solid var(--brd);cursor:pointer;transition:.15s;user-select:none}
+.pick:hover{border-color:var(--brd2)}
+.pick.sel{background:rgba(45,212,167,.16);border-color:var(--emerald);color:var(--emerald)}
+.pick .pw{font-size:10px;color:var(--muted);font-weight:700}
+.pick.sel .pw{color:var(--emerald)}
+.pick.disabled{opacity:.4;cursor:not-allowed;text-decoration:line-through}
+
+/* admin */
+.admin-lock{max-width:380px;margin:40px auto;text-align:center}
+.admin-lock .lk{font-size:46px;margin-bottom:14px}
+.admin-lock h3{font-family:var(--ff-disp);font-weight:400;font-size:28px;letter-spacing:.5px;margin-bottom:8px}
+.admin-lock p{color:var(--muted);font-size:14px;margin-bottom:20px}
+.admin-toolbar{display:flex;flex-wrap:wrap;gap:10px;align-items:center;margin-bottom:20px;
+  background:var(--panel);border:1px solid var(--brd);border-radius:var(--r);padding:13px}
+.admin-stat{display:flex;gap:18px;margin-left:auto;font-size:13px;font-weight:700;color:var(--muted)}
+.admin-stat b{color:var(--gold2);font-size:16px}
+.atab{display:flex;gap:6px;margin-bottom:18px;flex-wrap:wrap}
+.atab button{padding:9px 15px;border-radius:10px;font-weight:700;font-size:13.5px;color:var(--muted);background:var(--panel);border:1px solid var(--brd);transition:.15s}
+.atab button.on{background:linear-gradient(180deg,var(--gold2),var(--gold));color:#1a1205;border-color:transparent}
+.order{background:linear-gradient(180deg,var(--panel2),var(--panel));border:1px solid var(--brd);border-radius:var(--r);padding:18px;margin-bottom:14px}
+.order.novo{border-left:4px solid var(--emerald)}
+.order.separado{border-left:4px solid var(--gold)}
+.order.concluido{border-left:4px solid var(--muted2);opacity:.85}
+.order .oh{display:flex;flex-wrap:wrap;align-items:center;gap:12px;margin-bottom:14px;padding-bottom:13px;border-bottom:1px solid var(--brd)}
+.order .oid{font-family:var(--ff-disp);font-weight:400;font-size:18px;letter-spacing:.5px;color:var(--gold2)}
+.ostatus{font-size:11px;font-weight:800;padding:4px 10px;border-radius:99px;text-transform:uppercase;letter-spacing:.3px}
+.ostatus.novo{background:rgba(45,212,167,.16);color:var(--emerald)}
+.ostatus.separado{background:rgba(233,185,73,.16);color:var(--gold2)}
+.ostatus.concluido{background:rgba(148,162,184,.16);color:var(--muted)}
+.order .ots{font-size:12px;color:var(--muted);font-weight:600;margin-left:auto}
+.ocli{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px;margin-bottom:14px}
+.ocli .oc{background:var(--bg3);border:1px solid var(--brd);border-radius:10px;padding:10px 13px}
+.ocli .oc .ol{font-size:11px;color:var(--muted);font-weight:600;text-transform:uppercase;letter-spacing:.3px}
+.ocli .oc .ov{font-weight:700;font-size:14px;margin-top:2px}
+.ocli .oc .ov a{color:var(--wa)}
+.osec{margin-bottom:13px}
+.osec .osl{font-size:12px;font-weight:800;color:var(--muted);text-transform:uppercase;letter-spacing:.4px;margin-bottom:8px}
+.oitems{display:flex;flex-wrap:wrap;gap:7px}
+.oitem{font-size:12.5px;font-weight:700;background:var(--panel);border:1px solid var(--brd);border-radius:8px;padding:5px 10px;display:inline-flex;align-items:center;gap:6px}
+.oitem.give{background:rgba(45,212,167,.1);border-color:rgba(45,212,167,.35);color:var(--emerald)}
+.otrade{background:var(--bg3);border:1px solid var(--brd);border-radius:10px;padding:11px 13px;margin-bottom:8px}
+.otrade .tw{font-weight:800;font-size:13.5px;display:flex;align-items:center;gap:8px;margin-bottom:8px}
+.otrade .tg{font-size:12px;color:var(--muted);font-weight:600;margin-bottom:6px}
+.order .oactions{display:flex;flex-wrap:wrap;gap:9px;margin-top:15px;padding-top:14px;border-top:1px solid var(--brd)}
+.sbtn{padding:9px 15px;border-radius:10px;font-weight:700;font-size:13px;transition:.15s;border:1px solid transparent}
+.sbtn.ok{background:linear-gradient(180deg,var(--emerald),var(--emerald-d));color:#03251c}
+.sbtn.gold{background:linear-gradient(180deg,var(--gold2),var(--gold));color:#1a1205}
+.sbtn.danger{background:rgba(255,93,108,.12);border-color:rgba(255,93,108,.45);color:var(--danger)}
+.sbtn.ghost{background:var(--panel);border-color:var(--brd);color:var(--muted)}
+.sbtn:hover{filter:brightness(1.06)}
+.otot{font-weight:800;color:var(--gold2);font-size:15px;margin-left:auto;align-self:center}
+
+.oreturn{margin-top:10px;background:rgba(255,255,255,.035);border:1px dashed var(--brd2);border-radius:12px;padding:10px 12px}
+.oreturn .rt{font-size:11.5px;font-weight:800;color:var(--gold2);text-transform:uppercase;letter-spacing:.35px;margin-bottom:7px}
+.return-select{background:var(--bg3);border:1px solid var(--brd);color:var(--ink);border-radius:8px;padding:4px 7px;font-size:12px;font-weight:700;outline:none;margin-left:4px}
+.return-check{display:inline-flex;align-items:center;gap:7px;font-size:12px;font-weight:800;color:var(--gold2);background:rgba(233,185,73,.10);border:1px solid rgba(233,185,73,.35);border-radius:8px;padding:5px 9px;margin-bottom:8px;cursor:pointer;user-select:none}
+.return-check input{accent-color:var(--gold)}
+.ret-tag{font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:.3px;border-radius:99px;padding:2px 7px;background:rgba(148,162,184,.16);color:var(--muted);border:1px solid var(--brd);white-space:nowrap}
+.oitem.returned,.otrade.returned{opacity:.58;text-decoration:line-through;border-style:dashed}
+.oitem .meta{font-size:10.5px;color:var(--muted);font-weight:700}
+
+/* ---------- FOOTER ---------- */
+.foot{border-top:1px solid var(--brd);padding:30px 0;margin-top:30px;text-align:center;color:var(--muted2);font-size:13px}
+.foot .fb{display:flex;align-items:center;justify-content:center;gap:9px;margin-bottom:10px;font-weight:800;color:var(--muted)}
+.foot a{color:var(--gold2);font-weight:600}
+.foot .dis{font-size:11.5px;max-width:60ch;margin:10px auto 0;opacity:.8}
+
+/* FAB whatsapp */
+.fab{position:fixed;right:18px;bottom:18px;z-index:80;width:58px;height:58px;border-radius:50%;
+  background:linear-gradient(180deg,#2ee06f,var(--wa));display:grid;place-items:center;
+  box-shadow:0 12px 30px -8px rgba(37,211,102,.7);transition:.2s;color:#fff}
+.fab:hover{transform:scale(1.08)}
+.fab svg{width:30px;height:30px}
+.fab.hide{transform:scale(0);opacity:0;pointer-events:none}
+
+/* ---------- RESPONSIVE ---------- */
+@media(max-width:880px){
+  .hero-grid{grid-template-columns:1fr;gap:30px}
+  .contact-card{grid-template-columns:1fr}
+  .nav-links{display:none;position:absolute;top:62px;left:0;right:0;flex-direction:column;gap:2px;
+    background:rgba(8,12,20,.98);backdrop-filter:blur(14px);padding:12px;border-bottom:1px solid var(--brd)}
+  .nav-links.open{display:flex}
+  .nav-links a{padding:13px}
+  .burger{display:grid}
+}
+@media(max-width:560px){
+  .grid{grid-template-columns:repeat(auto-fill,minmax(145px,1fr));gap:12px}
+  .stats{grid-template-columns:1fr}
+  .filters{padding:11px}
+  .field input{min-width:0;width:100%}
+  .field{flex:1 1 100%}
+  .trow{grid-template-columns:auto 1fr;gap:10px}
+  .trow .pr,.trow .pw{grid-column:2;text-align:left}
+}
+</style>
+</head>
+<body>
+<div class="toasts" id="toasts"></div>
+
+<!-- NAV -->
+<nav class="nav">
+  <div class="nav-in">
+    <a href="#topo" class="brand"><span class="cup">🏆</span>
+      <span><b>COPA 2026</b><small>Troca & Venda</small></span></a>
+    <div class="nav-links" id="navLinks">
+      <a href="#catalogo" onclick="document.getElementById('navLinks').classList.remove('open')">Catálogo</a>
+      <a href="#faltam-sec" onclick="document.getElementById('navLinks').classList.remove('open')">Faltam</a>
+      <a href="#como" onclick="document.getElementById('navLinks').classList.remove('open')">Como comprar</a>
+      <a href="#contato" onclick="document.getElementById('navLinks').classList.remove('open')">Contato</a>
+    </div>
+    <div class="nav-actions">
+      <button class="cart-btn" onclick="openDrawer()">🛒 Carrinho <span class="cart-badge" id="cartBadge" style="display:none">0</span></button>
+      <button class="admin-btn" title="Administrador" onclick="openAdmin()">🔒</button>
+      <button class="burger" onclick="document.getElementById('navLinks').classList.toggle('open')">☰</button>
+    </div>
+  </div>
+</nav>
+
+<!-- HERO -->
+<header class="hero" id="topo">
+  <div class="wrap hero-grid">
+    <div>
+      <span class="kick"><span class="dot"></span> Estoque atualizado em tempo real</span>
+      <h1>Complete seu álbum da <span class="g">Copa 2026</span></h1>
+      <p class="lead">Figurinhas repetidas para <b>trocar</b> ou <b>comprar</b>. Escolha as cartas, monte seu pedido e combine a entrega. As trocas e vendas são presenciais.</p>
+      <div class="hero-cta">
+        <a class="btn btn-gold" href="#catalogo">Ver figurinhas</a>
+        <a class="btn btn-wa" data-wa target="_blank">
+          <svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor"><path d="M.057 24l1.687-6.163a11.867 11.867 0 01-1.587-5.946C.16 5.335 5.495 0 12.05 0a11.817 11.817 0 018.413 3.488 11.824 11.824 0 013.48 8.414c-.003 6.557-5.338 11.892-11.893 11.892a11.9 11.9 0 01-5.688-1.448L.057 24zm6.597-3.807c1.676.995 3.276 1.591 5.392 1.592 5.448 0 9.886-4.434 9.889-9.885.002-5.462-4.415-9.89-9.881-9.892-5.452 0-9.887 4.434-9.889 9.884a9.86 9.86 0 001.518 5.26l-.999 3.648 3.97-1.039zm11.387-5.464c-.074-.124-.272-.198-.57-.347-.297-.149-1.758-.868-2.031-.967-.272-.099-.47-.149-.669.149-.198.297-.768.967-.941 1.165-.173.198-.347.223-.644.074-.297-.149-1.255-.462-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.297-.347.446-.521.151-.172.2-.296.3-.495.099-.198.05-.372-.025-.521-.075-.148-.669-1.611-.916-2.206-.242-.579-.487-.501-.669-.51l-.57-.01c-.198 0-.52.074-.792.372s-1.04 1.016-1.04 2.479 1.065 2.876 1.213 3.074c.149.198 2.095 3.2 5.076 4.487.709.306 1.263.489 1.694.626.712.226 1.36.194 1.872.118.571-.085 1.758-.719 2.006-1.413.248-.695.248-1.29.173-1.414z"/></svg>
+          Tirar dúvidas</a>
+      </div>
+    </div>
+    <div>
+      <div class="stats">
+        <div class="stat em"><div class="n" id="stFaltam">0</div><div class="l">Faltam</div></div>
+        <div class="stat"><div class="n" id="stRep">0</div><div class="l">Repetidas</div></div>
+        <div class="stat"><div class="n" id="stPct">0%</div><div class="l">Álbum</div></div>
+      </div>
+      <div class="album-bar"><i id="albumFill" style="width:0"></i></div>
+      <div class="album-cap"><span>Progresso do álbum</span><span><b id="albumHave">0</b> / <span id="albumTotal">994</span></span></div>
+    </div>
+  </div>
+</header>
+
+<div class="wrap"><div class="divider"></div></div>
+
+<!-- CATÁLOGO -->
+<section class="block" id="catalogo">
+  <div class="wrap">
+    <div class="sec-head">
+      <div><h2><span class="g">Catálogo</span> de repetidas</h2>
+        <p>Estas são as figurinhas que tenho repetidas. O número disponível cai automaticamente conforme as cartas saem.</p></div>
+    </div>
+    <div class="filters">
+      <div class="field"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4-4"/></svg>
+        <input id="fSearch" type="text" placeholder="Buscar por código ou país..."></div>
+      <div class="field sel"><select id="fTeam"></select></div>
+      <div class="field sel"><select id="fTipo">
+        <option value="all">Todos os tipos</option>
+        <option value="comuns">Comuns (R$1)</option>
+        <option value="destaques">Destaques · escudo/seleção/craque (R$2)</option>
+        <option value="fwc">Especiais FWC (R$3)</option>
+        <option value="br">Brasil</option>
+        <option value="coca">Coca-Cola</option>
+      </select></div>
+      <label class="toggle"><input id="fAvail" type="checkbox" checked><span class="sw"></span>Somente disponíveis</label>
+      <span class="chip-count" id="catCount"></span>
+    </div>
+    <div id="catalog"></div>
+  </div>
+</section>
+
+<div class="wrap"><div class="divider"></div></div>
+
+<!-- FALTAM -->
+<section class="block" id="faltam-sec">
+  <div class="wrap">
+    <div class="sec-head">
+      <div><h2>O que <span class="g">eu preciso</span></h2>
+        <p>Estas são as figurinhas que faltam no meu álbum. Se você tiver alguma delas, pode usá-la para trocar. Assim que eu obtenho uma, ela é marcada e some da lista.</p></div>
+    </div>
+    <div class="falt-legend">
+      <span><span class="lg-dot lg-need"></span> Ainda preciso</span>
+      <span><span class="lg-dot lg-res"></span> Reservada (em um pedido)</span>
+      <span><span class="lg-dot lg-got"></span> Já obtida</span>
+    </div>
+    <div id="faltam"></div>
+  </div>
+</section>
+
+<div class="wrap"><div class="divider"></div></div>
+
+<!-- COMO COMPRAR -->
+<section class="block" id="como">
+  <div class="wrap">
+    <div class="sec-head"><div><h2>Como <span class="g">funciona</span></h2>
+      <p>Comprar ou trocar leva menos de um minuto. Veja o passo a passo e a tabela de valores.</p></div></div>
+
+    <div class="steps">
+      <div class="step"><div class="nn">1</div><h4>Escolha as figurinhas</h4><p>Navegue pelo catálogo das repetidas. O estoque mostrado é o que está realmente disponível agora.</p></div>
+      <div class="step"><div class="nn">2</div><h4>Comprar ou trocar</h4><p>Em cada carta você decide: <b>comprar</b> (paga em reais) ou <b>trocar</b> (você me entrega figurinhas que eu preciso).</p></div>
+      <div class="step"><div class="nn">3</div><h4>Monte a troca por valor</h4><p>Cada figurinha tem um <b>poder de troca</b>. Some o poder das suas figurinhas faltantes até alcançar o valor da carta que você quer.</p></div>
+      <div class="step"><div class="nn">4</div><h4>Finalize o pedido</h4><p>Informe nome completo, telefone e a área onde trabalha na Lince Tech. O pedido cai direto para mim.</p></div>
+      <div class="step"><div class="nn">5</div><h4>Combine a entrega</h4><p>No próximo dia útil eu levo as figurinhas para firmar. É só combinar horário e local pelo WhatsApp.</p></div>
+    </div>
+
+    <div class="tiers">
+      <div class="th"><span style="font-size:22px">💰</span><h4>Tabela de valores</h4></div>
+      <div class="trow"><div class="ti t1">⚽</div>
+        <div class="desc"><b>Jogador comum</b><small>A maioria das figurinhas dos times</small></div>
+        <div class="pr">R$ 1</div><div class="pw">1 figurinha 🔁</div></div>
+      <div class="trow"><div class="ti t2">⭐</div>
+        <div class="desc"><b>Destaque</b><small>Jogador do Brasil, Messi e Cristiano Ronaldo, escudo (nº 1) e seleção (nº 13)</small></div>
+        <div class="pr">R$ 2</div><div class="pw">2 figurinhas 🔁</div></div>
+      <div class="trow"><div class="ti t3">🌟</div>
+        <div class="desc"><b>Especial FWC</b><small>Figurinhas da introdução / especiais do álbum</small></div>
+        <div class="pr">R$ 3</div><div class="pw">3 figurinhas 🔁</div></div>
+      <div class="trow"><div class="ti t1">🥤</div>
+        <div class="desc"><b>Coca-Cola</b><small>Figurinhas extras da coleção Coca-Cola</small></div>
+        <div class="pr">R$ 1</div><div class="pw">1 figurinha 🔁</div></div>
+    </div>
+
+    <div class="note"><span class="ni">📅</span><div>Independente de comprar ou trocar, <b>no próximo dia útil</b> após o pedido eu levo a figurinha para firmar a entrega, sempre presencialmente. Use o botão do WhatsApp para combinar.</div></div>
+
+    <div style="margin-top:22px;text-align:center">
+      <a class="btn btn-wa" data-wa target="_blank">
+        <svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor"><path d="M.057 24l1.687-6.163a11.867 11.867 0 01-1.587-5.946C.16 5.335 5.495 0 12.05 0a11.817 11.817 0 018.413 3.488 11.824 11.824 0 013.48 8.414c-.003 6.557-5.338 11.892-11.893 11.892a11.9 11.9 0 01-5.688-1.448L.057 24zm6.597-3.807c1.676.995 3.276 1.591 5.392 1.592 5.448 0 9.886-4.434 9.889-9.885.002-5.462-4.415-9.89-9.881-9.892-5.452 0-9.887 4.434-9.889 9.884a9.86 9.86 0 001.518 5.26l-.999 3.648 3.97-1.039zm11.387-5.464c-.074-.124-.272-.198-.57-.347-.297-.149-1.758-.868-2.031-.967-.272-.099-.47-.149-.669.149-.198.297-.768.967-.941 1.165-.173.198-.347.223-.644.074-.297-.149-1.255-.462-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.297-.347.446-.521.151-.172.2-.296.3-.495.099-.198.05-.372-.025-.521-.075-.148-.669-1.611-.916-2.206-.242-.579-.487-.501-.669-.51l-.57-.01c-.198 0-.52.074-.792.372s-1.04 1.016-1.04 2.479 1.065 2.876 1.213 3.074c.149.198 2.095 3.2 5.076 4.487.709.306 1.263.489 1.694.626.712.226 1.36.194 1.872.118.571-.085 1.758-.719 2.006-1.413.248-.695.248-1.29.173-1.414z"/></svg>
+        Tirar dúvidas no WhatsApp</a>
+    </div>
+  </div>
+</section>
+
+<div class="wrap"><div class="divider"></div></div>
+
+<!-- CONTATO -->
+<section class="block" id="contato">
+  <div class="wrap">
+    <div class="sec-head"><div><h2><span class="g">Contato</span></h2>
+      <p>Ficou com dúvida? Fale comigo diretamente.</p></div></div>
+    <div class="contact-card">
+      <div class="contact-info">
+        <h3 data-owner-nome>Rodrigo César Hang</h3>
+        <div class="role" data-owner-area>Departamento de TI — área de Documentação</div>
+        <div class="cline"><span class="ci">👤</span><div><div class="cl">Responsável</div><div class="cv" data-owner-nome>Rodrigo César Hang</div></div></div>
+        <div class="cline"><span class="ci">📱</span><div><div class="cl">WhatsApp / Telefone</div><div class="cv" data-owner-fone>(47) 99143-8831</div></div></div>
+        <div class="cline"><span class="ci">🏢</span><div><div class="cl">Setor</div><div class="cv" data-owner-area>Departamento de TI — área de Documentação</div></div></div>
+      </div>
+      <div style="display:flex;flex-direction:column;gap:11px;align-items:stretch;min-width:230px">
+        <a class="btn btn-wa btn-block" data-wa target="_blank">
+          <svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor"><path d="M.057 24l1.687-6.163a11.867 11.867 0 01-1.587-5.946C.16 5.335 5.495 0 12.05 0a11.817 11.817 0 018.413 3.488 11.824 11.824 0 013.48 8.414c-.003 6.557-5.338 11.892-11.893 11.892a11.9 11.9 0 01-5.688-1.448L.057 24zm6.597-3.807c1.676.995 3.276 1.591 5.392 1.592 5.448 0 9.886-4.434 9.889-9.885.002-5.462-4.415-9.89-9.881-9.892-5.452 0-9.887 4.434-9.889 9.884a9.86 9.86 0 001.518 5.26l-.999 3.648 3.97-1.039zm11.387-5.464c-.074-.124-.272-.198-.57-.347-.297-.149-1.758-.868-2.031-.967-.272-.099-.47-.149-.669.149-.198.297-.768.967-.941 1.165-.173.198-.347.223-.644.074-.297-.149-1.255-.462-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.297-.347.446-.521.151-.172.2-.296.3-.495.099-.198.05-.372-.025-.521-.075-.148-.669-1.611-.916-2.206-.242-.579-.487-.501-.669-.51l-.57-.01c-.198 0-.52.074-.792.372s-1.04 1.016-1.04 2.479 1.065 2.876 1.213 3.074c.149.198 2.095 3.2 5.076 4.487.709.306 1.263.489 1.694.626.712.226 1.36.194 1.872.118.571-.085 1.758-.719 2.006-1.413.248-.695.248-1.29.173-1.414z"/></svg>
+          Abrir WhatsApp</a>
+        <a class="btn btn-ghost btn-block" href="#catalogo">Ver figurinhas</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer class="foot">
+  <div class="wrap">
+    <div class="fb"><span class="cup">🏆</span> COPA 2026 · Troca & Venda de Figurinhas</div>
+    <div>Feito por <span data-owner-nome>Rodrigo César Hang</span> · <span data-owner-area>Departamento de TI — área de Documentação</span></div>
+    <div>© <span id="year">2026</span> · Trocas e vendas presenciais</div>
+    <div class="dis">As cartas exibidas são representações estilizadas para identificação das figurinhas. Imagens, marcas e o álbum oficial pertencem aos seus detentores de direitos. Site sem fins de catálogo oficial.</div>
+  </div>
+</footer>
+
+<!-- FAB WHATSAPP -->
+<a class="fab" id="fab" data-wa target="_blank" title="Fale no WhatsApp">
+  <svg viewBox="0 0 24 24" fill="currentColor"><path d="M.057 24l1.687-6.163a11.867 11.867 0 01-1.587-5.946C.16 5.335 5.495 0 12.05 0a11.817 11.817 0 018.413 3.488 11.824 11.824 0 013.48 8.414c-.003 6.557-5.338 11.892-11.893 11.892a11.9 11.9 0 01-5.688-1.448L.057 24zm6.597-3.807c1.676.995 3.276 1.591 5.392 1.592 5.448 0 9.886-4.434 9.889-9.885.002-5.462-4.415-9.89-9.881-9.892-5.452 0-9.887 4.434-9.889 9.884a9.86 9.86 0 001.518 5.26l-.999 3.648 3.97-1.039zm11.387-5.464c-.074-.124-.272-.198-.57-.347-.297-.149-1.758-.868-2.031-.967-.272-.099-.47-.149-.669.149-.198.297-.768.967-.941 1.165-.173.198-.347.223-.644.074-.297-.149-1.255-.462-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.297-.347.446-.521.151-.172.2-.296.3-.495.099-.198.05-.372-.025-.521-.075-.148-.669-1.611-.916-2.206-.242-.579-.487-.501-.669-.51l-.57-.01c-.198 0-.52.074-.792.372s-1.04 1.016-1.04 2.479 1.065 2.876 1.213 3.074c.149.198 2.095 3.2 5.076 4.487.709.306 1.263.489 1.694.626.712.226 1.36.194 1.872.118.571-.085 1.758-.719 2.006-1.413.248-.695.248-1.29.173-1.414z"/></svg>
+</a>
+
+<!-- DRAWER CARRINHO -->
+<div class="scrim" id="cartScrim" onclick="closeDrawer()"></div>
+<aside class="drawer" id="cartDrawer">
+  <div class="drawer-head"><h3>🛒 Carrinho</h3><button class="xbtn" onclick="closeDrawer()">✕</button></div>
+  <div class="drawer-body" id="cartItems"></div>
+  <div class="drawer-foot" id="cartFoot" style="display:none">
+    <div class="csum">
+      <div class="row"><span>Comprar</span><span class="v"><span id="sumBuy">0</span> figurinhas</span></div>
+      <div class="row"><span>Trocar</span><span class="v"><span id="sumTrade">0</span> cartas</span></div>
+      <div class="row"><span>Você entrega na troca</span><span class="v"><span id="sumGive">0</span> figurinhas</span></div>
+      <div class="row tot"><span>Total a pagar</span><span class="v" id="sumReais">R$ 0</span></div>
+    </div>
+    <div class="owner-box"><div class="t">📅 Entrega presencial</div>
+      <div class="l">No próximo dia útil <b data-owner-nome>Rodrigo César Hang</b> leva as figurinhas para firmar. Combine pelo WhatsApp.</div></div>
+
+    <div class="form-grp"><label>Nome completo <span class="req">*</span></label>
+      <input id="fNome" type="text" placeholder="Seu nome e sobrenome" autocomplete="name">
+      <div class="err-msg">Informe seu nome completo.</div></div>
+    <div class="form-grp"><label>Telefone <span class="req">*</span></label>
+      <input id="fFone" type="tel" placeholder="(47) 9 0000-0000" autocomplete="tel">
+      <div class="err-msg">Informe um telefone válido com DDD.</div></div>
+    <div class="form-grp"><label>Área onde trabalha na Lince Tech <span class="req">*</span></label>
+      <input id="fArea" type="text" list="areasLince" placeholder="Ex.: Desenvolvimento, Suporte, Comercial...">
+      <datalist id="areasLince">
+        <option value="Desenvolvimento"></option><option value="Suporte"></option>
+        <option value="Comercial"></option><option value="Financeiro"></option>
+        <option value="Implantação"></option><option value="Infraestrutura / TI"></option>
+        <option value="Documentação"></option><option value="Recursos Humanos"></option>
+        <option value="Qualidade"></option><option value="Administrativo"></option>
+      </datalist>
+      <div class="err-msg">Informe sua área.</div></div>
+
+    <a class="btn btn-wa btn-block" style="margin-bottom:9px" data-wa target="_blank">
+      <svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor"><path d="M.057 24l1.687-6.163a11.867 11.867 0 01-1.587-5.946C.16 5.335 5.495 0 12.05 0a11.817 11.817 0 018.413 3.488 11.824 11.824 0 013.48 8.414c-.003 6.557-5.338 11.892-11.893 11.892a11.9 11.9 0 01-5.688-1.448L.057 24zm6.597-3.807c1.676.995 3.276 1.591 5.392 1.592 5.448 0 9.886-4.434 9.889-9.885.002-5.462-4.415-9.89-9.881-9.892-5.452 0-9.887 4.434-9.889 9.884a9.86 9.86 0 001.518 5.26l-.999 3.648 3.97-1.039zm11.387-5.464c-.074-.124-.272-.198-.57-.347-.297-.149-1.758-.868-2.031-.967-.272-.099-.47-.149-.669.149-.198.297-.768.967-.941 1.165-.173.198-.347.223-.644.074-.297-.149-1.255-.462-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.297-.347.446-.521.151-.172.2-.296.3-.495.099-.198.05-.372-.025-.521-.075-.148-.669-1.611-.916-2.206-.242-.579-.487-.501-.669-.51l-.57-.01c-.198 0-.52.074-.792.372s-1.04 1.016-1.04 2.479 1.065 2.876 1.213 3.074c.149.198 2.095 3.2 5.076 4.487.709.306 1.263.489 1.694.626.712.226 1.36.194 1.872.118.571-.085 1.758-.719 2.006-1.413.248-.695.248-1.29.173-1.414z"/></svg>
+      Dúvidas? Falar no WhatsApp</a>
+    <button class="btn btn-gold btn-block" onclick="doCheckout()">Finalizar pedido</button>
+  </div>
+</aside>
+
+<!-- MODAL TROCA -->
+<div class="modal" id="tradeModal">
+  <div class="modal-card">
+    <div class="modal-head">
+      <h3>🔁 Montar troca</h3>
+      <p>Você quer a carta <span class="want-chip" id="tradeWantChip"></span>. Selecione abaixo as figurinhas que <b>você tem</b> e que <b>eu preciso</b>, até alcançar o poder de troca necessário (<b id="tradeReq">0</b>).</p>
+      <div class="meter" id="meter">
+        <div class="mlab" id="meterLab"></div>
+        <div class="bar"><i id="meterFill" style="width:0"></i></div>
+      </div>
+      <div class="field pick-search" style="margin-top:12px"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="position:absolute;left:12px;top:50%;transform:translateY(-50%);color:var(--muted2)"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4-4"/></svg>
+        <input id="pickSearch" type="text" placeholder="Buscar figurinha que você tem..." style="width:100%;padding-left:38px;background:var(--bg3);border:1px solid var(--brd);color:var(--ink);border-radius:11px;padding-top:11px;padding-bottom:11px"></div>
+    </div>
+    <div class="modal-body" id="pickBody"></div>
+    <div class="modal-foot" style="display:flex;gap:10px">
+      <button class="btn btn-ghost" style="flex:1" onclick="showModal(false)">Cancelar</button>
+      <button class="btn btn-emerald" style="flex:1.4" id="confirmTrade" onclick="confirmTrade()" disabled>Adicionar troca ao carrinho</button>
+    </div>
+  </div>
+</div>
+
+<!-- MODAL CONFIRMAÇÃO -->
+<div class="modal" id="confirmModal">
+  <div class="modal-card" style="width:min(460px,100%)">
+    <div class="modal-body" id="confirmBody" style="padding:26px"></div>
+  </div>
+</div>
+
+<!-- DRAWER ADMIN -->
+<div class="scrim" id="adminScrim" onclick="closeAdmin()"></div>
+<aside class="drawer" id="adminDrawer" style="width:min(720px,100%)">
+  <div class="drawer-head"><h3>🔒 Administrador</h3><button class="xbtn" onclick="closeAdmin()">✕</button></div>
+  <div class="drawer-body" id="adminBody"></div>
+</aside>
+
+<script>window.DADOS = {"teams": {"FWC": {"code": "FWC", "nome": "Introdução e Especiais", "iso": null, "kind": "fwc"}, "MEX": {"code": "MEX", "nome": "México", "iso": "mx", "kind": "team"}, "RSA": {"code": "RSA", "nome": "África do Sul", "iso": "za", "kind": "team"}, "KOR": {"code": "KOR", "nome": "Coreia do Sul", "iso": "kr", "kind": "team"}, "CZE": {"code": "CZE", "nome": "República Tcheca", "iso": "cz", "kind": "team"}, "CAN": {"code": "CAN", "nome": "Canadá", "iso": "ca", "kind": "team"}, "BIH": {"code": "BIH", "nome": "Bósnia e Herzegovina", "iso": "ba", "kind": "team"}, "QAT": {"code": "QAT", "nome": "Catar", "iso": "qa", "kind": "team"}, "SUI": {"code": "SUI", "nome": "Suíça", "iso": "ch", "kind": "team"}, "BRA": {"code": "BRA", "nome": "Brasil", "iso": "br", "kind": "team"}, "MAR": {"code": "MAR", "nome": "Marrocos", "iso": "ma", "kind": "team"}, "HAI": {"code": "HAI", "nome": "Haiti", "iso": "ht", "kind": "team"}, "SCO": {"code": "SCO", "nome": "Escócia", "iso": "gb-sct", "kind": "team"}, "USA": {"code": "USA", "nome": "Estados Unidos", "iso": "us", "kind": "team"}, "PAR": {"code": "PAR", "nome": "Paraguai", "iso": "py", "kind": "team"}, "AUS": {"code": "AUS", "nome": "Austrália", "iso": "au", "kind": "team"}, "TUR": {"code": "TUR", "nome": "Turquia", "iso": "tr", "kind": "team"}, "GER": {"code": "GER", "nome": "Alemanha", "iso": "de", "kind": "team"}, "CUW": {"code": "CUW", "nome": "Curaçao", "iso": "cw", "kind": "team"}, "CIV": {"code": "CIV", "nome": "Costa do Marfim", "iso": "ci", "kind": "team"}, "ECU": {"code": "ECU", "nome": "Equador", "iso": "ec", "kind": "team"}, "NED": {"code": "NED", "nome": "Holanda", "iso": "nl", "kind": "team"}, "JPN": {"code": "JPN", "nome": "Japão", "iso": "jp", "kind": "team"}, "SWE": {"code": "SWE", "nome": "Suécia", "iso": "se", "kind": "team"}, "TUN": {"code": "TUN", "nome": "Tunísia", "iso": "tn", "kind": "team"}, "BEL": {"code": "BEL", "nome": "Bélgica", "iso": "be", "kind": "team"}, "EGY": {"code": "EGY", "nome": "Egito", "iso": "eg", "kind": "team"}, "IRN": {"code": "IRN", "nome": "Irã", "iso": "ir", "kind": "team"}, "NZL": {"code": "NZL", "nome": "Nova Zelândia", "iso": "nz", "kind": "team"}, "ESP": {"code": "ESP", "nome": "Espanha", "iso": "es", "kind": "team"}, "CPV": {"code": "CPV", "nome": "Cabo Verde", "iso": "cv", "kind": "team"}, "KSA": {"code": "KSA", "nome": "Arábia Saudita", "iso": "sa", "kind": "team"}, "URU": {"code": "URU", "nome": "Uruguai", "iso": "uy", "kind": "team"}, "FRA": {"code": "FRA", "nome": "França", "iso": "fr", "kind": "team"}, "SEN": {"code": "SEN", "nome": "Senegal", "iso": "sn", "kind": "team"}, "IRQ": {"code": "IRQ", "nome": "Iraque", "iso": "iq", "kind": "team"}, "NOR": {"code": "NOR", "nome": "Noruega", "iso": "no", "kind": "team"}, "ARG": {"code": "ARG", "nome": "Argentina", "iso": "ar", "kind": "team"}, "ALG": {"code": "ALG", "nome": "Argélia", "iso": "dz", "kind": "team"}, "AUT": {"code": "AUT", "nome": "Áustria", "iso": "at", "kind": "team"}, "JOR": {"code": "JOR", "nome": "Jordânia", "iso": "jo", "kind": "team"}, "POR": {"code": "POR", "nome": "Portugal", "iso": "pt", "kind": "team"}, "COD": {"code": "COD", "nome": "Congo RD", "iso": "cd", "kind": "team"}, "UZB": {"code": "UZB", "nome": "Uzbequistão", "iso": "uz", "kind": "team"}, "COL": {"code": "COL", "nome": "Colômbia", "iso": "co", "kind": "team"}, "ENG": {"code": "ENG", "nome": "Inglaterra", "iso": "gb-eng", "kind": "team"}, "CRO": {"code": "CRO", "nome": "Croácia", "iso": "hr", "kind": "team"}, "GHA": {"code": "GHA", "nome": "Gana", "iso": "gh", "kind": "team"}, "PAN": {"code": "PAN", "nome": "Panamá", "iso": "pa", "kind": "team"}, "CC": {"code": "CC", "nome": "Coca-Cola", "iso": null, "kind": "coca"}}, "order": ["FWC", "MEX", "RSA", "KOR", "CZE", "CAN", "BIH", "QAT", "SUI", "BRA", "MAR", "HAI", "SCO", "USA", "PAR", "AUS", "TUR", "GER", "CUW", "CIV", "ECU", "NED", "JPN", "SWE", "TUN", "BEL", "EGY", "IRN", "NZL", "ESP", "CPV", "KSA", "URU", "FRA", "SEN", "IRQ", "NOR", "ARG", "ALG", "AUT", "JOR", "POR", "COD", "UZB", "COL", "ENG", "CRO", "GHA", "PAN", "CC"], "stickers": {"COL13": {"code": "COL13", "team": "COL", "num": 13, "tipo": "time", "tier": 2, "label": "Seleção", "reais": 2}, "FWC5": {"code": "FWC5", "team": "FWC", "num": 5, "tipo": "fwc", "tier": 3, "label": "Especial FWC", "reais": 3}, "KOR8": {"code": "KOR8", "team": "KOR", "num": 8, "tipo": "jogador", "tier": 1, "label": "Jogador", "reais": 1}, "FRA1": {"code": "FRA1", "team": "FRA", "num": 1, "tipo": "escudo", "tier": 2, "label": "Escudo", "reais": 2}, "IRQ19": {"code": "IRQ19", "team": "IRQ", "num": 19, "tipo": "jogador", "tier": 1, "label": "Jogador", "reais": 1}, "JPN8": {"code": "JPN8", "team": "JPN", "num": 8, "tipo": "jogador", "tier": 1, "label": "Jogador", "reais": 1}, "SUI12": {"code": "SUI12", "team": "SUI", "num": 12, "tipo": "jogador", "tier": 1, "label": "Jogador", "reais": 1}, "AUS14": {"code": "AUS14", "team": "AUS", "num": 14, "tipo": "jogador", "tier": 1, "label": "Jogador", "reais": 1}, "CUW5": {"code": "CUW5", "team": "CUW", "num": 5, "tipo": "jogador", "tier": 1, "label": "Jogador", "reais": 1}, "SUI17": {"code": "SUI17", "team": "SUI", "num": 17, "tipo": "jogador", "tier": 1, "label": "Jogador", "reais": 1}, "ARG14": {"code": "ARG14", "team": "ARG", "num": 14, "tipo": "jogador", "tier": 1, "label": "Jogador", "reais": 1}, "IRN2": {"code": "IRN2", "team": "IRN", "num": 2, "tipo": "jogador", "tier": 1, "label": "Jogador", "reais": 1}, "SUI7": {"code": "SUI7", "team": "SUI", "num": 7, "tipo": "jogador", "tier": 1, "label": "Jogador", "reais": 1}, "PAR11": {"code": "PAR11", "team": "PAR", "num": 11, "tipo": "jogador", "tier": 1, "label": "Jogador", "reais": 1}, "RSA4": {"code": "RSA4", "team": "RSA", "num": 4, "tipo": "jogador", "tier": 1, "label": "Jogador", "reais": 1}, "CUW9": {"code": "CUW9", "team": "CUW", "num": 9, "tipo": "jogador", "tier": 1, "label": "Jogador", "reais": 1}, "CIV13": {"code": "CIV13", "team": "CIV", "num": 13, "tipo": "time", "tier": 2, "label": "Seleção", "reais": 2}, "JOR6": {"code": "JOR6", "team": "JOR", "num": 6, "tipo": "jogador", "tier": 1, "label": "Jogador", "reais": 1}, "PAN15": {"code": "PAN15", "team": "PAN", "num": 15, "tipo": "jogador", "tier": 1, "label": "Jogador", "reais": 1}, "ECU19": {"code": "ECU19", "team": "ECU", "num": 19, "tipo": "jogador", "tier": 1, "label": "Jogador", "reais": 1}, "PAN9": {"code": "PAN9", "team": "PAN", "num": 9, "tipo": "jogador", "tier": 1, "label": "Jogador", "reais": 1}, "CZE1": {"code": "CZE1", "team": "CZE", "num": 1, "tipo": "escudo", "tier": 2, "label": "Escudo", "reais": 2}, "HAI11": {"code": "HAI11", "team": "HAI", "num": 11, "tipo": "jogador", "tier": 1, "label": "Jogador", "reais": 1}, "KSA6": {"code": "KSA6", "team": "KSA", "num": 6, "tipo": "jogador", "tier": 1, "label": "Jogador", "reais": 1}, "QAT16": {"code": "QAT16", "team": "QAT", "num": 16, "tipo": "jogador", "tier": 1, "label": "Jogador", "reais": 1}, "QAT10": {"code": "QAT10", "team": "QAT", "num": 10, "tipo": "jogador", "tier": 1, "label": "Jogador", "reais": 1}, "IRQ17": {"code": "IRQ17", "team": "IRQ", "num": 17, "tipo": "jogador", "tier": 1, "label": "Jogador", "reais": 1}, "CAN3": {"code": "CAN3", "team": "CAN", "num": 3, "tipo": "jogador", "tier": 1, "label": "Jogador", "reais": 1}, "CIV8": {"code": "CIV8", "team": "CIV", "num": 8, "tipo": "jogador", "tier": 1, "label": "Jogador", "reais": 1}, "IRN14": {"code": "IRN14", "team": "IRN", "num": 14, "tipo": "jogador", "tier": 1, "label": "Jogador", "reais": 1}, "ECU12": {"code": "ECU12", "team": "ECU", "num": 12, "tipo": "jogador", "tier": 1, "label": "Jogador", "reais": 1}, "CAN18": {"code": "CAN18", "team": "CAN", "num": 18, "tipo": "jogador", "tier": 1, "label": "Jogador", "reais": 1}, "KSA15": {"code": "KSA15", "team": "KSA", "num": 15, "tipo": "jogador", "tier": 1, "label": "Jogador", "reais": 1}, "BIH15": {"code": "BIH15", "team": "BIH", "num": 15, "tipo": "jogador", "tier": 1, "label": "Jogador", "reais": 1}, "FWC13": {"code": "FWC13", "team": "FWC", "num": 13, "tipo": "fwc", "tier": 3, "label": "Especial FWC", "reais": 3}, "BIH6": {"code": "BIH6", "team": "BIH", "num": 6, "tipo": "jogador", "tier": 1, "label": "Jogador", "reais": 1}, "FWC8": {"code": "FWC8", "team": "FWC", "num": 8, "tipo": "fwc", "tier": 3, "label": "Especial FWC", "reais": 3}, "IRN6": {"code": "IRN6", "team": "IRN", "num": 6, "tipo": "jogador", "tier": 1, "label": "Jogador", "reais": 1}, "URU17": {"code": "URU17", "team": "URU", "num": 17, "tipo": "jogador", "tier": 1, "label": "Jogador", "reais": 1}, "CUW7": {"code": "CUW7", "team": "CUW", "num": 7, "tipo": "jogador", "tier": 1, "label": "Jogador", "reais": 1}, "TUN8": {"code": "TUN8", "team": "TUN", "num": 8, "tipo": "jogador", "tier": 1, "label": "Jogador", "reais": 1}, "KOR1": {"code": "KOR1", "team": "KOR", "num": 1, "tipo": "escudo", "tier": 2, "label": "Escudo", "reais": 2}, "JPN20": {"code": "JPN20", "team": "JPN", "num": 20, "tipo": "jogador", "tier": 1, "label": "Jogador", "reais": 1}, "NED4": {"code": "NED4", "team": "NED", "num": 4, "tipo": "jogador", "tier": 1, "label": "Jogador", "reais": 1}, "AUS16": {"code": "AUS16", "team": "AUS", "num": 16, "tipo": "jogador", "tier": 1, "label": "Jogador", "reais": 1}, "CPV10": {"code": "CPV10", "team": "CPV", "num": 10, "tipo": "jogador", "tier": 1, "label": "Jogador", "reais": 1}, "TUN7": {"code": "TUN7", "team": "TUN", "num": 7, "tipo": "jogador", "tier": 1, "label": "Jogador", "reais": 1}, "UZB11": {"code": "UZB11", "team": "UZB", "num": 11, "tipo": "jogador", "tier": 1, "label": "Jogador", "reais": 1}, "SUI11": {"code": "SUI11", "team": "SUI", "num": 11, "tipo": "jogador", "tier": 1, "label": "Jogador", "reais": 1}, "RSA19": {"code": "RSA19", "team": "RSA", "num": 19, "tipo": "jogador", "tier": 1, "label": "Jogador", "reais": 1}, "QAT12": {"code": "QAT12", "team": "QAT", "num": 12, "tipo": "jogador", "tier": 1, "label": "Jogador", "reais": 1}, "FWC2": {"code": "FWC2", "team": "FWC", "num": 2, "tipo": "fwc", "tier": 3, "label": "Especial FWC", "reais": 3}, "TUR13": {"code": "TUR13", "team": "TUR", "num": 13, "tipo": "time", "tier": 2, "label": "Seleção", "reais": 2}, "IRN9": {"code": "IRN9", "team": "IRN", "num": 9, "tipo": "jogador", "tier": 1, "label": "Jogador", "reais": 1}, "SEN5": {"code": "SEN5", "team": "SEN", "num": 5, "tipo": "jogador", "tier": 1, "label": "Jogador", "reais": 1}, "KSA2": {"code": "KSA2", "team": "KSA", "num": 2, "tipo": "jogador", "tier": 1, "label": "Jogador", "reais": 1}, "KOR13": {"code": "KOR13", "team": "KOR", "num": 13, "tipo": "time", "tier": 2, "label": "Seleção", "reais": 2}, "QAT14": {"code": "QAT14", "team": "QAT", "num": 14, "tipo": "jogador", "tier": 1, "label": "Jogador", "reais": 1}, "SEN20": {"code": "SEN20", "team": "SEN", "num": 20, "tipo": "jogador", "tier": 1, "label": "Jogador", "reais": 1}, "COD20": {"code": "COD20", "team": "COD", "num": 20, "tipo": "jogador", "tier": 1, "label": "Jogador", "reais": 1}, "AUT6": {"code": "AUT6", "team": "AUT", "num": 6, "tipo": "jogador", "tier": 1, "label": "Jogador", "reais": 1}, "JOR10": {"code": "JOR10", "team": "JOR", "num": 10, "tipo": "jogador", "tier": 1, "label": "Jogador", "reais": 1}, "CZE9": {"code": "CZE9", "team": "CZE", "num": 9, "tipo": "jogador", "tier": 1, "label": "Jogador", "reais": 1}, "ENG6": {"code": "ENG6", "team": "ENG", "num": 6, "tipo": "jogador", "tier": 1, "label": "Jogador", "reais": 1}, "CPV2": {"code": "CPV2", "team": "CPV", "num": 2, "tipo": "jogador", "tier": 1, "label": "Jogador", "reais": 1}, "TUR11": {"code": "TUR11", "team": "TUR", "num": 11, "tipo": "jogador", "tier": 1, "label": "Jogador", "reais": 1}, "AUS7": {"code": "AUS7", "team": "AUS", "num": 7, "tipo": "jogador", "tier": 1, "label": "Jogador", "reais": 1}, "CPV5": {"code": "CPV5", "team": "CPV", "num": 5, "tipo": "jogador", "tier": 1, "label": "Jogador", "reais": 1}, "COD15": {"code": "COD15", "team": "COD", "num": 15, "tipo": "jogador", "tier": 1, "label": "Jogador", "reais": 1}, "NED10": {"code": "NED10", "team": "NED", "num": 10, "tipo": "jogador", "tier": 1, "label": "Jogador", "reais": 1}, "NZL18": {"code": "NZL18", "team": "NZL", "num": 18, "tipo": "jogador", "tier": 1, "label": "Jogador", "reais": 1}, "MAR7": {"code": "MAR7", "team": "MAR", "num": 7, "tipo": "jogador", "tier": 1, "label": "Jogador", "reais": 1}, "PAR18": {"code": "PAR18", "team": "PAR", "num": 18, "tipo": "jogador", "tier": 1, "label": "Jogador", "reais": 1}, "SEN11": {"code": "SEN11", "team": "SEN", "num": 11, "tipo": "jogador", "tier": 1, "label": "Jogador", "reais": 1}, "COD11": {"code": "COD11", "team": "COD", "num": 11, "tipo": "jogador", "tier": 1, "label": "Jogador", "reais": 1}, "TUR4": {"code": "TUR4", "team": "TUR", "num": 4, "tipo": "jogador", "tier": 1, "label": "Jogador", "reais": 1}, "CAN16": {"code": "CAN16", "team": "CAN", "num": 16, "tipo": "jogador", "tier": 1, "label": "Jogador", "reais": 1}, "CAN17": {"code": "CAN17", "team": "CAN", "num": 17, "tipo": "jogador", "tier": 1, "label": "Jogador", "reais": 1}, "IRN5": {"code": "IRN5", "team": "IRN", "num": 5, "tipo": "jogador", "tier": 1, "label": "Jogador", "reais": 1}, "CIV9": {"code": "CIV9", "team": "CIV", "num": 9, "tipo": "jogador", "tier": 1, "label": "Jogador", "reais": 1}, "JPN9": {"code": "JPN9", "team": "JPN", "num": 9, "tipo": "jogador", "tier": 1, "label": "Jogador", "reais": 1}, "GER4": {"code": "GER4", "team": "GER", "num": 4, "tipo": "jogador", "tier": 1, "label": "Jogador", "reais": 1}, "FRA18": {"code": "FRA18", "team": "FRA", "num": 18, "tipo": "jogador", "tier": 1, "label": "Jogador", "reais": 1}, "KSA19": {"code": "KSA19", "team": "KSA", "num": 19, "tipo": "jogador", "tier": 1, "label": "Jogador", "reais": 1}, "FWC12": {"code": "FWC12", "team": "FWC", "num": 12, "tipo": "fwc", "tier": 3, "label": "Especial FWC", "reais": 3}, "TUR8": {"code": "TUR8", "team": "TUR", "num": 8, "tipo": "jogador", "tier": 1, "label": "Jogador", "reais": 1}, "PAR19": {"code": "PAR19", "team": "PAR", "num": 19, "tipo": "jogador", "tier": 1, "label": "Jogador", "reais": 1}, "ENG9": {"code": "ENG9", "team": "ENG", "num": 9, "tipo": "jogador", "tier": 1, "label": "Jogador", "reais": 1}, "NZL8": {"code": "NZL8", "team": "NZL", "num": 8, "tipo": "jogador", "tier": 1, "label": "Jogador", "reais": 1}, "SEN6": {"code": "SEN6", "team": "SEN", "num": 6, "tipo": "jogador", "tier": 1, "label": "Jogador", "reais": 1}, "CC4": {"code": "CC4", "team": "CC", "num": 4, "tipo": "coca", "tier": 1, "label": "Coca-Cola", "reais": 1}, "FWC19": {"code": "FWC19", "team": "FWC", "num": 19, "tipo": "fwc", "tier": 3, "label": "Especial FWC", "reais": 3}, "IRQ6": {"code": "IRQ6", "team": "IRQ", "num": 6, "tipo": "jogador", "tier": 1, "label": "Jogador", "reais": 1}, "GER9": {"code": "GER9", "team": "GER", "num": 9, "tipo": "jogador", "tier": 1, "label": "Jogador", "reais": 1}, "IRQ8": {"code": "IRQ8", "team": "IRQ", "num": 8, "tipo": "jogador", "tier": 1, "label": "Jogador", "reais": 1}, "RSA16": {"code": "RSA16", "team": "RSA", "num": 16, "tipo": "jogador", "tier": 1, "label": "Jogador", "reais": 1}, "CUW8": {"code": "CUW8", "team": "CUW", "num": 8, "tipo": "jogador", "tier": 1, "label": "Jogador", "reais": 1}, "ARG19": {"code": "ARG19", "team": "ARG", "num": 19, "tipo": "jogador", "tier": 1, "label": "Jogador", "reais": 1}, "RSA11": {"code": "RSA11", "team": "RSA", "num": 11, "tipo": "jogador", "tier": 1, "label": "Jogador", "reais": 1}, "GER2": {"code": "GER2", "team": "GER", "num": 2, "tipo": "jogador", "tier": 1, "label": "Jogador", "reais": 1}, "CZE5": {"code": "CZE5", "team": "CZE", "num": 5, "tipo": "jogador", "tier": 1, "label": "Jogador", "reais": 1}, "URU20": {"code": "URU20", "team": "URU", "num": 20, "tipo": "jogador", "tier": 1, "label": "Jogador", "reais": 1}, "CPV4": {"code": "CPV4", "team": "CPV", "num": 4, "tipo": "jogador", "tier": 1, "label": "Jogador", "reais": 1}, "CZE2": {"code": "CZE2", "team": "CZE", "num": 2, "tipo": "jogador", "tier": 1, "label": "Jogador", "reais": 1}, "GER12": {"code": "GER12", "team": "GER", "num": 12, "tipo": "jogador", "tier": 1, "label": "Jogador", "reais": 1}, "COD6": {"code": "COD6", "team": "COD", "num": 6, "tipo": "jogador", "tier": 1, "label": "Jogador", "reais": 1}, "EGY6": {"code": "EGY6", "team": "EGY", "num": 6, "tipo": "jogador", "tier": 1, "label": "Jogador", "reais": 1}, "QAT5": {"code": "QAT5", "team": "QAT", "num": 5, "tipo": "jogador", "tier": 1, "label": "Jogador", "reais": 1}, "GER10": {"code": "GER10", "team": "GER", "num": 10, "tipo": "jogador", "tier": 1, "label": "Jogador", "reais": 1}, "PAR4": {"code": "PAR4", "team": "PAR", "num": 4, "tipo": "jogador", "tier": 1, "label": "Jogador", "reais": 1}, "KOR6": {"code": "KOR6", "team": "KOR", "num": 6, "tipo": "jogador", "tier": 1, "label": "Jogador", "reais": 1}, "TUR14": {"code": "TUR14", "team": "TUR", "num": 14, "tipo": "jogador", "tier": 1, "label": "Jogador", "reais": 1}, "EGY11": {"code": "EGY11", "team": "EGY", "num": 11, "tipo": "jogador", "tier": 1, "label": "Jogador", "reais": 1}, "COL11": {"code": "COL11", "team": "COL", "num": 11, "tipo": "jogador", "tier": 1, "label": "Jogador", "reais": 1}, "ALG12": {"code": "ALG12", "team": "ALG", "num": 12, "tipo": "jogador", "tier": 1, "label": "Jogador", "reais": 1}, "RSA2": {"code": "RSA2", "team": "RSA", "num": 2, "tipo": "jogador", "tier": 1, "label": "Jogador", "reais": 1}, "NOR4": {"code": "NOR4", "team": "NOR", "num": 4, "tipo": "jogador", "tier": 1, "label": "Jogador", "reais": 1}, "GHA16": {"code": "GHA16", "team": "GHA", "num": 16, "tipo": "jogador", "tier": 1, "label": "Jogador", "reais": 1}, "USA10": {"code": "USA10", "team": "USA", "num": 10, "tipo": "jogador", "tier": 1, "label": "Jogador", "reais": 1}, "FWC1": {"code": "FWC1", "team": "FWC", "num": 1, "tipo": "fwc", "tier": 3, "label": "Especial FWC", "reais": 3}, "EGY10": {"code": "EGY10", "team": "EGY", "num": 10, "tipo": "jogador", "tier": 1, "label": "Jogador", "reais": 1}, "PAR9": {"code": "PAR9", "team": "PAR", "num": 9, "tipo": "jogador", "tier": 1, "label": "Jogador", "reais": 1}, "TUR1": {"code": "TUR1", "team": "TUR", "num": 1, "tipo": "escudo", "tier": 2, "label": "Escudo", "reais": 2}, "CAN10": {"code": "CAN10", "team": "CAN", "num": 10, "tipo": "jogador", "tier": 1, "label": "Jogador", "reais": 1}, "BEL12": {"code": "BEL12", "team": "BEL", "num": 12, "tipo": "jogador", "tier": 1, "label": "Jogador", "reais": 1}, "SCO7": {"code": "SCO7", "team": "SCO", "num": 7, "tipo": "jogador", "tier": 1, "label": "Jogador", "reais": 1}, "BRA16": {"code": "BRA16", "team": "BRA", "num": 16, "tipo": "br", "tier": 2, "label": "Jogador (Brasil)", "reais": 2}, "TUR2": {"code": "TUR2", "team": "TUR", "num": 2, "tipo": "jogador", "tier": 1, "label": "Jogador", "reais": 1}, "NED19": {"code": "NED19", "team": "NED", "num": 19, "tipo": "jogador", "tier": 1, "label": "Jogador", "reais": 1}, "CRO14": {"code": "CRO14", "team": "CRO", "num": 14, "tipo": "jogador", "tier": 1, "label": "Jogador", "reais": 1}, "AUT10": {"code": "AUT10", "team": "AUT", "num": 10, "tipo": "jogador", "tier": 1, "label": "Jogador", "reais": 1}, "ENG3": {"code": "ENG3", "team": "ENG", "num": 3, "tipo": "jogador", "tier": 1, "label": "Jogador", "reais": 1}, "AUT3": {"code": "AUT3", "team": "AUT", "num": 3, "tipo": "jogador", "tier": 1, "label": "Jogador", "reais": 1}, "ECU9": {"code": "ECU9", "team": "ECU", "num": 9, "tipo": "jogador", "tier": 1, "label": "Jogador", "reais": 1}, "MAR20": {"code": "MAR20", "team": "MAR", "num": 20, "tipo": "jogador", "tier": 1, "label": "Jogador", "reais": 1}, "CIV6": {"code": "CIV6", "team": "CIV", "num": 6, "tipo": "jogador", "tier": 1, "label": "Jogador", "reais": 1}, "MAR6": {"code": "MAR6", "team": "MAR", "num": 6, "tipo": "jogador", "tier": 1, "label": "Jogador", "reais": 1}, "ECU15": {"code": "ECU15", "team": "ECU", "num": 15, "tipo": "jogador", "tier": 1, "label": "Jogador", "reais": 1}, "CAN13": {"code": "CAN13", "team": "CAN", "num": 13, "tipo": "time", "tier": 2, "label": "Seleção", "reais": 2}, "CUW20": {"code": "CUW20", "team": "CUW", "num": 20, "tipo": "jogador", "tier": 1, "label": "Jogador", "reais": 1}, "GER6": {"code": "GER6", "team": "GER", "num": 6, "tipo": "jogador", "tier": 1, "label": "Jogador", "reais": 1}, "ALG9": {"code": "ALG9", "team": "ALG", "num": 9, "tipo": "jogador", "tier": 1, "label": "Jogador", "reais": 1}, "CC1": {"code": "CC1", "team": "CC", "num": 1, "tipo": "coca", "tier": 1, "label": "Coca-Cola", "reais": 1}, "ECU4": {"code": "ECU4", "team": "ECU", "num": 4, "tipo": "jogador", "tier": 1, "label": "Jogador", "reais": 1}, "HAI14": {"code": "HAI14", "team": "HAI", "num": 14, "tipo": "jogador", "tier": 1, "label": "Jogador", "reais": 1}, "POR13": {"code": "POR13", "team": "POR", "num": 13, "tipo": "time", "tier": 2, "label": "Seleção", "reais": 2}, "MEX15": {"code": "MEX15", "team": "MEX", "num": 15, "tipo": "jogador", "tier": 1, "label": "Jogador", "reais": 1}, "TUN18": {"code": "TUN18", "team": "TUN", "num": 18, "tipo": "jogador", "tier": 1, "label": "Jogador", "reais": 1}, "CUW17": {"code": "CUW17", "team": "CUW", "num": 17, "tipo": "jogador", "tier": 1, "label": "Jogador", "reais": 1}, "QAT4": {"code": "QAT4", "team": "QAT", "num": 4, "tipo": "jogador", "tier": 1, "label": "Jogador", "reais": 1}, "BIH20": {"code": "BIH20", "team": "BIH", "num": 20, "tipo": "jogador", "tier": 1, "label": "Jogador", "reais": 1}, "IRN13": {"code": "IRN13", "team": "IRN", "num": 13, "tipo": "time", "tier": 2, "label": "Seleção", "reais": 2}, "JOR17": {"code": "JOR17", "team": "JOR", "num": 17, "tipo": "jogador", "tier": 1, "label": "Jogador", "reais": 1}, "CZE19": {"code": "CZE19", "team": "CZE", "num": 19, "tipo": "jogador", "tier": 1, "label": "Jogador", "reais": 1}, "CRO16": {"code": "CRO16", "team": "CRO", "num": 16, "tipo": "jogador", "tier": 1, "label": "Jogador", "reais": 1}, "RSA17": {"code": "RSA17", "team": "RSA", "num": 17, "tipo": "jogador", "tier": 1, "label": "Jogador", "reais": 1}, "ARG4": {"code": "ARG4", "team": "ARG", "num": 4, "tipo": "jogador", "tier": 1, "label": "Jogador", "reais": 1}, "RSA13": {"code": "RSA13", "team": "RSA", "num": 13, "tipo": "time", "tier": 2, "label": "Seleção", "reais": 2}, "ECU8": {"code": "ECU8", "team": "ECU", "num": 8, "tipo": "jogador", "tier": 1, "label": "Jogador", "reais": 1}, "SWE4": {"code": "SWE4", "team": "SWE", "num": 4, "tipo": "jogador", "tier": 1, "label": "Jogador", "reais": 1}, "TUR17": {"code": "TUR17", "team": "TUR", "num": 17, "tipo": "jogador", "tier": 1, "label": "Jogador", "reais": 1}, "AUT7": {"code": "AUT7", "team": "AUT", "num": 7, "tipo": "jogador", "tier": 1, "label": "Jogador", "reais": 1}, "FWC11": {"code": "FWC11", "team": "FWC", "num": 11, "tipo": "fwc", "tier": 3, "label": "Especial FWC", "reais": 3}, "QAT2": {"code": "QAT2", "team": "QAT", "num": 2, "tipo": "jogador", "tier": 1, "label": "Jogador", "reais": 1}, "QAT3": {"code": "QAT3", "team": "QAT", "num": 3, "tipo": "jogador", "tier": 1, "label": "Jogador", "reais": 1}, "USA20": {"code": "USA20", "team": "USA", "num": 20, "tipo": "jogador", "tier": 1, "label": "Jogador", "reais": 1}, "CC9": {"code": "CC9", "team": "CC", "num": 9, "tipo": "coca", "tier": 1, "label": "Coca-Cola", "reais": 1}, "ESP13": {"code": "ESP13", "team": "ESP", "num": 13, "tipo": "time", "tier": 2, "label": "Seleção", "reais": 2}, "BRA1": {"code": "BRA1", "team": "BRA", "num": 1, "tipo": "escudo", "tier": 2, "label": "Escudo", "reais": 2}, "SWE15": {"code": "SWE15", "team": "SWE", "num": 15, "tipo": "jogador", "tier": 1, "label": "Jogador", "reais": 1}, "CPV17": {"code": "CPV17", "team": "CPV", "num": 17, "tipo": "jogador", "tier": 1, "label": "Jogador", "reais": 1}, "BRA12": {"code": "BRA12", "team": "BRA", "num": 12, "tipo": "br", "tier": 2, "label": "Jogador (Brasil)", "reais": 2}, "AUS13": {"code": "AUS13", "team": "AUS", "num": 13, "tipo": "time", "tier": 2, "label": "Seleção", "reais": 2}, "FWC7": {"code": "FWC7", "team": "FWC", "num": 7, "tipo": "fwc", "tier": 3, "label": "Especial FWC", "reais": 3}, "CIV3": {"code": "CIV3", "team": "CIV", "num": 3, "tipo": "jogador", "tier": 1, "label": "Jogador", "reais": 1}, "FRA10": {"code": "FRA10", "team": "FRA", "num": 10, "tipo": "jogador", "tier": 1, "label": "Jogador", "reais": 1}, "GHA1": {"code": "GHA1", "team": "GHA", "num": 1, "tipo": "escudo", "tier": 2, "label": "Escudo", "reais": 2}, "SWE11": {"code": "SWE11", "team": "SWE", "num": 11, "tipo": "jogador", "tier": 1, "label": "Jogador", "reais": 1}, "ALG8": {"code": "ALG8", "team": "ALG", "num": 8, "tipo": "jogador", "tier": 1, "label": "Jogador", "reais": 1}, "HAI3": {"code": "HAI3", "team": "HAI", "num": 3, "tipo": "jogador", "tier": 1, "label": "Jogador", "reais": 1}, "UZB1": {"code": "UZB1", "team": "UZB", "num": 1, "tipo": "escudo", "tier": 2, "label": "Escudo", "reais": 2}, "HAI16": {"code": "HAI16", "team": "HAI", "num": 16, "tipo": "jogador", "tier": 1, "label": "Jogador", "reais": 1}, "BIH4": {"code": "BIH4", "team": "BIH", "num": 4, "tipo": "jogador", "tier": 1, "label": "Jogador", "reais": 1}, "POR11": {"code": "POR11", "team": "POR", "num": 11, "tipo": "jogador", "tier": 1, "label": "Jogador", "reais": 1}, "BRA14": {"code": "BRA14", "team": "BRA", "num": 14, "tipo": "br", "tier": 2, "label": "Jogador (Brasil)", "reais": 2}, "BIH19": {"code": "BIH19", "team": "BIH", "num": 19, "tipo": "jogador", "tier": 1, "label": "Jogador", "reais": 1}, "COD3": {"code": "COD3", "team": "COD", "num": 3, "tipo": "jogador", "tier": 1, "label": "Jogador", "reais": 1}, "ARG10": {"code": "ARG10", "team": "ARG", "num": 10, "tipo": "estrela", "tier": 2, "label": "Craque", "reais": 2}, "CRO18": {"code": "CRO18", "team": "CRO", "num": 18, "tipo": "jogador", "tier": 1, "label": "Jogador", "reais": 1}, "HAI12": {"code": "HAI12", "team": "HAI", "num": 12, "tipo": "jogador", "tier": 1, "label": "Jogador", "reais": 1}, "CUW16": {"code": "CUW16", "team": "CUW", "num": 16, "tipo": "jogador", "tier": 1, "label": "Jogador", "reais": 1}, "CPV3": {"code": "CPV3", "team": "CPV", "num": 3, "tipo": "jogador", "tier": 1, "label": "Jogador", "reais": 1}, "ECU11": {"code": "ECU11", "team": "ECU", "num": 11, "tipo": "jogador", "tier": 1, "label": "Jogador", "reais": 1}, "SCO1": {"code": "SCO1", "team": "SCO", "num": 1, "tipo": "escudo", "tier": 2, "label": "Escudo", "reais": 2}, "PAR14": {"code": "PAR14", "team": "PAR", "num": 14, "tipo": "jogador", "tier": 1, "label": "Jogador", "reais": 1}, "TUR5": {"code": "TUR5", "team": "TUR", "num": 5, "tipo": "jogador", "tier": 1, "label": "Jogador", "reais": 1}, "AUS17": {"code": "AUS17", "team": "AUS", "num": 17, "tipo": "jogador", "tier": 1, "label": "Jogador", "reais": 1}, "TUR20": {"code": "TUR20", "team": "TUR", "num": 20, "tipo": "jogador", "tier": 1, "label": "Jogador", "reais": 1}, "NED6": {"code": "NED6", "team": "NED", "num": 6, "tipo": "jogador", "tier": 1, "label": "Jogador", "reais": 1}, "IRQ5": {"code": "IRQ5", "team": "IRQ", "num": 5, "tipo": "jogador", "tier": 1, "label": "Jogador", "reais": 1}, "ARG9": {"code": "ARG9", "team": "ARG", "num": 9, "tipo": "jogador", "tier": 1, "label": "Jogador", "reais": 1}, "SEN10": {"code": "SEN10", "team": "SEN", "num": 10, "tipo": "jogador", "tier": 1, "label": "Jogador", "reais": 1}, "COD7": {"code": "COD7", "team": "COD", "num": 7, "tipo": "jogador", "tier": 1, "label": "Jogador", "reais": 1}, "JPN10": {"code": "JPN10", "team": "JPN", "num": 10, "tipo": "jogador", "tier": 1, "label": "Jogador", "reais": 1}, "USA11": {"code": "USA11", "team": "USA", "num": 11, "tipo": "jogador", "tier": 1, "label": "Jogador", "reais": 1}, "PAN19": {"code": "PAN19", "team": "PAN", "num": 19, "tipo": "jogador", "tier": 1, "label": "Jogador", "reais": 1}, "ARG20": {"code": "ARG20", "team": "ARG", "num": 20, "tipo": "jogador", "tier": 1, "label": "Jogador", "reais": 1}, "JPN6": {"code": "JPN6", "team": "JPN", "num": 6, "tipo": "jogador", "tier": 1, "label": "Jogador", "reais": 1}, "SEN15": {"code": "SEN15", "team": "SEN", "num": 15, "tipo": "jogador", "tier": 1, "label": "Jogador", "reais": 1}, "CRO12": {"code": "CRO12", "team": "CRO", "num": 12, "tipo": "jogador", "tier": 1, "label": "Jogador", "reais": 1}, "JOR13": {"code": "JOR13", "team": "JOR", "num": 13, "tipo": "time", "tier": 2, "label": "Seleção", "reais": 2}, "USA6": {"code": "USA6", "team": "USA", "num": 6, "tipo": "jogador", "tier": 1, "label": "Jogador", "reais": 1}, "COL6": {"code": "COL6", "team": "COL", "num": 6, "tipo": "jogador", "tier": 1, "label": "Jogador", "reais": 1}, "AUT20": {"code": "AUT20", "team": "AUT", "num": 20, "tipo": "jogador", "tier": 1, "label": "Jogador", "reais": 1}, "BEL16": {"code": "BEL16", "team": "BEL", "num": 16, "tipo": "jogador", "tier": 1, "label": "Jogador", "reais": 1}, "ALG3": {"code": "ALG3", "team": "ALG", "num": 3, "tipo": "jogador", "tier": 1, "label": "Jogador", "reais": 1}, "SWE1": {"code": "SWE1", "team": "SWE", "num": 1, "tipo": "escudo", "tier": 2, "label": "Escudo", "reais": 2}, "TUN15": {"code": "TUN15", "team": "TUN", "num": 15, "tipo": "jogador", "tier": 1, "label": "Jogador", "reais": 1}, "NED16": {"code": "NED16", "team": "NED", "num": 16, "tipo": "jogador", "tier": 1, "label": "Jogador", "reais": 1}, "CAN11": {"code": "CAN11", "team": "CAN", "num": 11, "tipo": "jogador", "tier": 1, "label": "Jogador", "reais": 1}, "UZB7": {"code": "UZB7", "team": "UZB", "num": 7, "tipo": "jogador", "tier": 1, "label": "Jogador", "reais": 1}, "BEL15": {"code": "BEL15", "team": "BEL", "num": 15, "tipo": "jogador", "tier": 1, "label": "Jogador", "reais": 1}, "HAI10": {"code": "HAI10", "team": "HAI", "num": 10, "tipo": "jogador", "tier": 1, "label": "Jogador", "reais": 1}, "NED17": {"code": "NED17", "team": "NED", "num": 17, "tipo": "jogador", "tier": 1, "label": "Jogador", "reais": 1}, "SWE17": {"code": "SWE17", "team": "SWE", "num": 17, "tipo": "jogador", "tier": 1, "label": "Jogador", "reais": 1}, "CIV16": {"code": "CIV16", "team": "CIV", "num": 16, "tipo": "jogador", "tier": 1, "label": "Jogador", "reais": 1}, "COD1": {"code": "COD1", "team": "COD", "num": 1, "tipo": "escudo", "tier": 2, "label": "Escudo", "reais": 2}, "SWE10": {"code": "SWE10", "team": "SWE", "num": 10, "tipo": "jogador", "tier": 1, "label": "Jogador", "reais": 1}, "COL19": {"code": "COL19", "team": "COL", "num": 19, "tipo": "jogador", "tier": 1, "label": "Jogador", "reais": 1}, "MEX19": {"code": "MEX19", "team": "MEX", "num": 19, "tipo": "jogador", "tier": 1, "label": "Jogador", "reais": 1}, "MAR11": {"code": "MAR11", "team": "MAR", "num": 11, "tipo": "jogador", "tier": 1, "label": "Jogador", "reais": 1}, "CC11": {"code": "CC11", "team": "CC", "num": 11, "tipo": "coca", "tier": 1, "label": "Coca-Cola", "reais": 1}, "FRA17": {"code": "FRA17", "team": "FRA", "num": 17, "tipo": "jogador", "tier": 1, "label": "Jogador", "reais": 1}, "USA18": {"code": "USA18", "team": "USA", "num": 18, "tipo": "jogador", "tier": 1, "label": "Jogador", "reais": 1}, "BEL5": {"code": "BEL5", "team": "BEL", "num": 5, "tipo": "jogador", "tier": 1, "label": "Jogador", "reais": 1}, "FRA15": {"code": "FRA15", "team": "FRA", "num": 15, "tipo": "jogador", "tier": 1, "label": "Jogador", "reais": 1}, "MEX13": {"code": "MEX13", "team": "MEX", "num": 13, "tipo": "time", "tier": 2, "label": "Seleção", "reais": 2}, "ESP15": {"code": "ESP15", "team": "ESP", "num": 15, "tipo": "jogador", "tier": 1, "label": "Jogador", "reais": 1}, "BIH14": {"code": "BIH14", "team": "BIH", "num": 14, "tipo": "jogador", "tier": 1, "label": "Jogador", "reais": 1}, "KSA3": {"code": "KSA3", "team": "KSA", "num": 3, "tipo": "jogador", "tier": 1, "label": "Jogador", "reais": 1}, "CAN7": {"code": "CAN7", "team": "CAN", "num": 7, "tipo": "jogador", "tier": 1, "label": "Jogador", "reais": 1}, "QAT15": {"code": "QAT15", "team": "QAT", "num": 15, "tipo": "jogador", "tier": 1, "label": "Jogador", "reais": 1}, "URU12": {"code": "URU12", "team": "URU", "num": 12, "tipo": "jogador", "tier": 1, "label": "Jogador", "reais": 1}, "COD2": {"code": "COD2", "team": "COD", "num": 2, "tipo": "jogador", "tier": 1, "label": "Jogador", "reais": 1}, "CAN8": {"code": "CAN8", "team": "CAN", "num": 8, "tipo": "jogador", "tier": 1, "label": "Jogador", "reais": 1}, "POR16": {"code": "POR16", "team": "POR", "num": 16, "tipo": "jogador", "tier": 1, "label": "Jogador", "reais": 1}, "ARG7": {"code": "ARG7", "team": "ARG", "num": 7, "tipo": "jogador", "tier": 1, "label": "Jogador", "reais": 1}, "COL5": {"code": "COL5", "team": "COL", "num": 5, "tipo": "jogador", "tier": 1, "label": "Jogador", "reais": 1}, "ARG8": {"code": "ARG8", "team": "ARG", "num": 8, "tipo": "jogador", "tier": 1, "label": "Jogador", "reais": 1}, "SUI14": {"code": "SUI14", "team": "SUI", "num": 14, "tipo": "jogador", "tier": 1, "label": "Jogador", "reais": 1}, "IRN18": {"code": "IRN18", "team": "IRN", "num": 18, "tipo": "jogador", "tier": 1, "label": "Jogador", "reais": 1}, "MEX1": {"code": "MEX1", "team": "MEX", "num": 1, "tipo": "escudo", "tier": 2, "label": "Escudo", "reais": 2}, "CC6": {"code": "CC6", "team": "CC", "num": 6, "tipo": "coca", "tier": 1, "label": "Coca-Cola", "reais": 1}, "SCO9": {"code": "SCO9", "team": "SCO", "num": 9, "tipo": "jogador", "tier": 1, "label": "Jogador", "reais": 1}, "CUW10": {"code": "CUW10", "team": "CUW", "num": 10, "tipo": "jogador", "tier": 1, "label": "Jogador", "reais": 1}, "CZE11": {"code": "CZE11", "team": "CZE", "num": 11, "tipo": "jogador", "tier": 1, "label": "Jogador", "reais": 1}, "PAR13": {"code": "PAR13", "team": "PAR", "num": 13, "tipo": "time", "tier": 2, "label": "Seleção", "reais": 2}, "SUI10": {"code": "SUI10", "team": "SUI", "num": 10, "tipo": "jogador", "tier": 1, "label": "Jogador", "reais": 1}, "ENG20": {"code": "ENG20", "team": "ENG", "num": 20, "tipo": "jogador", "tier": 1, "label": "Jogador", "reais": 1}, "ARG3": {"code": "ARG3", "team": "ARG", "num": 3, "tipo": "jogador", "tier": 1, "label": "Jogador", "reais": 1}, "COL16": {"code": "COL16", "team": "COL", "num": 16, "tipo": "jogador", "tier": 1, "label": "Jogador", "reais": 1}, "EGY13": {"code": "EGY13", "team": "EGY", "num": 13, "tipo": "time", "tier": 2, "label": "Seleção", "reais": 2}, "CPV14": {"code": "CPV14", "team": "CPV", "num": 14, "tipo": "jogador", "tier": 1, "label": "Jogador", "reais": 1}, "CZE13": {"code": "CZE13", "team": "CZE", "num": 13, "tipo": "time", "tier": 2, "label": "Seleção", "reais": 2}, "CZE4": {"code": "CZE4", "team": "CZE", "num": 4, "tipo": "jogador", "tier": 1, "label": "Jogador", "reais": 1}, "BIH11": {"code": "BIH11", "team": "BIH", "num": 11, "tipo": "jogador", "tier": 1, "label": "Jogador", "reais": 1}, "NZL14": {"code": "NZL14", "team": "NZL", "num": 14, "tipo": "jogador", "tier": 1, "label": "Jogador", "reais": 1}, "CIV14": {"code": "CIV14", "team": "CIV", "num": 14, "tipo": "jogador", "tier": 1, "label": "Jogador", "reais": 1}, "SCO2": {"code": "SCO2", "team": "SCO", "num": 2, "tipo": "jogador", "tier": 1, "label": "Jogador", "reais": 1}, "ENG4": {"code": "ENG4", "team": "ENG", "num": 4, "tipo": "jogador", "tier": 1, "label": "Jogador", "reais": 1}, "SWE16": {"code": "SWE16", "team": "SWE", "num": 16, "tipo": "jogador", "tier": 1, "label": "Jogador", "reais": 1}, "EGY4": {"code": "EGY4", "team": "EGY", "num": 4, "tipo": "jogador", "tier": 1, "label": "Jogador", "reais": 1}, "AUS8": {"code": "AUS8", "team": "AUS", "num": 8, "tipo": "jogador", "tier": 1, "label": "Jogador", "reais": 1}, "BIH5": {"code": "BIH5", "team": "BIH", "num": 5, "tipo": "jogador", "tier": 1, "label": "Jogador", "reais": 1}, "SUI4": {"code": "SUI4", "team": "SUI", "num": 4, "tipo": "jogador", "tier": 1, "label": "Jogador", "reais": 1}, "PAN8": {"code": "PAN8", "team": "PAN", "num": 8, "tipo": "jogador", "tier": 1, "label": "Jogador", "reais": 1}, "GHA12": {"code": "GHA12", "team": "GHA", "num": 12, "tipo": "jogador", "tier": 1, "label": "Jogador", "reais": 1}, "CC7": {"code": "CC7", "team": "CC", "num": 7, "tipo": "coca", "tier": 1, "label": "Coca-Cola", "reais": 1}, "JOR19": {"code": "JOR19", "team": "JOR", "num": 19, "tipo": "jogador", "tier": 1, "label": "Jogador", "reais": 1}, "JPN11": {"code": "JPN11", "team": "JPN", "num": 11, "tipo": "jogador", "tier": 1, "label": "Jogador", "reais": 1}, "TUR9": {"code": "TUR9", "team": "TUR", "num": 9, "tipo": "jogador", "tier": 1, "label": "Jogador", "reais": 1}, "FRA19": {"code": "FRA19", "team": "FRA", "num": 19, "tipo": "jogador", "tier": 1, "label": "Jogador", "reais": 1}, "ESP4": {"code": "ESP4", "team": "ESP", "num": 4, "tipo": "jogador", "tier": 1, "label": "Jogador", "reais": 1}, "URU2": {"code": "URU2", "team": "URU", "num": 2, "tipo": "jogador", "tier": 1, "label": "Jogador", "reais": 1}, "MAR15": {"code": "MAR15", "team": "MAR", "num": 15, "tipo": "jogador", "tier": 1, "label": "Jogador", "reais": 1}, "COL17": {"code": "COL17", "team": "COL", "num": 17, "tipo": "jogador", "tier": 1, "label": "Jogador", "reais": 1}, "CZE20": {"code": "CZE20", "team": "CZE", "num": 20, "tipo": "jogador", "tier": 1, "label": "Jogador", "reais": 1}, "URU9": {"code": "URU9", "team": "URU", "num": 9, "tipo": "jogador", "tier": 1, "label": "Jogador", "reais": 1}, "JPN15": {"code": "JPN15", "team": "JPN", "num": 15, "tipo": "jogador", "tier": 1, "label": "Jogador", "reais": 1}, "NOR9": {"code": "NOR9", "team": "NOR", "num": 9, "tipo": "jogador", "tier": 1, "label": "Jogador", "reais": 1}, "AUT15": {"code": "AUT15", "team": "AUT", "num": 15, "tipo": "jogador", "tier": 1, "label": "Jogador", "reais": 1}, "00": {"code": "00", "team": "FWC", "num": 0, "tipo": "fwc", "tier": 3, "label": "Especial FWC", "reais": 3}, "QAT9": {"code": "QAT9", "team": "QAT", "num": 9, "tipo": "jogador", "tier": 1, "label": "Jogador", "reais": 1}, "JPN5": {"code": "JPN5", "team": "JPN", "num": 5, "tipo": "jogador", "tier": 1, "label": "Jogador", "reais": 1}, "ECU13": {"code": "ECU13", "team": "ECU", "num": 13, "tipo": "time", "tier": 2, "label": "Seleção", "reais": 2}, "ENG1": {"code": "ENG1", "team": "ENG", "num": 1, "tipo": "escudo", "tier": 2, "label": "Escudo", "reais": 2}, "CZE18": {"code": "CZE18", "team": "CZE", "num": 18, "tipo": "jogador", "tier": 1, "label": "Jogador", "reais": 1}, "CUW13": {"code": "CUW13", "team": "CUW", "num": 13, "tipo": "time", "tier": 2, "label": "Seleção", "reais": 2}, "HAI7": {"code": "HAI7", "team": "HAI", "num": 7, "tipo": "jogador", "tier": 1, "label": "Jogador", "reais": 1}, "JPN7": {"code": "JPN7", "team": "JPN", "num": 7, "tipo": "jogador", "tier": 1, "label": "Jogador", "reais": 1}, "MEX9": {"code": "MEX9", "team": "MEX", "num": 9, "tipo": "jogador", "tier": 1, "label": "Jogador", "reais": 1}, "SEN16": {"code": "SEN16", "team": "SEN", "num": 16, "tipo": "jogador", "tier": 1, "label": "Jogador", "reais": 1}, "COD10": {"code": "COD10", "team": "COD", "num": 10, "tipo": "jogador", "tier": 1, "label": "Jogador", "reais": 1}, "TUN12": {"code": "TUN12", "team": "TUN", "num": 12, "tipo": "jogador", "tier": 1, "label": "Jogador", "reais": 1}, "NOR13": {"code": "NOR13", "team": "NOR", "num": 13, "tipo": "time", "tier": 2, "label": "Seleção", "reais": 2}, "SCO19": {"code": "SCO19", "team": "SCO", "num": 19, "tipo": "jogador", "tier": 1, "label": "Jogador", "reais": 1}, "FWC15": {"code": "FWC15", "team": "FWC", "num": 15, "tipo": "fwc", "tier": 3, "label": "Especial FWC", "reais": 3}, "COL3": {"code": "COL3", "team": "COL", "num": 3, "tipo": "jogador", "tier": 1, "label": "Jogador", "reais": 1}, "URU15": {"code": "URU15", "team": "URU", "num": 15, "tipo": "jogador", "tier": 1, "label": "Jogador", "reais": 1}, "NZL15": {"code": "NZL15", "team": "NZL", "num": 15, "tipo": "jogador", "tier": 1, "label": "Jogador", "reais": 1}, "CAN12": {"code": "CAN12", "team": "CAN", "num": 12, "tipo": "jogador", "tier": 1, "label": "Jogador", "reais": 1}, "FWC16": {"code": "FWC16", "team": "FWC", "num": 16, "tipo": "fwc", "tier": 3, "label": "Especial FWC", "reais": 3}, "FRA2": {"code": "FRA2", "team": "FRA", "num": 2, "tipo": "jogador", "tier": 1, "label": "Jogador", "reais": 1}, "NOR7": {"code": "NOR7", "team": "NOR", "num": 7, "tipo": "jogador", "tier": 1, "label": "Jogador", "reais": 1}, "SUI3": {"code": "SUI3", "team": "SUI", "num": 3, "tipo": "jogador", "tier": 1, "label": "Jogador", "reais": 1}, "NED13": {"code": "NED13", "team": "NED", "num": 13, "tipo": "time", "tier": 2, "label": "Seleção", "reais": 2}, "BRA10": {"code": "BRA10", "team": "BRA", "num": 10, "tipo": "br", "tier": 2, "label": "Jogador (Brasil)", "reais": 2}, "CAN20": {"code": "CAN20", "team": "CAN", "num": 20, "tipo": "jogador", "tier": 1, "label": "Jogador", "reais": 1}, "SWE6": {"code": "SWE6", "team": "SWE", "num": 6, "tipo": "jogador", "tier": 1, "label": "Jogador", "reais": 1}, "USA7": {"code": "USA7", "team": "USA", "num": 7, "tipo": "jogador", "tier": 1, "label": "Jogador", "reais": 1}, "CPV9": {"code": "CPV9", "team": "CPV", "num": 9, "tipo": "jogador", "tier": 1, "label": "Jogador", "reais": 1}, "SEN19": {"code": "SEN19", "team": "SEN", "num": 19, "tipo": "jogador", "tier": 1, "label": "Jogador", "reais": 1}, "BRA2": {"code": "BRA2", "team": "BRA", "num": 2, "tipo": "br", "tier": 2, "label": "Jogador (Brasil)", "reais": 2}, "UZB2": {"code": "UZB2", "team": "UZB", "num": 2, "tipo": "jogador", "tier": 1, "label": "Jogador", "reais": 1}, "SUI19": {"code": "SUI19", "team": "SUI", "num": 19, "tipo": "jogador", "tier": 1, "label": "Jogador", "reais": 1}, "PAR10": {"code": "PAR10", "team": "PAR", "num": 10, "tipo": "jogador", "tier": 1, "label": "Jogador", "reais": 1}, "CAN1": {"code": "CAN1", "team": "CAN", "num": 1, "tipo": "escudo", "tier": 2, "label": "Escudo", "reais": 2}, "BIH18": {"code": "BIH18", "team": "BIH", "num": 18, "tipo": "jogador", "tier": 1, "label": "Jogador", "reais": 1}, "POR6": {"code": "POR6", "team": "POR", "num": 6, "tipo": "jogador", "tier": 1, "label": "Jogador", "reais": 1}, "FWC9": {"code": "FWC9", "team": "FWC", "num": 9, "tipo": "fwc", "tier": 3, "label": "Especial FWC", "reais": 3}, "NED8": {"code": "NED8", "team": "NED", "num": 8, "tipo": "jogador", "tier": 1, "label": "Jogador", "reais": 1}, "POR7": {"code": "POR7", "team": "POR", "num": 7, "tipo": "estrela", "tier": 2, "label": "Craque", "reais": 2}, "TUR16": {"code": "TUR16", "team": "TUR", "num": 16, "tipo": "jogador", "tier": 1, "label": "Jogador", "reais": 1}, "PAN5": {"code": "PAN5", "team": "PAN", "num": 5, "tipo": "jogador", "tier": 1, "label": "Jogador", "reais": 1}, "KOR7": {"code": "KOR7", "team": "KOR", "num": 7, "tipo": "jogador", "tier": 1, "label": "Jogador", "reais": 1}, "BEL7": {"code": "BEL7", "team": "BEL", "num": 7, "tipo": "jogador", "tier": 1, "label": "Jogador", "reais": 1}, "UZB17": {"code": "UZB17", "team": "UZB", "num": 17, "tipo": "jogador", "tier": 1, "label": "Jogador", "reais": 1}, "COD19": {"code": "COD19", "team": "COD", "num": 19, "tipo": "jogador", "tier": 1, "label": "Jogador", "reais": 1}, "GER8": {"code": "GER8", "team": "GER", "num": 8, "tipo": "jogador", "tier": 1, "label": "Jogador", "reais": 1}, "BRA3": {"code": "BRA3", "team": "BRA", "num": 3, "tipo": "br", "tier": 2, "label": "Jogador (Brasil)", "reais": 2}, "PAR2": {"code": "PAR2", "team": "PAR", "num": 2, "tipo": "jogador", "tier": 1, "label": "Jogador", "reais": 1}, "CRO10": {"code": "CRO10", "team": "CRO", "num": 10, "tipo": "jogador", "tier": 1, "label": "Jogador", "reais": 1}, "JOR7": {"code": "JOR7", "team": "JOR", "num": 7, "tipo": "jogador", "tier": 1, "label": "Jogador", "reais": 1}, "NED11": {"code": "NED11", "team": "NED", "num": 11, "tipo": "jogador", "tier": 1, "label": "Jogador", "reais": 1}, "COL14": {"code": "COL14", "team": "COL", "num": 14, "tipo": "jogador", "tier": 1, "label": "Jogador", "reais": 1}, "CUW12": {"code": "CUW12", "team": "CUW", "num": 12, "tipo": "jogador", "tier": 1, "label": "Jogador", "reais": 1}, "SUI8": {"code": "SUI8", "team": "SUI", "num": 8, "tipo": "jogador", "tier": 1, "label": "Jogador", "reais": 1}, "AUT14": {"code": "AUT14", "team": "AUT", "num": 14, "tipo": "jogador", "tier": 1, "label": "Jogador", "reais": 1}, "CIV18": {"code": "CIV18", "team": "CIV", "num": 18, "tipo": "jogador", "tier": 1, "label": "Jogador", "reais": 1}, "IRQ9": {"code": "IRQ9", "team": "IRQ", "num": 9, "tipo": "jogador", "tier": 1, "label": "Jogador", "reais": 1}, "GER11": {"code": "GER11", "team": "GER", "num": 11, "tipo": "jogador", "tier": 1, "label": "Jogador", "reais": 1}, "UZB3": {"code": "UZB3", "team": "UZB", "num": 3, "tipo": "jogador", "tier": 1, "label": "Jogador", "reais": 1}, "POR12": {"code": "POR12", "team": "POR", "num": 12, "tipo": "jogador", "tier": 1, "label": "Jogador", "reais": 1}, "URU14": {"code": "URU14", "team": "URU", "num": 14, "tipo": "jogador", "tier": 1, "label": "Jogador", "reais": 1}, "UZB20": {"code": "UZB20", "team": "UZB", "num": 20, "tipo": "jogador", "tier": 1, "label": "Jogador", "reais": 1}, "IRQ3": {"code": "IRQ3", "team": "IRQ", "num": 3, "tipo": "jogador", "tier": 1, "label": "Jogador", "reais": 1}, "URU18": {"code": "URU18", "team": "URU", "num": 18, "tipo": "jogador", "tier": 1, "label": "Jogador", "reais": 1}, "KOR12": {"code": "KOR12", "team": "KOR", "num": 12, "tipo": "jogador", "tier": 1, "label": "Jogador", "reais": 1}, "COD16": {"code": "COD16", "team": "COD", "num": 16, "tipo": "jogador", "tier": 1, "label": "Jogador", "reais": 1}, "AUS3": {"code": "AUS3", "team": "AUS", "num": 3, "tipo": "jogador", "tier": 1, "label": "Jogador", "reais": 1}, "TUN9": {"code": "TUN9", "team": "TUN", "num": 9, "tipo": "jogador", "tier": 1, "label": "Jogador", "reais": 1}, "ENG12": {"code": "ENG12", "team": "ENG", "num": 12, "tipo": "jogador", "tier": 1, "label": "Jogador", "reais": 1}, "CUW4": {"code": "CUW4", "team": "CUW", "num": 4, "tipo": "jogador", "tier": 1, "label": "Jogador", "reais": 1}, "SWE9": {"code": "SWE9", "team": "SWE", "num": 9, "tipo": "jogador", "tier": 1, "label": "Jogador", "reais": 1}, "CRO6": {"code": "CRO6", "team": "CRO", "num": 6, "tipo": "jogador", "tier": 1, "label": "Jogador", "reais": 1}, "CZE6": {"code": "CZE6", "team": "CZE", "num": 6, "tipo": "jogador", "tier": 1, "label": "Jogador", "reais": 1}, "NED2": {"code": "NED2", "team": "NED", "num": 2, "tipo": "jogador", "tier": 1, "label": "Jogador", "reais": 1}, "TUN14": {"code": "TUN14", "team": "TUN", "num": 14, "tipo": "jogador", "tier": 1, "label": "Jogador", "reais": 1}, "UZB12": {"code": "UZB12", "team": "UZB", "num": 12, "tipo": "jogador", "tier": 1, "label": "Jogador", "reais": 1}, "GHA5": {"code": "GHA5", "team": "GHA", "num": 5, "tipo": "jogador", "tier": 1, "label": "Jogador", "reais": 1}, "GER3": {"code": "GER3", "team": "GER", "num": 3, "tipo": "jogador", "tier": 1, "label": "Jogador", "reais": 1}, "JOR4": {"code": "JOR4", "team": "JOR", "num": 4, "tipo": "jogador", "tier": 1, "label": "Jogador", "reais": 1}, "BEL9": {"code": "BEL9", "team": "BEL", "num": 9, "tipo": "jogador", "tier": 1, "label": "Jogador", "reais": 1}, "SWE20": {"code": "SWE20", "team": "SWE", "num": 20, "tipo": "jogador", "tier": 1, "label": "Jogador", "reais": 1}, "FWC6": {"code": "FWC6", "team": "FWC", "num": 6, "tipo": "fwc", "tier": 3, "label": "Especial FWC", "reais": 3}, "TUR3": {"code": "TUR3", "team": "TUR", "num": 3, "tipo": "jogador", "tier": 1, "label": "Jogador", "reais": 1}, "MEX18": {"code": "MEX18", "team": "MEX", "num": 18, "tipo": "jogador", "tier": 1, "label": "Jogador", "reais": 1}, "NOR16": {"code": "NOR16", "team": "NOR", "num": 16, "tipo": "jogador", "tier": 1, "label": "Jogador", "reais": 1}, "RSA10": {"code": "RSA10", "team": "RSA", "num": 10, "tipo": "jogador", "tier": 1, "label": "Jogador", "reais": 1}, "SCO13": {"code": "SCO13", "team": "SCO", "num": 13, "tipo": "time", "tier": 2, "label": "Seleção", "reais": 2}, "CZE14": {"code": "CZE14", "team": "CZE", "num": 14, "tipo": "jogador", "tier": 1, "label": "Jogador", "reais": 1}, "HAI4": {"code": "HAI4", "team": "HAI", "num": 4, "tipo": "jogador", "tier": 1, "label": "Jogador", "reais": 1}, "ARG18": {"code": "ARG18", "team": "ARG", "num": 18, "tipo": "jogador", "tier": 1, "label": "Jogador", "reais": 1}, "TUN11": {"code": "TUN11", "team": "TUN", "num": 11, "tipo": "jogador", "tier": 1, "label": "Jogador", "reais": 1}, "ALG20": {"code": "ALG20", "team": "ALG", "num": 20, "tipo": "jogador", "tier": 1, "label": "Jogador", "reais": 1}, "NOR20": {"code": "NOR20", "team": "NOR", "num": 20, "tipo": "jogador", "tier": 1, "label": "Jogador", "reais": 1}, "BIH12": {"code": "BIH12", "team": "BIH", "num": 12, "tipo": "jogador", "tier": 1, "label": "Jogador", "reais": 1}, "PAR17": {"code": "PAR17", "team": "PAR", "num": 17, "tipo": "jogador", "tier": 1, "label": "Jogador", "reais": 1}, "EGY20": {"code": "EGY20", "team": "EGY", "num": 20, "tipo": "jogador", "tier": 1, "label": "Jogador", "reais": 1}, "USA2": {"code": "USA2", "team": "USA", "num": 2, "tipo": "jogador", "tier": 1, "label": "Jogador", "reais": 1}, "CRO19": {"code": "CRO19", "team": "CRO", "num": 19, "tipo": "jogador", "tier": 1, "label": "Jogador", "reais": 1}, "KSA13": {"code": "KSA13", "team": "KSA", "num": 13, "tipo": "time", "tier": 2, "label": "Seleção", "reais": 2}, "URU4": {"code": "URU4", "team": "URU", "num": 4, "tipo": "jogador", "tier": 1, "label": "Jogador", "reais": 1}, "POR10": {"code": "POR10", "team": "POR", "num": 10, "tipo": "jogador", "tier": 1, "label": "Jogador", "reais": 1}, "BRA11": {"code": "BRA11", "team": "BRA", "num": 11, "tipo": "br", "tier": 2, "label": "Jogador (Brasil)", "reais": 2}, "UZB9": {"code": "UZB9", "team": "UZB", "num": 9, "tipo": "jogador", "tier": 1, "label": "Jogador", "reais": 1}, "CC14": {"code": "CC14", "team": "CC", "num": 14, "tipo": "coca", "tier": 1, "label": "Coca-Cola", "reais": 1}, "CZE16": {"code": "CZE16", "team": "CZE", "num": 16, "tipo": "jogador", "tier": 1, "label": "Jogador", "reais": 1}, "BEL2": {"code": "BEL2", "team": "BEL", "num": 2, "tipo": "jogador", "tier": 1, "label": "Jogador", "reais": 1}, "ALG1": {"code": "ALG1", "team": "ALG", "num": 1, "tipo": "escudo", "tier": 2, "label": "Escudo", "reais": 2}, "NZL7": {"code": "NZL7", "team": "NZL", "num": 7, "tipo": "jogador", "tier": 1, "label": "Jogador", "reais": 1}, "AUS4": {"code": "AUS4", "team": "AUS", "num": 4, "tipo": "jogador", "tier": 1, "label": "Jogador", "reais": 1}, "ESP14": {"code": "ESP14", "team": "ESP", "num": 14, "tipo": "jogador", "tier": 1, "label": "Jogador", "reais": 1}, "COL20": {"code": "COL20", "team": "COL", "num": 20, "tipo": "jogador", "tier": 1, "label": "Jogador", "reais": 1}, "BIH1": {"code": "BIH1", "team": "BIH", "num": 1, "tipo": "escudo", "tier": 2, "label": "Escudo", "reais": 2}, "ENG14": {"code": "ENG14", "team": "ENG", "num": 14, "tipo": "jogador", "tier": 1, "label": "Jogador", "reais": 1}, "CZE3": {"code": "CZE3", "team": "CZE", "num": 3, "tipo": "jogador", "tier": 1, "label": "Jogador", "reais": 1}, "COL7": {"code": "COL7", "team": "COL", "num": 7, "tipo": "jogador", "tier": 1, "label": "Jogador", "reais": 1}, "KOR5": {"code": "KOR5", "team": "KOR", "num": 5, "tipo": "jogador", "tier": 1, "label": "Jogador", "reais": 1}, "CZE7": {"code": "CZE7", "team": "CZE", "num": 7, "tipo": "jogador", "tier": 1, "label": "Jogador", "reais": 1}, "AUT13": {"code": "AUT13", "team": "AUT", "num": 13, "tipo": "time", "tier": 2, "label": "Seleção", "reais": 2}, "CPV20": {"code": "CPV20", "team": "CPV", "num": 20, "tipo": "jogador", "tier": 1, "label": "Jogador", "reais": 1}, "SWE12": {"code": "SWE12", "team": "SWE", "num": 12, "tipo": "jogador", "tier": 1, "label": "Jogador", "reais": 1}, "FWC10": {"code": "FWC10", "team": "FWC", "num": 10, "tipo": "fwc", "tier": 3, "label": "Especial FWC", "reais": 3}, "UZB18": {"code": "UZB18", "team": "UZB", "num": 18, "tipo": "jogador", "tier": 1, "label": "Jogador", "reais": 1}, "PAN7": {"code": "PAN7", "team": "PAN", "num": 7, "tipo": "jogador", "tier": 1, "label": "Jogador", "reais": 1}, "COL8": {"code": "COL8", "team": "COL", "num": 8, "tipo": "jogador", "tier": 1, "label": "Jogador", "reais": 1}, "SUI13": {"code": "SUI13", "team": "SUI", "num": 13, "tipo": "time", "tier": 2, "label": "Seleção", "reais": 2}, "USA1": {"code": "USA1", "team": "USA", "num": 1, "tipo": "escudo", "tier": 2, "label": "Escudo", "reais": 2}, "FRA7": {"code": "FRA7", "team": "FRA", "num": 7, "tipo": "jogador", "tier": 1, "label": "Jogador", "reais": 1}, "CRO20": {"code": "CRO20", "team": "CRO", "num": 20, "tipo": "jogador", "tier": 1, "label": "Jogador", "reais": 1}, "URU8": {"code": "URU8", "team": "URU", "num": 8, "tipo": "jogador", "tier": 1, "label": "Jogador", "reais": 1}, "NZL6": {"code": "NZL6", "team": "NZL", "num": 6, "tipo": "jogador", "tier": 1, "label": "Jogador", "reais": 1}, "JPN12": {"code": "JPN12", "team": "JPN", "num": 12, "tipo": "jogador", "tier": 1, "label": "Jogador", "reais": 1}, "SCO8": {"code": "SCO8", "team": "SCO", "num": 8, "tipo": "jogador", "tier": 1, "label": "Jogador", "reais": 1}, "EGY15": {"code": "EGY15", "team": "EGY", "num": 15, "tipo": "jogador", "tier": 1, "label": "Jogador", "reais": 1}, "ENG13": {"code": "ENG13", "team": "ENG", "num": 13, "tipo": "time", "tier": 2, "label": "Seleção", "reais": 2}, "TUN5": {"code": "TUN5", "team": "TUN", "num": 5, "tipo": "jogador", "tier": 1, "label": "Jogador", "reais": 1}, "FWC17": {"code": "FWC17", "team": "FWC", "num": 17, "tipo": "fwc", "tier": 3, "label": "Especial FWC", "reais": 3}, "COD5": {"code": "COD5", "team": "COD", "num": 5, "tipo": "jogador", "tier": 1, "label": "Jogador", "reais": 1}, "HAI2": {"code": "HAI2", "team": "HAI", "num": 2, "tipo": "jogador", "tier": 1, "label": "Jogador", "reais": 1}, "HAI6": {"code": "HAI6", "team": "HAI", "num": 6, "tipo": "jogador", "tier": 1, "label": "Jogador", "reais": 1}, "EGY8": {"code": "EGY8", "team": "EGY", "num": 8, "tipo": "jogador", "tier": 1, "label": "Jogador", "reais": 1}, "BIH16": {"code": "BIH16", "team": "BIH", "num": 16, "tipo": "jogador", "tier": 1, "label": "Jogador", "reais": 1}, "CPV11": {"code": "CPV11", "team": "CPV", "num": 11, "tipo": "jogador", "tier": 1, "label": "Jogador", "reais": 1}, "ENG2": {"code": "ENG2", "team": "ENG", "num": 2, "tipo": "jogador", "tier": 1, "label": "Jogador", "reais": 1}, "GHA18": {"code": "GHA18", "team": "GHA", "num": 18, "tipo": "jogador", "tier": 1, "label": "Jogador", "reais": 1}, "HAI18": {"code": "HAI18", "team": "HAI", "num": 18, "tipo": "jogador", "tier": 1, "label": "Jogador", "reais": 1}, "TUR7": {"code": "TUR7", "team": "TUR", "num": 7, "tipo": "jogador", "tier": 1, "label": "Jogador", "reais": 1}, "CPV8": {"code": "CPV8", "team": "CPV", "num": 8, "tipo": "jogador", "tier": 1, "label": "Jogador", "reais": 1}, "COD17": {"code": "COD17", "team": "COD", "num": 17, "tipo": "jogador", "tier": 1, "label": "Jogador", "reais": 1}, "UZB15": {"code": "UZB15", "team": "UZB", "num": 15, "tipo": "jogador", "tier": 1, "label": "Jogador", "reais": 1}, "NOR11": {"code": "NOR11", "team": "NOR", "num": 11, "tipo": "jogador", "tier": 1, "label": "Jogador", "reais": 1}, "GHA19": {"code": "GHA19", "team": "GHA", "num": 19, "tipo": "jogador", "tier": 1, "label": "Jogador", "reais": 1}, "TUR10": {"code": "TUR10", "team": "TUR", "num": 10, "tipo": "jogador", "tier": 1, "label": "Jogador", "reais": 1}, "NZL10": {"code": "NZL10", "team": "NZL", "num": 10, "tipo": "jogador", "tier": 1, "label": "Jogador", "reais": 1}, "USA19": {"code": "USA19", "team": "USA", "num": 19, "tipo": "jogador", "tier": 1, "label": "Jogador", "reais": 1}, "BEL19": {"code": "BEL19", "team": "BEL", "num": 19, "tipo": "jogador", "tier": 1, "label": "Jogador", "reais": 1}, "BEL11": {"code": "BEL11", "team": "BEL", "num": 11, "tipo": "jogador", "tier": 1, "label": "Jogador", "reais": 1}, "CZE10": {"code": "CZE10", "team": "CZE", "num": 10, "tipo": "jogador", "tier": 1, "label": "Jogador", "reais": 1}, "UZB13": {"code": "UZB13", "team": "UZB", "num": 13, "tipo": "time", "tier": 2, "label": "Seleção", "reais": 2}, "SCO11": {"code": "SCO11", "team": "SCO", "num": 11, "tipo": "jogador", "tier": 1, "label": "Jogador", "reais": 1}, "NOR5": {"code": "NOR5", "team": "NOR", "num": 5, "tipo": "jogador", "tier": 1, "label": "Jogador", "reais": 1}, "TUR15": {"code": "TUR15", "team": "TUR", "num": 15, "tipo": "jogador", "tier": 1, "label": "Jogador", "reais": 1}, "FRA13": {"code": "FRA13", "team": "FRA", "num": 13, "tipo": "time", "tier": 2, "label": "Seleção", "reais": 2}, "ECU2": {"code": "ECU2", "team": "ECU", "num": 2, "tipo": "jogador", "tier": 1, "label": "Jogador", "reais": 1}, "NZL4": {"code": "NZL4", "team": "NZL", "num": 4, "tipo": "jogador", "tier": 1, "label": "Jogador", "reais": 1}, "AUT2": {"code": "AUT2", "team": "AUT", "num": 2, "tipo": "jogador", "tier": 1, "label": "Jogador", "reais": 1}, "MEX17": {"code": "MEX17", "team": "MEX", "num": 17, "tipo": "jogador", "tier": 1, "label": "Jogador", "reais": 1}, "KSA10": {"code": "KSA10", "team": "KSA", "num": 10, "tipo": "jogador", "tier": 1, "label": "Jogador", "reais": 1}, "EGY14": {"code": "EGY14", "team": "EGY", "num": 14, "tipo": "jogador", "tier": 1, "label": "Jogador", "reais": 1}, "IRQ14": {"code": "IRQ14", "team": "IRQ", "num": 14, "tipo": "jogador", "tier": 1, "label": "Jogador", "reais": 1}, "IRQ11": {"code": "IRQ11", "team": "IRQ", "num": 11, "tipo": "jogador", "tier": 1, "label": "Jogador", "reais": 1}, "FWC3": {"code": "FWC3", "team": "FWC", "num": 3, "tipo": "fwc", "tier": 3, "label": "Especial FWC", "reais": 3}, "QAT19": {"code": "QAT19", "team": "QAT", "num": 19, "tipo": "jogador", "tier": 1, "label": "Jogador", "reais": 1}, "MEX5": {"code": "MEX5", "team": "MEX", "num": 5, "tipo": "jogador", "tier": 1, "label": "Jogador", "reais": 1}, "NOR18": {"code": "NOR18", "team": "NOR", "num": 18, "tipo": "jogador", "tier": 1, "label": "Jogador", "reais": 1}, "GHA6": {"code": "GHA6", "team": "GHA", "num": 6, "tipo": "jogador", "tier": 1, "label": "Jogador", "reais": 1}, "SCO14": {"code": "SCO14", "team": "SCO", "num": 14, "tipo": "jogador", "tier": 1, "label": "Jogador", "reais": 1}, "POR19": {"code": "POR19", "team": "POR", "num": 19, "tipo": "jogador", "tier": 1, "label": "Jogador", "reais": 1}, "SWE13": {"code": "SWE13", "team": "SWE", "num": 13, "tipo": "time", "tier": 2, "label": "Seleção", "reais": 2}, "NED20": {"code": "NED20", "team": "NED", "num": 20, "tipo": "jogador", "tier": 1, "label": "Jogador", "reais": 1}, "BEL20": {"code": "BEL20", "team": "BEL", "num": 20, "tipo": "jogador", "tier": 1, "label": "Jogador", "reais": 1}, "CPV12": {"code": "CPV12", "team": "CPV", "num": 12, "tipo": "jogador", "tier": 1, "label": "Jogador", "reais": 1}, "COL12": {"code": "COL12", "team": "COL", "num": 12, "tipo": "jogador", "tier": 1, "label": "Jogador", "reais": 1}, "AUT17": {"code": "AUT17", "team": "AUT", "num": 17, "tipo": "jogador", "tier": 1, "label": "Jogador", "reais": 1}, "SWE2": {"code": "SWE2", "team": "SWE", "num": 2, "tipo": "jogador", "tier": 1, "label": "Jogador", "reais": 1}, "URU5": {"code": "URU5", "team": "URU", "num": 5, "tipo": "jogador", "tier": 1, "label": "Jogador", "reais": 1}, "NZL5": {"code": "NZL5", "team": "NZL", "num": 5, "tipo": "jogador", "tier": 1, "label": "Jogador", "reais": 1}, "COL4": {"code": "COL4", "team": "COL", "num": 4, "tipo": "jogador", "tier": 1, "label": "Jogador", "reais": 1}, "GHA11": {"code": "GHA11", "team": "GHA", "num": 11, "tipo": "jogador", "tier": 1, "label": "Jogador", "reais": 1}, "ECU16": {"code": "ECU16", "team": "ECU", "num": 16, "tipo": "jogador", "tier": 1, "label": "Jogador", "reais": 1}, "NED3": {"code": "NED3", "team": "NED", "num": 3, "tipo": "jogador", "tier": 1, "label": "Jogador", "reais": 1}, "TUN1": {"code": "TUN1", "team": "TUN", "num": 1, "tipo": "escudo", "tier": 2, "label": "Escudo", "reais": 2}, "TUR6": {"code": "TUR6", "team": "TUR", "num": 6, "tipo": "jogador", "tier": 1, "label": "Jogador", "reais": 1}, "ARG5": {"code": "ARG5", "team": "ARG", "num": 5, "tipo": "jogador", "tier": 1, "label": "Jogador", "reais": 1}, "COD8": {"code": "COD8", "team": "COD", "num": 8, "tipo": "jogador", "tier": 1, "label": "Jogador", "reais": 1}, "BEL13": {"code": "BEL13", "team": "BEL", "num": 13, "tipo": "time", "tier": 2, "label": "Seleção", "reais": 2}, "ESP12": {"code": "ESP12", "team": "ESP", "num": 12, "tipo": "jogador", "tier": 1, "label": "Jogador", "reais": 1}, "KOR17": {"code": "KOR17", "team": "KOR", "num": 17, "tipo": "jogador", "tier": 1, "label": "Jogador", "reais": 1}, "JPN14": {"code": "JPN14", "team": "JPN", "num": 14, "tipo": "jogador", "tier": 1, "label": "Jogador", "reais": 1}, "SWE18": {"code": "SWE18", "team": "SWE", "num": 18, "tipo": "jogador", "tier": 1, "label": "Jogador", "reais": 1}, "ESP18": {"code": "ESP18", "team": "ESP", "num": 18, "tipo": "jogador", "tier": 1, "label": "Jogador", "reais": 1}, "TUN19": {"code": "TUN19", "team": "TUN", "num": 19, "tipo": "jogador", "tier": 1, "label": "Jogador", "reais": 1}, "UZB19": {"code": "UZB19", "team": "UZB", "num": 19, "tipo": "jogador", "tier": 1, "label": "Jogador", "reais": 1}, "QAT11": {"code": "QAT11", "team": "QAT", "num": 11, "tipo": "jogador", "tier": 1, "label": "Jogador", "reais": 1}, "NOR14": {"code": "NOR14", "team": "NOR", "num": 14, "tipo": "jogador", "tier": 1, "label": "Jogador", "reais": 1}, "POR14": {"code": "POR14", "team": "POR", "num": 14, "tipo": "jogador", "tier": 1, "label": "Jogador", "reais": 1}, "CIV19": {"code": "CIV19", "team": "CIV", "num": 19, "tipo": "jogador", "tier": 1, "label": "Jogador", "reais": 1}, "BRA13": {"code": "BRA13", "team": "BRA", "num": 13, "tipo": "time", "tier": 2, "label": "Seleção", "reais": 2}, "BIH17": {"code": "BIH17", "team": "BIH", "num": 17, "tipo": "jogador", "tier": 1, "label": "Jogador", "reais": 1}, "CC10": {"code": "CC10", "team": "CC", "num": 10, "tipo": "coca", "tier": 1, "label": "Coca-Cola", "reais": 1}, "SWE14": {"code": "SWE14", "team": "SWE", "num": 14, "tipo": "jogador", "tier": 1, "label": "Jogador", "reais": 1}, "SEN2": {"code": "SEN2", "team": "SEN", "num": 2, "tipo": "jogador", "tier": 1, "label": "Jogador", "reais": 1}, "IRQ13": {"code": "IRQ13", "team": "IRQ", "num": 13, "tipo": "time", "tier": 2, "label": "Seleção", "reais": 2}, "CPV19": {"code": "CPV19", "team": "CPV", "num": 19, "tipo": "jogador", "tier": 1, "label": "Jogador", "reais": 1}, "CPV7": {"code": "CPV7", "team": "CPV", "num": 7, "tipo": "jogador", "tier": 1, "label": "Jogador", "reais": 1}, "JOR5": {"code": "JOR5", "team": "JOR", "num": 5, "tipo": "jogador", "tier": 1, "label": "Jogador", "reais": 1}, "NOR19": {"code": "NOR19", "team": "NOR", "num": 19, "tipo": "jogador", "tier": 1, "label": "Jogador", "reais": 1}, "JPN13": {"code": "JPN13", "team": "JPN", "num": 13, "tipo": "time", "tier": 2, "label": "Seleção", "reais": 2}, "COL1": {"code": "COL1", "team": "COL", "num": 1, "tipo": "escudo", "tier": 2, "label": "Escudo", "reais": 2}, "MAR13": {"code": "MAR13", "team": "MAR", "num": 13, "tipo": "time", "tier": 2, "label": "Seleção", "reais": 2}, "CUW1": {"code": "CUW1", "team": "CUW", "num": 1, "tipo": "escudo", "tier": 2, "label": "Escudo", "reais": 2}, "AUT9": {"code": "AUT9", "team": "AUT", "num": 9, "tipo": "jogador", "tier": 1, "label": "Jogador", "reais": 1}, "PAR12": {"code": "PAR12", "team": "PAR", "num": 12, "tipo": "jogador", "tier": 1, "label": "Jogador", "reais": 1}, "URU13": {"code": "URU13", "team": "URU", "num": 13, "tipo": "time", "tier": 2, "label": "Seleção", "reais": 2}, "MAR3": {"code": "MAR3", "team": "MAR", "num": 3, "tipo": "jogador", "tier": 1, "label": "Jogador", "reais": 1}, "ALG18": {"code": "ALG18", "team": "ALG", "num": 18, "tipo": "jogador", "tier": 1, "label": "Jogador", "reais": 1}, "NOR2": {"code": "NOR2", "team": "NOR", "num": 2, "tipo": "jogador", "tier": 1, "label": "Jogador", "reais": 1}, "JPN16": {"code": "JPN16", "team": "JPN", "num": 16, "tipo": "jogador", "tier": 1, "label": "Jogador", "reais": 1}, "CZE8": {"code": "CZE8", "team": "CZE", "num": 8, "tipo": "jogador", "tier": 1, "label": "Jogador", "reais": 1}, "COD4": {"code": "COD4", "team": "COD", "num": 4, "tipo": "jogador", "tier": 1, "label": "Jogador", "reais": 1}, "ESP17": {"code": "ESP17", "team": "ESP", "num": 17, "tipo": "jogador", "tier": 1, "label": "Jogador", "reais": 1}, "FWC14": {"code": "FWC14", "team": "FWC", "num": 14, "tipo": "fwc", "tier": 3, "label": "Especial FWC", "reais": 3}, "PAN10": {"code": "PAN10", "team": "PAN", "num": 10, "tipo": "jogador", "tier": 1, "label": "Jogador", "reais": 1}, "ALG2": {"code": "ALG2", "team": "ALG", "num": 2, "tipo": "jogador", "tier": 1, "label": "Jogador", "reais": 1}, "ALG16": {"code": "ALG16", "team": "ALG", "num": 16, "tipo": "jogador", "tier": 1, "label": "Jogador", "reais": 1}, "ALG13": {"code": "ALG13", "team": "ALG", "num": 13, "tipo": "time", "tier": 2, "label": "Seleção", "reais": 2}, "ALG10": {"code": "ALG10", "team": "ALG", "num": 10, "tipo": "jogador", "tier": 1, "label": "Jogador", "reais": 1}, "QAT8": {"code": "QAT8", "team": "QAT", "num": 8, "tipo": "jogador", "tier": 1, "label": "Jogador", "reais": 1}, "GER13": {"code": "GER13", "team": "GER", "num": 13, "tipo": "time", "tier": 2, "label": "Seleção", "reais": 2}, "CUW18": {"code": "CUW18", "team": "CUW", "num": 18, "tipo": "jogador", "tier": 1, "label": "Jogador", "reais": 1}, "URU16": {"code": "URU16", "team": "URU", "num": 16, "tipo": "jogador", "tier": 1, "label": "Jogador", "reais": 1}, "FRA4": {"code": "FRA4", "team": "FRA", "num": 4, "tipo": "jogador", "tier": 1, "label": "Jogador", "reais": 1}, "SEN3": {"code": "SEN3", "team": "SEN", "num": 3, "tipo": "jogador", "tier": 1, "label": "Jogador", "reais": 1}, "BEL6": {"code": "BEL6", "team": "BEL", "num": 6, "tipo": "jogador", "tier": 1, "label": "Jogador", "reais": 1}, "SEN13": {"code": "SEN13", "team": "SEN", "num": 13, "tipo": "time", "tier": 2, "label": "Seleção", "reais": 2}, "IRN15": {"code": "IRN15", "team": "IRN", "num": 15, "tipo": "jogador", "tier": 1, "label": "Jogador", "reais": 1}, "CAN2": {"code": "CAN2", "team": "CAN", "num": 2, "tipo": "jogador", "tier": 1, "label": "Jogador", "reais": 1}, "SUI15": {"code": "SUI15", "team": "SUI", "num": 15, "tipo": "jogador", "tier": 1, "label": "Jogador", "reais": 1}, "CRO3": {"code": "CRO3", "team": "CRO", "num": 3, "tipo": "jogador", "tier": 1, "label": "Jogador", "reais": 1}, "SCO6": {"code": "SCO6", "team": "SCO", "num": 6, "tipo": "jogador", "tier": 1, "label": "Jogador", "reais": 1}, "JOR15": {"code": "JOR15", "team": "JOR", "num": 15, "tipo": "jogador", "tier": 1, "label": "Jogador", "reais": 1}, "CUW6": {"code": "CUW6", "team": "CUW", "num": 6, "tipo": "jogador", "tier": 1, "label": "Jogador", "reais": 1}, "JOR1": {"code": "JOR1", "team": "JOR", "num": 1, "tipo": "escudo", "tier": 2, "label": "Escudo", "reais": 2}, "COD14": {"code": "COD14", "team": "COD", "num": 14, "tipo": "jogador", "tier": 1, "label": "Jogador", "reais": 1}, "ARG16": {"code": "ARG16", "team": "ARG", "num": 16, "tipo": "jogador", "tier": 1, "label": "Jogador", "reais": 1}, "ARG13": {"code": "ARG13", "team": "ARG", "num": 13, "tipo": "time", "tier": 2, "label": "Seleção", "reais": 2}, "UZB5": {"code": "UZB5", "team": "UZB", "num": 5, "tipo": "jogador", "tier": 1, "label": "Jogador", "reais": 1}, "SUI20": {"code": "SUI20", "team": "SUI", "num": 20, "tipo": "jogador", "tier": 1, "label": "Jogador", "reais": 1}, "ALG4": {"code": "ALG4", "team": "ALG", "num": 4, "tipo": "jogador", "tier": 1, "label": "Jogador", "reais": 1}, "BRA6": {"code": "BRA6", "team": "BRA", "num": 6, "tipo": "br", "tier": 2, "label": "Jogador (Brasil)", "reais": 2}, "ARG11": {"code": "ARG11", "team": "ARG", "num": 11, "tipo": "jogador", "tier": 1, "label": "Jogador", "reais": 1}, "ARG1": {"code": "ARG1", "team": "ARG", "num": 1, "tipo": "escudo", "tier": 2, "label": "Escudo", "reais": 2}, "RSA5": {"code": "RSA5", "team": "RSA", "num": 5, "tipo": "jogador", "tier": 1, "label": "Jogador", "reais": 1}, "QAT17": {"code": "QAT17", "team": "QAT", "num": 17, "tipo": "jogador", "tier": 1, "label": "Jogador", "reais": 1}, "BRA20": {"code": "BRA20", "team": "BRA", "num": 20, "tipo": "br", "tier": 2, "label": "Jogador (Brasil)", "reais": 2}, "CZE12": {"code": "CZE12", "team": "CZE", "num": 12, "tipo": "jogador", "tier": 1, "label": "Jogador", "reais": 1}, "IRN19": {"code": "IRN19", "team": "IRN", "num": 19, "tipo": "jogador", "tier": 1, "label": "Jogador", "reais": 1}, "GER15": {"code": "GER15", "team": "GER", "num": 15, "tipo": "jogador", "tier": 1, "label": "Jogador", "reais": 1}, "EGY9": {"code": "EGY9", "team": "EGY", "num": 9, "tipo": "jogador", "tier": 1, "label": "Jogador", "reais": 1}, "JPN17": {"code": "JPN17", "team": "JPN", "num": 17, "tipo": "jogador", "tier": 1, "label": "Jogador", "reais": 1}, "TUN4": {"code": "TUN4", "team": "TUN", "num": 4, "tipo": "jogador", "tier": 1, "label": "Jogador", "reais": 1}, "USA13": {"code": "USA13", "team": "USA", "num": 13, "tipo": "time", "tier": 2, "label": "Seleção", "reais": 2}, "POR5": {"code": "POR5", "team": "POR", "num": 5, "tipo": "jogador", "tier": 1, "label": "Jogador", "reais": 1}, "BEL4": {"code": "BEL4", "team": "BEL", "num": 4, "tipo": "jogador", "tier": 1, "label": "Jogador", "reais": 1}, "NED15": {"code": "NED15", "team": "NED", "num": 15, "tipo": "jogador", "tier": 1, "label": "Jogador", "reais": 1}, "ALG17": {"code": "ALG17", "team": "ALG", "num": 17, "tipo": "jogador", "tier": 1, "label": "Jogador", "reais": 1}, "NED18": {"code": "NED18", "team": "NED", "num": 18, "tipo": "jogador", "tier": 1, "label": "Jogador", "reais": 1}, "BIH8": {"code": "BIH8", "team": "BIH", "num": 8, "tipo": "jogador", "tier": 1, "label": "Jogador", "reais": 1}, "POR15": {"code": "POR15", "team": "POR", "num": 15, "tipo": "jogador", "tier": 1, "label": "Jogador", "reais": 1}, "BIH9": {"code": "BIH9", "team": "BIH", "num": 9, "tipo": "jogador", "tier": 1, "label": "Jogador", "reais": 1}, "MEX14": {"code": "MEX14", "team": "MEX", "num": 14, "tipo": "jogador", "tier": 1, "label": "Jogador", "reais": 1}, "MAR4": {"code": "MAR4", "team": "MAR", "num": 4, "tipo": "jogador", "tier": 1, "label": "Jogador", "reais": 1}, "MAR16": {"code": "MAR16", "team": "MAR", "num": 16, "tipo": "jogador", "tier": 1, "label": "Jogador", "reais": 1}, "KSA7": {"code": "KSA7", "team": "KSA", "num": 7, "tipo": "jogador", "tier": 1, "label": "Jogador", "reais": 1}, "ENG8": {"code": "ENG8", "team": "ENG", "num": 8, "tipo": "jogador", "tier": 1, "label": "Jogador", "reais": 1}, "CRO13": {"code": "CRO13", "team": "CRO", "num": 13, "tipo": "time", "tier": 2, "label": "Seleção", "reais": 2}, "SCO4": {"code": "SCO4", "team": "SCO", "num": 4, "tipo": "jogador", "tier": 1, "label": "Jogador", "reais": 1}, "TUN16": {"code": "TUN16", "team": "TUN", "num": 16, "tipo": "jogador", "tier": 1, "label": "Jogador", "reais": 1}, "RSA20": {"code": "RSA20", "team": "RSA", "num": 20, "tipo": "jogador", "tier": 1, "label": "Jogador", "reais": 1}, "UZB14": {"code": "UZB14", "team": "UZB", "num": 14, "tipo": "jogador", "tier": 1, "label": "Jogador", "reais": 1}, "QAT18": {"code": "QAT18", "team": "QAT", "num": 18, "tipo": "jogador", "tier": 1, "label": "Jogador", "reais": 1}, "POR2": {"code": "POR2", "team": "POR", "num": 2, "tipo": "jogador", "tier": 1, "label": "Jogador", "reais": 1}, "BIH10": {"code": "BIH10", "team": "BIH", "num": 10, "tipo": "jogador", "tier": 1, "label": "Jogador", "reais": 1}, "MAR8": {"code": "MAR8", "team": "MAR", "num": 8, "tipo": "jogador", "tier": 1, "label": "Jogador", "reais": 1}, "AUT19": {"code": "AUT19", "team": "AUT", "num": 19, "tipo": "jogador", "tier": 1, "label": "Jogador", "reais": 1}, "AUT11": {"code": "AUT11", "team": "AUT", "num": 11, "tipo": "jogador", "tier": 1, "label": "Jogador", "reais": 1}, "USA16": {"code": "USA16", "team": "USA", "num": 16, "tipo": "jogador", "tier": 1, "label": "Jogador", "reais": 1}, "MAR17": {"code": "MAR17", "team": "MAR", "num": 17, "tipo": "jogador", "tier": 1, "label": "Jogador", "reais": 1}, "NZL9": {"code": "NZL9", "team": "NZL", "num": 9, "tipo": "jogador", "tier": 1, "label": "Jogador", "reais": 1}, "AUS15": {"code": "AUS15", "team": "AUS", "num": 15, "tipo": "jogador", "tier": 1, "label": "Jogador", "reais": 1}, "NED7": {"code": "NED7", "team": "NED", "num": 7, "tipo": "jogador", "tier": 1, "label": "Jogador", "reais": 1}, "CZE17": {"code": "CZE17", "team": "CZE", "num": 17, "tipo": "jogador", "tier": 1, "label": "Jogador", "reais": 1}, "AUS10": {"code": "AUS10", "team": "AUS", "num": 10, "tipo": "jogador", "tier": 1, "label": "Jogador", "reais": 1}, "SUI9": {"code": "SUI9", "team": "SUI", "num": 9, "tipo": "jogador", "tier": 1, "label": "Jogador", "reais": 1}, "URU3": {"code": "URU3", "team": "URU", "num": 3, "tipo": "jogador", "tier": 1, "label": "Jogador", "reais": 1}, "IRQ16": {"code": "IRQ16", "team": "IRQ", "num": 16, "tipo": "jogador", "tier": 1, "label": "Jogador", "reais": 1}, "USA3": {"code": "USA3", "team": "USA", "num": 3, "tipo": "jogador", "tier": 1, "label": "Jogador", "reais": 1}, "HAI8": {"code": "HAI8", "team": "HAI", "num": 8, "tipo": "jogador", "tier": 1, "label": "Jogador", "reais": 1}, "CIV7": {"code": "CIV7", "team": "CIV", "num": 7, "tipo": "jogador", "tier": 1, "label": "Jogador", "reais": 1}, "TUN20": {"code": "TUN20", "team": "TUN", "num": 20, "tipo": "jogador", "tier": 1, "label": "Jogador", "reais": 1}, "IRN10": {"code": "IRN10", "team": "IRN", "num": 10, "tipo": "jogador", "tier": 1, "label": "Jogador", "reais": 1}, "SWE3": {"code": "SWE3", "team": "SWE", "num": 3, "tipo": "jogador", "tier": 1, "label": "Jogador", "reais": 1}, "USA17": {"code": "USA17", "team": "USA", "num": 17, "tipo": "jogador", "tier": 1, "label": "Jogador", "reais": 1}, "MEX12": {"code": "MEX12", "team": "MEX", "num": 12, "tipo": "jogador", "tier": 1, "label": "Jogador", "reais": 1}, "CRO7": {"code": "CRO7", "team": "CRO", "num": 7, "tipo": "jogador", "tier": 1, "label": "Jogador", "reais": 1}, "BEL17": {"code": "BEL17", "team": "BEL", "num": 17, "tipo": "jogador", "tier": 1, "label": "Jogador", "reais": 1}, "AUS11": {"code": "AUS11", "team": "AUS", "num": 11, "tipo": "jogador", "tier": 1, "label": "Jogador", "reais": 1}, "FRA14": {"code": "FRA14", "team": "FRA", "num": 14, "tipo": "jogador", "tier": 1, "label": "Jogador", "reais": 1}, "ECU20": {"code": "ECU20", "team": "ECU", "num": 20, "tipo": "jogador", "tier": 1, "label": "Jogador", "reais": 1}, "MAR19": {"code": "MAR19", "team": "MAR", "num": 19, "tipo": "jogador", "tier": 1, "label": "Jogador", "reais": 1}, "ESP16": {"code": "ESP16", "team": "ESP", "num": 16, "tipo": "jogador", "tier": 1, "label": "Jogador", "reais": 1}, "ENG5": {"code": "ENG5", "team": "ENG", "num": 5, "tipo": "jogador", "tier": 1, "label": "Jogador", "reais": 1}, "TUR12": {"code": "TUR12", "team": "TUR", "num": 12, "tipo": "jogador", "tier": 1, "label": "Jogador", "reais": 1}, "RSA12": {"code": "RSA12", "team": "RSA", "num": 12, "tipo": "jogador", "tier": 1, "label": "Jogador", "reais": 1}, "IRQ20": {"code": "IRQ20", "team": "IRQ", "num": 20, "tipo": "jogador", "tier": 1, "label": "Jogador", "reais": 1}, "GHA13": {"code": "GHA13", "team": "GHA", "num": 13, "tipo": "time", "tier": 2, "label": "Seleção", "reais": 2}, "BRA17": {"code": "BRA17", "team": "BRA", "num": 17, "tipo": "br", "tier": 2, "label": "Jogador (Brasil)", "reais": 2}, "IRQ2": {"code": "IRQ2", "team": "IRQ", "num": 2, "tipo": "jogador", "tier": 1, "label": "Jogador", "reais": 1}, "JPN1": {"code": "JPN1", "team": "JPN", "num": 1, "tipo": "escudo", "tier": 2, "label": "Escudo", "reais": 2}, "AUS1": {"code": "AUS1", "team": "AUS", "num": 1, "tipo": "escudo", "tier": 2, "label": "Escudo", "reais": 2}, "QAT13": {"code": "QAT13", "team": "QAT", "num": 13, "tipo": "time", "tier": 2, "label": "Seleção", "reais": 2}, "COD13": {"code": "COD13", "team": "COD", "num": 13, "tipo": "time", "tier": 2, "label": "Seleção", "reais": 2}, "COD12": {"code": "COD12", "team": "COD", "num": 12, "tipo": "jogador", "tier": 1, "label": "Jogador", "reais": 1}, "ECU7": {"code": "ECU7", "team": "ECU", "num": 7, "tipo": "jogador", "tier": 1, "label": "Jogador", "reais": 1}, "BRA18": {"code": "BRA18", "team": "BRA", "num": 18, "tipo": "br", "tier": 2, "label": "Jogador (Brasil)", "reais": 2}, "USA15": {"code": "USA15", "team": "USA", "num": 15, "tipo": "jogador", "tier": 1, "label": "Jogador", "reais": 1}, "QAT20": {"code": "QAT20", "team": "QAT", "num": 20, "tipo": "jogador", "tier": 1, "label": "Jogador", "reais": 1}, "TUR19": {"code": "TUR19", "team": "TUR", "num": 19, "tipo": "jogador", "tier": 1, "label": "Jogador", "reais": 1}, "CPV16": {"code": "CPV16", "team": "CPV", "num": 16, "tipo": "jogador", "tier": 1, "label": "Jogador", "reais": 1}, "ECU10": {"code": "ECU10", "team": "ECU", "num": 10, "tipo": "jogador", "tier": 1, "label": "Jogador", "reais": 1}, "CAN14": {"code": "CAN14", "team": "CAN", "num": 14, "tipo": "jogador", "tier": 1, "label": "Jogador", "reais": 1}, "CAN9": {"code": "CAN9", "team": "CAN", "num": 9, "tipo": "jogador", "tier": 1, "label": "Jogador", "reais": 1}, "GHA2": {"code": "GHA2", "team": "GHA", "num": 2, "tipo": "jogador", "tier": 1, "label": "Jogador", "reais": 1}, "IRQ7": {"code": "IRQ7", "team": "IRQ", "num": 7, "tipo": "jogador", "tier": 1, "label": "Jogador", "reais": 1}, "SWE5": {"code": "SWE5", "team": "SWE", "num": 5, "tipo": "jogador", "tier": 1, "label": "Jogador", "reais": 1}, "COL18": {"code": "COL18", "team": "COL", "num": 18, "tipo": "jogador", "tier": 1, "label": "Jogador", "reais": 1}, "PAN13": {"code": "PAN13", "team": "PAN", "num": 13, "tipo": "time", "tier": 2, "label": "Seleção", "reais": 2}, "SCO3": {"code": "SCO3", "team": "SCO", "num": 3, "tipo": "jogador", "tier": 1, "label": "Jogador", "reais": 1}, "PAR5": {"code": "PAR5", "team": "PAR", "num": 5, "tipo": "jogador", "tier": 1, "label": "Jogador", "reais": 1}, "TUN17": {"code": "TUN17", "team": "TUN", "num": 17, "tipo": "jogador", "tier": 1, "label": "Jogador", "reais": 1}, "JOR8": {"code": "JOR8", "team": "JOR", "num": 8, "tipo": "jogador", "tier": 1, "label": "Jogador", "reais": 1}, "MEX8": {"code": "MEX8", "team": "MEX", "num": 8, "tipo": "jogador", "tier": 1, "label": "Jogador", "reais": 1}, "AUT1": {"code": "AUT1", "team": "AUT", "num": 1, "tipo": "escudo", "tier": 2, "label": "Escudo", "reais": 2}, "CAN6": {"code": "CAN6", "team": "CAN", "num": 6, "tipo": "jogador", "tier": 1, "label": "Jogador", "reais": 1}, "TUN6": {"code": "TUN6", "team": "TUN", "num": 6, "tipo": "jogador", "tier": 1, "label": "Jogador", "reais": 1}, "QAT6": {"code": "QAT6", "team": "QAT", "num": 6, "tipo": "jogador", "tier": 1, "label": "Jogador", "reais": 1}, "ECU3": {"code": "ECU3", "team": "ECU", "num": 3, "tipo": "jogador", "tier": 1, "label": "Jogador", "reais": 1}, "CPV18": {"code": "CPV18", "team": "CPV", "num": 18, "tipo": "jogador", "tier": 1, "label": "Jogador", "reais": 1}}, "estoqueInicial": {"00": 4, "FWC1": 2, "FWC2": 1, "FWC3": 2, "FWC5": 1, "FWC6": 2, "FWC7": 7, "FWC9": 5, "FWC10": 3, "FWC11": 3, "FWC12": 5, "FWC13": 2, "FWC14": 3, "FWC15": 4, "FWC16": 3, "FWC17": 2, "FWC19": 4, "MEX1": 1, "MEX5": 1, "MEX9": 1, "MEX13": 3, "MEX14": 1, "MEX15": 2, "MEX17": 1, "MEX18": 1, "MEX19": 1, "RSA2": 8, "RSA4": 1, "RSA5": 1, "RSA12": 2, "RSA13": 2, "RSA16": 2, "RSA17": 2, "RSA19": 2, "RSA20": 2, "KOR1": 2, "KOR5": 2, "KOR6": 1, "KOR7": 1, "KOR8": 2, "KOR12": 2, "KOR13": 2, "KOR17": 2, "CZE1": 1, "CZE2": 5, "CZE3": 1, "CZE4": 5, "CZE5": 5, "CZE6": 2, "CZE7": 3, "CZE8": 4, "CZE9": 4, "CZE10": 3, "CZE11": 1, "CZE12": 1, "CZE14": 2, "CZE17": 3, "CZE18": 3, "CZE19": 2, "CZE20": 2, "CAN2": 3, "CAN3": 1, "CAN6": 1, "CAN7": 3, "CAN8": 1, "CAN9": 1, "CAN10": 2, "CAN11": 2, "CAN12": 2, "CAN13": 1, "CAN14": 1, "CAN16": 1, "CAN20": 2, "BIH1": 5, "BIH4": 4, "BIH5": 5, "BIH6": 3, "BIH8": 5, "BIH9": 2, "BIH10": 5, "BIH11": 1, "BIH12": 3, "BIH14": 2, "BIH15": 2, "BIH17": 4, "BIH18": 3, "BIH19": 2, "BIH20": 5, "QAT2": 1, "QAT3": 1, "QAT4": 1, "QAT5": 1, "QAT6": 1, "QAT8": 2, "QAT9": 2, "QAT10": 1, "QAT12": 2, "QAT13": 2, "QAT14": 1, "QAT15": 1, "QAT17": 1, "QAT18": 2, "QAT19": 1, "QAT20": 1, "SUI4": 1, "SUI7": 1, "SUI8": 4, "SUI9": 4, "SUI10": 2, "SUI11": 2, "SUI12": 3, "SUI13": 1, "SUI14": 2, "SUI15": 2, "SUI17": 1, "SUI19": 1, "SUI20": 2, "BRA11": 2, "BRA12": 1, "BRA13": 4, "BRA14": 1, "BRA16": 2, "BRA17": 2, "BRA18": 1, "BRA20": 1, "MAR3": 1, "MAR4": 2, "MAR6": 1, "MAR7": 1, "MAR8": 2, "MAR11": 1, "MAR13": 1, "MAR15": 1, "MAR16": 2, "MAR17": 1, "MAR19": 1, "MAR20": 2, "HAI3": 1, "HAI4": 2, "HAI7": 1, "HAI8": 1, "HAI11": 1, "HAI12": 1, "HAI16": 2, "HAI18": 1, "SCO2": 2, "SCO3": 2, "SCO6": 1, "SCO13": 5, "SCO14": 1, "SCO19": 1, "USA1": 5, "USA2": 2, "USA3": 2, "USA6": 2, "USA7": 3, "USA10": 2, "USA11": 1, "USA13": 2, "USA15": 1, "USA16": 1, "USA17": 4, "USA18": 1, "USA19": 2, "USA20": 3, "PAR4": 1, "PAR10": 1, "PAR11": 1, "PAR12": 1, "PAR13": 5, "PAR17": 2, "PAR19": 1, "AUS3": 2, "AUS7": 1, "AUS8": 2, "AUS10": 1, "AUS11": 2, "AUS13": 4, "AUS14": 2, "AUS15": 2, "AUS16": 1, "AUS17": 2, "TUR1": 2, "TUR2": 4, "TUR3": 1, "TUR4": 1, "TUR6": 2, "TUR7": 4, "TUR10": 4, "TUR11": 4, "TUR12": 3, "TUR13": 1, "TUR14": 2, "TUR15": 2, "TUR16": 4, "TUR17": 2, "TUR19": 1, "TUR20": 3, "GER2": 2, "GER3": 1, "GER4": 3, "GER6": 2, "GER8": 2, "GER10": 1, "GER11": 1, "GER12": 3, "GER13": 2, "GER15": 1, "CUW4": 2, "CUW5": 4, "CUW7": 2, "CUW8": 3, "CUW9": 1, "CUW12": 4, "CUW13": 2, "CUW16": 1, "CUW17": 1, "CUW18": 2, "CUW20": 1, "CIV6": 1, "CIV8": 1, "CIV9": 3, "CIV13": 4, "CIV14": 1, "CIV18": 1, "CIV19": 1, "ECU2": 2, "ECU3": 2, "ECU7": 1, "ECU8": 1, "ECU11": 1, "ECU12": 1, "ECU15": 1, "ECU16": 2, "ECU19": 2, "ECU20": 1, "NED2": 2, "NED3": 1, "NED4": 2, "NED6": 2, "NED7": 1, "NED8": 1, "NED10": 3, "NED11": 1, "NED13": 2, "NED15": 2, "NED16": 1, "NED18": 2, "NED19": 1, "JPN1": 1, "JPN5": 1, "JPN7": 1, "JPN8": 1, "JPN11": 2, "JPN12": 1, "JPN13": 1, "JPN15": 1, "JPN16": 1, "JPN17": 1, "JPN20": 2, "SWE1": 2, "SWE2": 1, "SWE3": 1, "SWE4": 4, "SWE5": 1, "SWE6": 1, "SWE9": 1, "SWE10": 5, "SWE11": 1, "SWE12": 2, "SWE13": 2, "SWE14": 2, "SWE15": 5, "SWE17": 2, "SWE18": 3, "TUN4": 2, "TUN5": 3, "TUN6": 2, "TUN7": 1, "TUN8": 2, "TUN9": 3, "TUN11": 3, "TUN12": 2, "TUN14": 1, "TUN15": 2, "TUN16": 2, "TUN17": 3, "TUN18": 2, "TUN19": 1, "TUN20": 2, "BEL2": 1, "BEL6": 1, "BEL13": 2, "BEL15": 1, "BEL19": 2, "EGY4": 1, "EGY6": 1, "EGY9": 1, "EGY10": 1, "EGY11": 1, "EGY13": 3, "EGY14": 1, "EGY15": 2, "EGY20": 1, "IRN5": 2, "IRN9": 4, "IRN13": 1, "IRN14": 1, "IRN18": 1, "NZL4": 1, "NZL7": 1, "NZL8": 2, "ESP4": 1, "ESP13": 3, "ESP16": 2, "ESP17": 1, "CPV2": 1, "CPV4": 2, "CPV8": 2, "CPV10": 1, "CPV12": 1, "CPV17": 1, "KSA2": 2, "KSA3": 1, "KSA6": 2, "KSA7": 1, "KSA10": 2, "KSA13": 2, "KSA15": 1, "KSA19": 2, "URU3": 2, "URU4": 1, "URU5": 2, "URU8": 2, "URU9": 2, "URU12": 4, "URU14": 2, "URU15": 1, "URU16": 2, "URU17": 3, "URU18": 5, "URU20": 2, "FRA1": 1, "FRA4": 1, "FRA7": 1, "FRA14": 1, "FRA15": 1, "FRA17": 2, "FRA18": 2, "FRA19": 3, "SEN2": 2, "SEN5": 1, "SEN6": 2, "SEN10": 1, "SEN13": 6, "SEN15": 3, "SEN16": 1, "SEN19": 2, "SEN20": 1, "IRQ2": 3, "IRQ3": 3, "IRQ5": 2, "IRQ6": 1, "IRQ7": 1, "IRQ8": 3, "IRQ9": 2, "IRQ11": 2, "IRQ13": 1, "IRQ14": 1, "IRQ16": 4, "IRQ17": 3, "IRQ19": 5, "IRQ20": 2, "NOR4": 2, "NOR7": 2, "NOR11": 1, "NOR13": 4, "NOR16": 1, "NOR19": 3, "ARG1": 1, "ARG3": 1, "ARG4": 1, "ARG5": 2, "ARG9": 1, "ARG10": 1, "ARG13": 4, "ARG14": 2, "ARG18": 3, "ALG2": 2, "ALG3": 2, "ALG4": 1, "ALG8": 2, "ALG9": 1, "ALG10": 2, "ALG12": 2, "ALG13": 4, "ALG16": 2, "ALG18": 2, "ALG20": 1, "AUT2": 3, "AUT3": 2, "AUT6": 2, "AUT7": 1, "AUT10": 1, "AUT13": 2, "AUT17": 1, "JOR1": 2, "JOR4": 3, "JOR6": 1, "JOR7": 1, "JOR8": 1, "JOR10": 1, "JOR13": 1, "JOR15": 1, "JOR17": 1, "JOR19": 1, "POR2": 1, "POR5": 1, "POR6": 2, "POR7": 1, "POR10": 2, "POR11": 2, "POR13": 6, "POR14": 1, "POR15": 2, "POR16": 1, "POR19": 1, "COD1": 2, "COD2": 4, "COD3": 4, "COD4": 2, "COD5": 3, "COD6": 1, "COD7": 1, "COD8": 2, "COD10": 3, "COD11": 2, "COD12": 4, "COD15": 1, "COD16": 3, "COD17": 3, "COD19": 4, "COD20": 1, "UZB2": 1, "UZB3": 1, "UZB5": 2, "UZB7": 3, "UZB11": 2, "UZB12": 1, "UZB13": 4, "UZB15": 2, "UZB17": 2, "UZB18": 3, "UZB19": 3, "UZB20": 3, "COL3": 1, "COL4": 1, "COL5": 1, "COL6": 1, "COL7": 1, "COL8": 1, "COL11": 1, "COL12": 1, "COL13": 4, "COL14": 1, "COL16": 1, "COL17": 2, "COL18": 1, "COL19": 2, "ENG3": 1, "ENG4": 2, "ENG5": 1, "ENG6": 1, "ENG8": 1, "ENG9": 1, "ENG13": 3, "ENG14": 1, "CRO13": 3, "CRO18": 1, "CRO19": 1, "GHA2": 1, "GHA6": 1, "GHA11": 1, "GHA13": 3, "GHA19": 1, "PAN7": 1, "PAN10": 1, "PAN13": 4, "PAN15": 2, "PAN19": 3}, "faltantes": ["FWC8", "MEX8", "MEX12", "RSA10", "RSA11", "CZE13", "CZE16", "CAN1", "CAN17", "CAN18", "BIH16", "QAT11", "QAT16", "SUI3", "BRA1", "BRA2", "BRA3", "BRA6", "BRA10", "HAI2", "HAI6", "HAI10", "HAI14", "SCO1", "SCO4", "SCO7", "SCO8", "SCO9", "SCO11", "PAR2", "PAR5", "PAR9", "PAR14", "PAR18", "AUS1", "AUS4", "TUR5", "TUR8", "TUR9", "GER9", "CUW1", "CUW6", "CUW10", "CIV3", "CIV7", "CIV16", "ECU4", "ECU9", "ECU10", "ECU13", "NED17", "NED20", "JPN6", "JPN9", "JPN10", "JPN14", "SWE16", "SWE20", "TUN1", "BEL4", "BEL5", "BEL7", "BEL9", "BEL11", "BEL12", "BEL16", "BEL17", "BEL20", "EGY8", "IRN2", "IRN6", "IRN10", "IRN15", "IRN19", "NZL5", "NZL6", "NZL9", "NZL10", "NZL14", "NZL15", "NZL18", "ESP12", "ESP14", "ESP15", "ESP18", "CPV3", "CPV5", "CPV7", "CPV9", "CPV11", "CPV14", "CPV16", "CPV18", "CPV19", "CPV20", "URU2", "URU13", "FRA2", "FRA10", "FRA13", "SEN3", "SEN11", "NOR2", "NOR5", "NOR9", "NOR14", "NOR18", "NOR20", "ARG7", "ARG8", "ARG11", "ARG16", "ARG19", "ARG20", "ALG1", "ALG17", "AUT1", "AUT9", "AUT11", "AUT14", "AUT15", "AUT19", "AUT20", "JOR5", "POR12", "COD13", "COD14", "UZB1", "UZB9", "UZB14", "COL1", "COL20", "ENG1", "ENG2", "ENG12", "ENG20", "CRO3", "CRO6", "CRO7", "CRO10", "CRO12", "CRO14", "CRO16", "CRO20", "GHA1", "GHA5", "GHA12", "GHA16", "GHA18", "PAN5", "PAN8", "PAN9", "CC1", "CC4", "CC6", "CC7", "CC9", "CC10", "CC11", "CC14"], "stats": {"albumTotal": 994, "faltam": 160, "repetidasSpares": 953, "repetidasDistintas": 490}, "config": {"whatsapp": "5547991438831", "whatsappMsg": "Olá Rodrigo! Tenho uma dúvida sobre a troca/venda de figurinhas da Copa 2026.", "adminPass": "W@rs8735", "dono": {"nome": "Rodrigo César Hang", "fone": "47991438831", "fonePretty": "(47) 99143-8831", "area": "Departamento de TI — área de Documentação"}}};</script>
+<!-- Firebase compat (opcional, ativa só se FB_CONFIG estiver preenchido) -->
+<script src="https://www.gstatic.com/firebasejs/10.12.5/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.5/firebase-analytics-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.5/firebase-database-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.5/firebase-firestore-compat.js"></script>
+<script>/* =================================================================
+   Copa 2026 — Troca & Venda de Figurinhas  (app.js)
+   ================================================================= */
+"use strict";
+
+/* ---------- CONFIG FIREBASE ----------
+   Projeto: copa2026-4ada1. O sistema usa Firestore em tempo real para
+   sincronizar estoque, pedidos e devoluções. Caso o Firestore/Database
+   não esteja disponível, cai automaticamente para localStorage.          */
+const FB_CONFIG = {
+  apiKey: "AIzaSyB3ThjnCVhw8HN7gMBVE48CnuUuGg9SjM8",
+  authDomain: "copa2026-4ada1.firebaseapp.com",
+  projectId: "copa2026-4ada1",
+  storageBucket: "copa2026-4ada1.firebasestorage.app",
+  messagingSenderId: "355163272269",
+  appId: "1:355163272269:web:375bef3a15b4a86274d804",
+  measurementId: "G-D6T08CYC2Y"
+};
+
+const D = window.DADOS;
+const CFG = D.config;
+const LS_STATE = "copa2026_state_v1";
+const LS_CART  = "copa2026_cart_v1";
+
+/* ---------- HELPERS ---------- */
+const $  = (s, r = document) => r.querySelector(s);
+const $$ = (s, r = document) => Array.from(r.querySelectorAll(s));
+const esc = s => String(s).replace(/[&<>"']/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
+const clone = o => JSON.parse(JSON.stringify(o));
+const tierPrice = t => t;                 // R$ = tier
+const tierPower = t => t;                 // poder de troca = tier
+const st = code => D.stickers[code];
+const teamOf = code => D.teams[st(code).team];
+const sortCodes = arr => arr.slice().sort((a, b) => st(a).num - st(b).num);
+
+function flagHTML(teamCode, cls) {
+  const t = D.teams[teamCode];
+  if (t && t.iso) return `<span class="fi fi-${t.iso}"></span>`;
+  if (teamCode === "CC") return `<span class="ce">🥤</span>`;
+  return `<span class="ce">🏆</span>`;
+}
+function emblemBig(code) {
+  const t = teamOf(code);
+  if (t.iso) return `<div class="flagbig"><span class="fi fi-${t.iso}"></span></div>`;
+  if (t.code === "CC") return `<span class="ic">🥤</span>`;
+  return `<span class="ic">🏆</span>`;
+}
+
+/* ---------- ESTADO ---------- */
+const SEED = () => ({
+  stock: clone(D.estoqueInicial),
+  falt: D.faltantes.reduce((o, c) => (o[c] = "needed", o), {}),
+  orders: {},
+  seeded: true
+});
+let STATE = SEED();
+let CART = { buys: {}, trades: [] };
+
+/* ---------- BACKEND (Firebase -> localStorage -> memória) ---------- */
+const Backend = {
+  mode: "memory",
+  ref: null,
+  unsub: null,
+  ready: false,
+  app: null,
+  init() {
+    if (window.firebase && firebase.initializeApp && FB_CONFIG.apiKey) {
+      try {
+        this.app = firebase.apps && firebase.apps.length ? firebase.app() : firebase.initializeApp(FB_CONFIG);
+        try {
+          if (firebase.analytics && /^https?:/i.test(location.protocol)) firebase.analytics();
+        } catch (e) { /* analytics não deve bloquear o site */ }
+
+        if (FB_CONFIG.databaseURL && firebase.database) {
+          this.ref = firebase.database().ref("copa2026");
+          this.mode = "firebase-db";
+          this.ref.on("value", snap => {
+            const v = snap.val();
+            if (!v || !v.seeded) this.ref.set(STATE);
+            else { STATE = normalize(v); afterStateChange(); }
+            this.ready = true;
+          }, () => this.fallbackLocal());
+          return;
+        }
+
+        if (firebase.firestore) {
+          this.ref = firebase.firestore().collection("copa2026").doc("estado");
+          this.mode = "firestore";
+          this.unsub = this.ref.onSnapshot(doc => {
+            const v = doc.exists ? doc.data() : null;
+            if (!v || !v.seeded) this.ref.set(STATE);
+            else { STATE = normalize(v); afterStateChange(); }
+            this.ready = true;
+          }, () => this.fallbackLocal());
+          return;
+        }
+      } catch (e) { /* cai para localStorage */ }
+    }
+    this.fallbackLocal();
+  },
+  fallbackLocal() {
+    try {
+      const raw = localStorage.getItem(LS_STATE);
+      localStorage.setItem("__t", "1"); localStorage.removeItem("__t"); // testa escrita
+      if (raw) STATE = normalize(JSON.parse(raw));
+      else localStorage.setItem(LS_STATE, JSON.stringify(STATE));
+      this.mode = "local";
+      window.addEventListener("storage", e => {
+        if (e.key === LS_STATE && e.newValue) { STATE = normalize(JSON.parse(e.newValue)); afterStateChange(); }
+        if (e.key === LS_CART && e.newValue) { CART = JSON.parse(e.newValue); renderCart(); renderCatalog(); }
+      });
+    } catch (e) {
+      this.mode = "memory"; // sandbox sem storage
+    }
+    this.ready = true;
+  },
+  persist() {
+    if (this.mode === "firebase-db" && this.ref) { try { this.ref.set(STATE); } catch (e) {} }
+    else if (this.mode === "firestore" && this.ref) { try { this.ref.set(STATE); } catch (e) {} }
+    else if (this.mode === "local") { try { localStorage.setItem(LS_STATE, JSON.stringify(STATE)); } catch (e) {} }
+  }
+};
+function normalize(v) {
+  const s = SEED();
+  return {
+    stock: Object.assign({}, s.stock, v.stock || {}),
+    falt: Object.assign({}, s.falt, v.falt || {}),
+    orders: v.orders || {},
+    seeded: true
+  };
+}
+function persist() { Backend.persist(); afterStateChange(); }
+function afterStateChange() { renderStats(); renderCatalog(); renderFaltam(); renderAdmin(); }
+
+function loadCart() {
+  try { const r = localStorage.getItem(LS_CART); if (r) CART = JSON.parse(r); } catch (e) {}
+  if (!CART.buys) CART.buys = {}; if (!CART.trades) CART.trades = [];
+}
+function saveCart() {
+  try { localStorage.setItem(LS_CART, JSON.stringify(CART)); } catch (e) {}
+  renderCart(); renderCatalog();
+}
+
+/* ---------- TOAST ---------- */
+function toast(msg, type = "ok") {
+  const box = $("#toasts");
+  const el = document.createElement("div");
+  const ic = type === "ok" ? "✅" : type === "err" ? "⛔" : "⚠️";
+  el.className = "toast " + type;
+  el.innerHTML = `<span class="tx">${ic}</span><span>${esc(msg)}</span>`;
+  box.appendChild(el);
+  setTimeout(() => { el.style.transition = ".3s"; el.style.opacity = "0"; el.style.transform = "translateX(120%)"; setTimeout(() => el.remove(), 320); }, 3200);
+}
+
+/* ---------- WHATSAPP ---------- */
+function waLink(extra) {
+  const base = CFG.whatsappMsg + (extra ? "\n\n" + extra : "");
+  return `https://wa.me/${CFG.whatsapp}?text=${encodeURIComponent(base)}`;
+}
+function openWA(extra) { window.open(waLink(extra), "_blank"); }
+
+/* ---------- STATS ---------- */
+function renderStats() {
+  const totalFalt = D.faltantes.length;
+  const got = D.faltantes.filter(c => STATE.falt[c] === "obtida").length;
+  const faltamAgora = totalFalt - got;
+  const spares = Object.values(STATE.stock).reduce((a, b) => a + Math.max(0, b), 0);
+  const have = D.stats.albumTotal - faltamAgora;
+  const pct = Math.round(have / D.stats.albumTotal * 100);
+  $("#stFaltam").textContent = faltamAgora;
+  $("#stRep").textContent = spares;
+  $("#stPct").textContent = pct + "%";
+  $("#albumFill").style.width = pct + "%";
+  $("#albumHave").textContent = have;
+  $("#albumTotal").textContent = D.stats.albumTotal;
+}
+
+/* ---------- CATÁLOGO ---------- */
+const filters = { q: "", team: "all", tipo: "all", onlyAvail: true };
+function matchTipo(s) {
+  switch (filters.tipo) {
+    case "all": return true;
+    case "comuns": return s.tier === 1 && s.tipo !== "coca";
+    case "destaques": return s.tier === 2;
+    case "fwc": return s.tipo === "fwc";
+    case "br": return s.tipo === "br" || s.tipo === "estrela" || (s.team === "BRA");
+    case "coca": return s.tipo === "coca";
+    default: return true;
+  }
+}
+function inCartBuy(code) { return CART.buys[code] > 0; }
+
+function renderCatalog() {
+  const host = $("#catalog");
+  const q = filters.q.trim().toUpperCase();
+  let shownCards = 0, shownTeams = 0;
+  let html = "";
+
+  for (const tc of D.order) {
+    // todas as figurinhas repetidas dessa seleção
+    let codes = Object.keys(D.estoqueInicial).filter(c => st(c).team === tc);
+    if (!codes.length) continue;
+    if (filters.team !== "all" && filters.team !== tc) continue;
+    codes = sortCodes(codes).filter(c => {
+      const s = st(c);
+      if (!matchTipo(s)) return false;
+      if (filters.onlyAvail && (STATE.stock[c] || 0) <= 0) return false;
+      if (q) {
+        const t = D.teams[tc];
+        if (!(c.includes(q) || (t.nome || "").toUpperCase().includes(q))) return false;
+      }
+      return true;
+    });
+    if (!codes.length) continue;
+
+    const t = D.teams[tc];
+    const teamSpare = codes.reduce((a, c) => a + Math.max(0, STATE.stock[c] || 0), 0);
+    const emblem = t.iso
+      ? `<div class="team-flag"><span class="fi fi-${t.iso}"></span></div>`
+      : `<div class="team-emblem ${tc === "CC" ? "coca" : ""}">${tc === "CC" ? "🥤" : "🏆"}</div>`;
+
+    html += `<div class="team-group"><div class="team-head">${emblem}
+      <h3>${esc(t.nome)}</h3><span class="tc">${codes.length} ${codes.length === 1 ? "carta" : "cartas"}</span>
+      <span class="tspare">disponíveis: <b>${teamSpare}</b></span></div><div class="grid">`;
+
+    for (const c of codes) {
+      const s = st(c);
+      const qty = STATE.stock[c] || 0;
+      const out = qty <= 0;
+      html += cardHTML(c, s, qty, out);
+      shownCards++;
+    }
+    html += `</div></div>`;
+    shownTeams++;
+  }
+
+  if (!shownCards) {
+    html = `<div class="empty"><div class="big">🔍</div><b>Nenhuma figurinha encontrada.</b>
+      <p style="margin-top:6px">Ajuste os filtros ou desmarque “Somente disponíveis”.</p></div>`;
+  }
+  host.innerHTML = html;
+  $("#catCount").innerHTML = `<b>${shownCards}</b> cartas`;
+  bindTilt(host);
+}
+
+function cardHTML(c, s, qty, out) {
+  const tierTxt = s.tier === 3 ? "FWC" : s.tier === 2 ? "Destaque" : "Comum";
+  const numTxt = c === "00" ? "00" : "#" + s.num;
+  const inCart = inCartBuy(c);
+  return `<div class="card-wrap"><div class="card ${out ? "out" : ""}" data-tipo="${s.tipo}" data-code="${c}">
+    <div class="glare"></div><div class="sheen"></div>
+    <div class="face">
+      ${inCart ? `<span class="in-cart-badge">no carrinho</span>` : ""}
+      <div class="top"><span class="cnum">${numTxt}</span><span class="tier-rib tier-${s.tier}">${tierTxt}</span></div>
+      <div class="emblem">${emblemBig(c)}</div>
+      <div class="bottom">
+        <div class="cname">${esc(teamOf(c).nome)}</div>
+        <div class="clabel">${esc(s.label)}</div>
+        <div class="price"><span class="v">R$ ${tierPrice(s.tier)}</span><span class="pw">ou ${tierPower(s.tier)} 🔁</span></div>
+        ${out
+          ? `<div class="out-tag">Esgotada</div>`
+          : `<div class="stockline"><span class="qd"></span>${qty} ${qty === 1 ? "disponível" : "disponíveis"}</div>
+             <div class="card-actions">
+               <button class="mini buy" onclick="addBuy('${c}')">🛒 Comprar</button>
+               <button class="mini trade" onclick="openTrade('${c}')">🔁 Trocar</button>
+             </div>`}
+      </div>
+    </div></div></div>`;
+}
+
+/* tilt 3D */
+function bindTilt(host) {
+  $$(".card", host).forEach(card => {
+    const wrap = card.parentElement;
+    wrap.onpointermove = e => {
+      const r = card.getBoundingClientRect();
+      const px = (e.clientX - r.left) / r.width, py = (e.clientY - r.top) / r.height;
+      card.style.transform = `rotateY(${(px - .5) * 12}deg) rotateX(${(.5 - py) * 14}deg) translateZ(6px)`;
+      const g = card.querySelector(".glare");
+      if (g) { g.style.setProperty("--mx", px * 100 + "%"); g.style.setProperty("--my", py * 100 + "%"); g.style.opacity = "1"; }
+    };
+    wrap.onpointerleave = () => {
+      card.style.transform = "";
+      const g = card.querySelector(".glare"); if (g) g.style.opacity = "0";
+    };
+  });
+}
+
+/* ---------- FALTAM ---------- */
+function renderFaltam() {
+  const host = $("#faltam");
+  let html = "";
+  for (const tc of D.order) {
+    const codes = sortCodes(D.faltantes.filter(c => st(c).team === tc));
+    if (!codes.length) continue;
+    const t = D.teams[tc];
+    const emblem = t.iso
+      ? `<div class="team-flag"><span class="fi fi-${t.iso}"></span></div>`
+      : `<div class="team-emblem ${tc === "CC" ? "coca" : ""}">${tc === "CC" ? "🥤" : "🏆"}</div>`;
+    html += `<div class="falt-team"><div class="fh">${emblem}<h4>${esc(t.nome)}</h4></div><div class="falt-pills">`;
+    for (const c of codes) {
+      const status = STATE.falt[c] || "needed";
+      const cls = status === "needed" ? "need" : status;
+      const stTxt = status === "reservada" ? "reservada" : status === "obtida" ? "obtida" : "";
+      const s = st(c);
+      html += `<span class="fpill ${cls}"><span class="d"></span>${c}
+        <span class="pw">${tierPower(s.tier)}🔁</span>${stTxt ? `<span class="st">${stTxt}</span>` : ""}</span>`;
+    }
+    html += `</div></div>`;
+  }
+  host.innerHTML = html || `<div class="empty"><div class="big">🎉</div><b>Álbum completo!</b></div>`;
+}
+
+/* ---------- CARRINHO: COMPRAR ---------- */
+function addBuy(code) {
+  const avail = STATE.stock[code] || 0;
+  const cur = CART.buys[code] || 0;
+  if (cur + 1 > avail) { toast("Estoque insuficiente para essa figurinha.", "warn"); return; }
+  CART.buys[code] = cur + 1;
+  saveCart();
+  toast(`${code} adicionada ao carrinho (compra).`, "ok");
+}
+function changeBuy(code, delta) {
+  const avail = STATE.stock[code] || 0;
+  let v = (CART.buys[code] || 0) + delta;
+  if (v <= 0) { delete CART.buys[code]; }
+  else if (v > avail) { toast("Sem mais estoque.", "warn"); return; }
+  else CART.buys[code] = v;
+  saveCart();
+}
+function removeBuy(code) { delete CART.buys[code]; saveCart(); }
+
+/* ---------- CARRINHO: TROCAR (picker) ---------- */
+let TRADE = { want: null, give: [], required: 0 };
+function usedGives(exceptIdx = -1) {
+  const set = new Set();
+  CART.trades.forEach((t, i) => { if (i !== exceptIdx) t.give.forEach(g => set.add(g)); });
+  return set;
+}
+function openTrade(wantCode) {
+  const s = st(wantCode);
+  TRADE = { want: wantCode, give: [], required: tierPower(s.tier) };
+  $("#tradeWantChip").innerHTML = `<span>${flagSmall(wantCode)}</span> ${wantCode} · ${esc(teamOf(wantCode).nome)}`;
+  $("#tradeReq").textContent = TRADE.required;
+  $("#pickSearch").value = "";
+  renderPicker();
+  showModal(true);
+}
+function flagSmall(code) {
+  const t = teamOf(code);
+  if (t.iso) return `<span class="fi fi-${t.iso}" style="width:18px;height:13px;display:inline-block;border-radius:2px"></span>`;
+  return t.code === "CC" ? "🥤" : "🏆";
+}
+function renderPicker() {
+  const host = $("#pickBody");
+  const q = ($("#pickSearch").value || "").trim().toUpperCase();
+  const used = usedGives();
+  let html = "";
+  for (const tc of D.order) {
+    let codes = sortCodes(D.faltantes.filter(c => st(c).team === tc && (STATE.falt[c] || "needed") === "needed"));
+    if (q) {
+      const nome = (D.teams[tc].nome || "").toUpperCase();
+      codes = codes.filter(c => c.includes(q) || nome.includes(q));
+    }
+    if (!codes.length) continue;
+    const t = D.teams[tc];
+    html += `<div class="pick-team"><div class="ph">${flagSmall(codes[0])} ${esc(t.nome)}</div><div class="pick-grid">`;
+    for (const c of codes) {
+      const s = st(c);
+      const sel = TRADE.give.includes(c);
+      const dis = used.has(c) && !sel;
+      html += `<span class="pick ${sel ? "sel" : ""} ${dis ? "disabled" : ""}" ${dis ? "" : `onclick="togglePick('${c}')"`}>
+        ${c} <span class="pw">${tierPower(s.tier)}🔁</span></span>`;
+    }
+    html += `</div></div>`;
+  }
+  if (!html) html = `<div class="empty"><div class="big">🔁</div><b>Nada disponível para esse filtro.</b></div>`;
+  host.innerHTML = html;
+  updateMeter();
+}
+function togglePick(code) {
+  const i = TRADE.give.indexOf(code);
+  if (i >= 0) TRADE.give.splice(i, 1); else TRADE.give.push(code);
+  renderPicker();
+}
+function tradePower(arr) { return arr.reduce((a, c) => a + tierPower(st(c).tier), 0); }
+function updateMeter() {
+  const have = tradePower(TRADE.give);
+  const need = TRADE.required;
+  const pct = Math.min(100, Math.round(have / need * 100));
+  const ok = have >= need;
+  $("#meterFill").style.width = pct + "%";
+  $("#meterFill").classList.toggle("full", ok);
+  $("#meterLab").innerHTML = `<span>Poder de troca oferecido</span>
+    <span class="${ok ? "ok" : "no"}">${have} / ${need} ${ok ? "✓ suficiente" : "faltam " + (need - have)}</span>`;
+  $("#confirmTrade").disabled = !ok || TRADE.give.length === 0;
+}
+function confirmTrade() {
+  if (tradePower(TRADE.give) < TRADE.required || !TRADE.give.length) return;
+  CART.trades.push({ id: "T" + Date.now().toString(36), want: TRADE.want, give: TRADE.give.slice() });
+  saveCart();
+  showModal(false);
+  toast(`Troca de ${TRADE.want} adicionada ao carrinho.`, "ok");
+}
+function removeTrade(id) { CART.trades = CART.trades.filter(t => t.id !== id); saveCart(); }
+
+/* ---------- RENDER CARRINHO ---------- */
+function cartCounts() {
+  const buyN = Object.values(CART.buys).reduce((a, b) => a + b, 0);
+  const tradeN = CART.trades.length;
+  return { buyN, tradeN, total: buyN + tradeN };
+}
+function cartReais() { return Object.entries(CART.buys).reduce((a, [c, q]) => a + q * tierPrice(st(c).tier), 0); }
+function giveTotal() { return CART.trades.reduce((a, t) => a + t.give.length, 0); }
+
+function renderCart() {
+  const { total } = cartCounts();
+  $("#cartBadge").textContent = total;
+  $("#cartBadge").style.display = total ? "grid" : "none";
+
+  const body = $("#cartItems");
+  const foot = $("#cartFoot");
+  if (!total) {
+    body.innerHTML = `<div class="empty" style="margin-top:30px"><div class="big">🛒</div><b>Seu carrinho está vazio.</b>
+      <p style="margin-top:6px">Escolha figurinhas no catálogo para comprar ou trocar.</p></div>`;
+    foot.style.display = "none";
+    return;
+  }
+  foot.style.display = "block";
+  let html = "";
+
+  // compras
+  const buys = Object.entries(CART.buys);
+  if (buys.length) {
+    html += `<div class="osl" style="margin:4px 0 10px;font-size:12px;font-weight:800;color:var(--muted);text-transform:uppercase;letter-spacing:.4px">🛒 Comprar (${buys.reduce((a,[,q])=>a+q,0)})</div>`;
+    for (const [c, q] of buys) {
+      const s = st(c);
+      html += `<div class="citem">
+        <div class="ct">${ctMini(c)}</div>
+        <div class="ci-main">
+          <div class="cc">${c} <span class="mode-tag buy">compra</span></div>
+          <div class="cs">${esc(teamOf(c).nome)} · ${esc(s.label)} · R$ ${tierPrice(s.tier)}/un</div>
+        </div>
+        <div class="ci-side">
+          <div class="qty"><button onclick="changeBuy('${c}',-1)">−</button><b>${q}</b><button onclick="changeBuy('${c}',1)">+</button></div>
+          <span class="pv">R$ ${q * tierPrice(s.tier)}</span>
+          <button class="rm" onclick="removeBuy('${c}')">remover</button>
+        </div></div>`;
+    }
+  }
+  // trocas
+  if (CART.trades.length) {
+    html += `<div class="osl" style="margin:16px 0 10px;font-size:12px;font-weight:800;color:var(--emerald);text-transform:uppercase;letter-spacing:.4px">🔁 Trocar (${CART.trades.length})</div>`;
+    for (const t of CART.trades) {
+      const s = st(t.want);
+      html += `<div class="citem">
+        <div class="ct">${ctMini(t.want)}</div>
+        <div class="ci-main">
+          <div class="cc">${t.want} <span class="mode-tag trade">troca</span></div>
+          <div class="cs">${esc(teamOf(t.want).nome)} · ${esc(s.label)} · custa ${tierPower(s.tier)}🔁</div>
+          <div class="give-list">${t.give.map(g => `<span class="gv">você dá ${g}</span>`).join("")}</div>
+        </div>
+        <div class="ci-side">
+          <button class="rm" onclick="removeTrade('${t.id}')">remover</button>
+        </div></div>`;
+    }
+  }
+  body.innerHTML = html;
+
+  // resumo
+  const reais = cartReais();
+  $("#sumBuy").textContent = buys.reduce((a, [, q]) => a + q, 0);
+  $("#sumTrade").textContent = CART.trades.length;
+  $("#sumGive").textContent = giveTotal();
+  $("#sumReais").textContent = "R$ " + reais;
+}
+function ctMini(code) {
+  const t = teamOf(code);
+  if (t.iso) return `<span class="fi fi-${t.iso}"></span>`;
+  return `<span class="ce">${t.code === "CC" ? "🥤" : "🏆"}</span>`;
+}
+
+/* ---------- CHECKOUT ---------- */
+function validateField(id, ok) {
+  const grp = $("#" + id).closest(".form-grp");
+  grp.classList.toggle("show-err", !ok);
+  $("#" + id).classList.toggle("bad", !ok);
+  return ok;
+}
+function doCheckout() {
+  const nome = $("#fNome").value.trim();
+  const fone = $("#fFone").value.trim();
+  const area = $("#fArea").value.trim();
+  let ok = true;
+  ok = validateField("fNome", nome.length >= 3 && nome.includes(" ")) && ok;
+  ok = validateField("fFone", fone.replace(/\D/g, "").length >= 10) && ok;
+  ok = validateField("fArea", area.length >= 2) && ok;
+  if (!ok) { toast("Preencha nome completo, telefone e área.", "err"); return; }
+
+  // revalida estoque/faltantes contra o estado atual
+  const demand = {};
+  Object.entries(CART.buys).forEach(([c, q]) => demand[c] = (demand[c] || 0) + q);
+  CART.trades.forEach(t => demand[t.want] = (demand[t.want] || 0) + 1);
+  for (const [c, need] of Object.entries(demand)) {
+    if ((STATE.stock[c] || 0) < need) { toast(`Estoque de ${c} mudou. Ajuste o carrinho.`, "err"); afterStateChange(); return; }
+  }
+  const gives = [];
+  for (const t of CART.trades) for (const g of t.give) {
+    if ((STATE.falt[g] || "needed") !== "needed") { toast(`A figurinha ${g} já não está disponível para troca.`, "err"); renderFaltam(); return; }
+    if (gives.includes(g)) { toast(`A figurinha ${g} está repetida em duas trocas.`, "err"); return; }
+    gives.push(g);
+  }
+
+  // aplica
+  for (const [c, need] of Object.entries(demand)) STATE.stock[c] = (STATE.stock[c] || 0) - need;
+  gives.forEach(g => STATE.falt[g] = "reservada");
+
+  const id = "PED-" + (Date.now().toString(36).toUpperCase().slice(-6));
+  const order = {
+    id, ts: Date.now(), status: "novo",
+    cliente: { nome, fone, area },
+    buys: Object.entries(CART.buys).map(([c, q]) => ({ code: c, qty: q, tier: st(c).tier })),
+    trades: CART.trades.map(t => ({ id: t.id, want: t.want, give: t.give.slice() })),
+    returns: { buys: {}, trades: {} },
+    totalReais: cartReais(),
+    totalCards: cartCounts().total
+  };
+  STATE.orders[id] = order;
+  persist();
+
+  // limpa carrinho
+  CART = { buys: {}, trades: [] };
+  saveCart();
+
+  closeDrawer();
+  showConfirm(order);
+}
+function showConfirm(order) {
+  const m = $("#confirmModal");
+  const reaisTxt = order.totalReais > 0 ? `R$ ${order.totalReais}` : "—";
+  const linhas = [];
+  if (order.buys.length) linhas.push("COMPRA: " + order.buys.map(b => `${b.code}${b.qty > 1 ? " x" + b.qty : ""}`).join(", "));
+  if (order.trades.length) linhas.push("TROCA: " + order.trades.map(t => `${t.want} (dando ${t.give.join("+")})`).join("; "));
+  const waMsg = `Pedido ${order.id}\nNome: ${order.cliente.nome}\nÁrea: ${order.cliente.area}\n${linhas.join("\n")}\nTotal a pagar: ${reaisTxt}`;
+  $("#confirmBody").innerHTML = `
+    <div style="text-align:center"><div style="font-size:50px">🎉</div>
+    <h3 style="font-family:var(--ff-disp);font-weight:400;font-size:26px;letter-spacing:.5px;margin:6px 0">Pedido enviado!</h3>
+    <p style="color:var(--muted);font-size:14px">Código <b style="color:var(--gold2)">${order.id}</b></p></div>
+    <div class="csum" style="margin-top:18px;text-align:left">
+      <div class="row"><span>Figurinhas</span><span class="v">${order.totalCards}</span></div>
+      <div class="row"><span>A pagar (compras)</span><span class="v">${reaisTxt}</span></div>
+      ${order.trades.length ? `<div class="row"><span>Você entrega na troca</span><span class="v">${order.trades.reduce((a,t)=>a+t.give.length,0)} figurinhas</span></div>` : ""}
+    </div>
+    <div class="owner-box"><div class="t">Combine a entrega</div>
+      <div class="l">No próximo dia útil levo as figurinhas para firmar. Fale comigo pelo WhatsApp para combinar horário e local.</div></div>
+    <a class="btn btn-wa btn-block" style="margin-top:6px" href="${waLink(waMsg)}" target="_blank">
+      ${waSVG()} Combinar pelo WhatsApp</a>
+    <button class="btn btn-ghost btn-block" style="margin-top:10px" onclick="hideConfirm()">Fechar</button>`;
+  m.classList.add("show");
+}
+function hideConfirm() { $("#confirmModal").classList.remove("show"); }
+
+/* ---------- ADMIN ---------- */
+let adminAuthed = false;
+let adminTab = "novo";
+function openAdmin() {
+  $("#adminScrim").classList.add("show");
+  $("#adminDrawer").classList.add("show");
+  renderAdmin();
+  if (!adminAuthed) setTimeout(() => $("#adminPass") && $("#adminPass").focus(), 200);
+}
+function closeAdmin() { $("#adminScrim").classList.remove("show"); $("#adminDrawer").classList.remove("show"); }
+function tryAdmin() {
+  const v = $("#adminPass").value;
+  if (v === CFG.adminPass) { adminAuthed = true; toast("Acesso liberado.", "ok"); renderAdmin(); }
+  else { toast("Senha incorreta.", "err"); $("#adminPass").value = ""; $("#adminPass").classList.add("bad"); }
+}
+function setAdminTab(t) { adminTab = t; renderAdmin(); }
+function renderAdmin() {
+  const body = $("#adminBody");
+  if (!body) return;
+  if (!adminAuthed) {
+    body.innerHTML = `<div class="admin-lock">
+      <div class="lk">🔒</div><h3>Área do administrador</h3>
+      <p>Digite a senha para ver e separar os pedidos.</p>
+      <div class="form-grp"><input id="adminPass" type="password" placeholder="Senha" onkeydown="if(event.key==='Enter')tryAdmin()"></div>
+      <button class="btn btn-gold btn-block" onclick="tryAdmin()">Entrar</button></div>`;
+    return;
+  }
+  const orders = Object.values(STATE.orders).sort((a, b) => b.ts - a.ts);
+  const novos = orders.filter(o => o.status === "novo");
+  const seps = orders.filter(o => o.status === "separado");
+  const dones = orders.filter(o => o.status === "concluido");
+  const list = adminTab === "novo" ? novos : adminTab === "separado" ? seps : dones;
+
+  let html = `<div class="admin-toolbar">
+      <button class="sbtn ghost" onclick="exportOrders()">⬇️ Exportar JSON</button>
+      <button class="sbtn danger" onclick="resetStock()">♻️ Reiniciar estoque</button>
+      <div class="admin-stat"><span>Novos <b>${novos.length}</b></span><span>Separados <b>${seps.length}</b></span><span>Concluídos <b>${dones.length}</b></span></div>
+    </div>
+    <div class="atab">
+      <button class="${adminTab === "novo" ? "on" : ""}" onclick="setAdminTab('novo')">Novos (${novos.length})</button>
+      <button class="${adminTab === "separado" ? "on" : ""}" onclick="setAdminTab('separado')">Separados (${seps.length})</button>
+      <button class="${adminTab === "concluido" ? "on" : ""}" onclick="setAdminTab('concluido')">Concluídos (${dones.length})</button>
+    </div>`;
+
+  if (!list.length) {
+    html += `<div class="empty"><div class="big">📭</div><b>Nenhum pedido aqui.</b></div>`;
+  } else {
+    for (const o of list) html += orderHTML(o);
+  }
+  body.innerHTML = html;
+}
+function ensureOrderReturns(o) {
+  if (!o.returns) o.returns = { buys: {}, trades: {} };
+  if (!o.returns.buys) o.returns.buys = {};
+  if (!o.returns.trades) o.returns.trades = {};
+  return o.returns;
+}
+function returnedBuyQty(o, code) { return Number((o.returns && o.returns.buys && o.returns.buys[code]) || 0); }
+function tradeKey(t, idx) { return t.id || `${t.want}-${idx}`; }
+function isTradeReturned(o, idx) {
+  const t = o.trades[idx];
+  return !!(o.returns && o.returns.trades && o.returns.trades[tradeKey(t, idx)]);
+}
+function orderActiveBuyQty(o, b) { return Math.max(0, Number(b.qty || 0) - returnedBuyQty(o, b.code)); }
+function orderActiveReais(o) {
+  return (o.buys || []).reduce((a, b) => a + orderActiveBuyQty(o, b) * tierPrice(st(b.code).tier), 0);
+}
+function orderActiveCards(o) {
+  const buys = (o.buys || []).reduce((a, b) => a + orderActiveBuyQty(o, b), 0);
+  const trades = (o.trades || []).reduce((a, _t, i) => a + (isTradeReturned(o, i) ? 0 : 1), 0);
+  return buys + trades;
+}
+function hasReturnableItems(o) {
+  return (o.buys || []).some(b => orderActiveBuyQty(o, b) > 0) || (o.trades || []).some((_t, i) => !isTradeReturned(o, i));
+}
+function qtyOptions(max) {
+  let h = `<option value="0">0</option>`;
+  for (let i = 1; i <= max; i++) h += `<option value="${i}">${i}</option>`;
+  return h;
+}
+function orderHTML(o) {
+  ensureOrderReturns(o);
+  const d = new Date(o.ts);
+  const dt = d.toLocaleDateString("pt-BR") + " " + d.toLocaleTimeString("pt-BR", { hour: "2-digit", minute: "2-digit" });
+  const foneDigits = o.cliente.fone.replace(/\D/g, "");
+  const wa = `https://wa.me/55${foneDigits.length <= 11 ? foneDigits : foneDigits}`;
+  const activeReais = orderActiveReais(o);
+  const activeCards = orderActiveCards(o);
+  let buysH = (o.buys || []).map(b => {
+    const ret = returnedBuyQty(o, b.code);
+    const active = orderActiveBuyQty(o, b);
+    const totalTxt = b.qty > 1 ? ` ×${b.qty}` : "";
+    return `<span class="oitem ${active <= 0 ? "returned" : ""}">${b.code}${totalTxt} <span style="color:var(--gold2)">R$${b.qty * tierPrice(st(b.code).tier)}</span>
+      ${ret ? `<span class="meta">devolvidas ${ret}</span>` : ""}
+      ${active > 0 ? `<label class="meta">devolver <select class="return-select" data-return-buy="${b.code}">${qtyOptions(active)}</select></label>` : `<span class="ret-tag">devolvida</span>`}</span>`;
+  }).join("");
+  let tradesH = (o.trades || []).map((t, idx) => {
+    const ret = isTradeReturned(o, idx);
+    const key = tradeKey(t, idx);
+    return `<div class="otrade ${ret ? "returned" : ""}">
+      ${ret ? `<span class="ret-tag">troca devolvida</span>` : `<label class="return-check"><input type="checkbox" data-return-trade="${key}" data-return-trade-idx="${idx}"> devolver esta troca</label>`}
+      <div class="tw">🔁 quer ${t.want} <span style="color:var(--muted);font-weight:600">(${esc(teamOf(t.want).nome)})</span></div>
+      <div class="tg">recebe de ${esc(o.cliente.nome.split(" ")[0])}:</div>
+      <div class="oitems">${t.give.map(g => `<span class="oitem give">${g}</span>`).join("")}</div></div>`;
+  }).join("");
+
+  let actions = "";
+  if (o.status === "novo") actions = `<button class="sbtn gold" onclick="setOrder('${o.id}','separado')">📦 Marcar separado</button>`;
+  else if (o.status === "separado") actions = `<button class="sbtn ok" onclick="setOrder('${o.id}','concluido')">✅ Concluir (firmado)</button>`;
+  else actions = `<span class="oitem">Concluído ✓</span>`;
+
+  const returnBtn = hasReturnableItems(o) ? `<button class="sbtn ghost" onclick="returnSelectedFromOrder('${o.id}')">↩️ Devolver selecionadas</button>` : `<span class="ret-tag">pedido sem itens ativos</span>`;
+
+  return `<div class="order ${o.status}" data-order-id="${o.id}">
+    <div class="oh"><span class="oid">${o.id}</span>
+      <span class="ostatus ${o.status}">${o.status === "novo" ? "Novo" : o.status === "separado" ? "Separado" : "Concluído"}</span>
+      <span class="ots">${dt}</span></div>
+    <div class="ocli">
+      <div class="oc"><div class="ol">Nome completo</div><div class="ov">${esc(o.cliente.nome)}</div></div>
+      <div class="oc"><div class="ol">Telefone</div><div class="ov"><a href="${wa}" target="_blank">${esc(o.cliente.fone)}</a></div></div>
+      <div class="oc"><div class="ol">Área (Lince Tech)</div><div class="ov">${esc(o.cliente.area)}</div></div>
+    </div>
+    ${(o.buys || []).length ? `<div class="osec"><div class="osl">🛒 Comprar — ativo R$ ${activeReais}</div><div class="oitems">${buysH}</div></div>` : ""}
+    ${(o.trades || []).length ? `<div class="osec"><div class="osl">🔁 Trocar (${(o.trades || []).filter((_t,i)=>!isTradeReturned(o,i)).length} ativa${(o.trades || []).filter((_t,i)=>!isTradeReturned(o,i)).length === 1 ? "" : "s"})</div>${tradesH}</div>` : ""}
+    <div class="oreturn"><div class="rt">Reversão parcial</div><div style="font-size:12px;color:var(--muted);font-weight:600">Selecione a quantidade de compras ou marque as trocas que não se concretizaram. Ao devolver, o estoque e a lista de faltantes são atualizados automaticamente.</div></div>
+    <div class="oactions">${actions}${returnBtn}
+      <button class="sbtn danger" onclick="cancelOrder('${o.id}')">✖ Cancelar</button>
+      <span class="otot">${activeReais > 0 ? "R$ " + activeReais : "Troca"} · ${activeCards} fig. ativa${activeCards === 1 ? "" : "s"}</span></div>
+  </div>`;
+}
+function setOrder(id, status) {
+  const o = STATE.orders[id]; if (!o) return;
+  ensureOrderReturns(o);
+  if (status === "concluido") {
+    (o.trades || []).forEach((t, idx) => {
+      if (!isTradeReturned(o, idx)) t.give.forEach(g => STATE.falt[g] = "obtida");
+    });
+  }
+  o.status = status;
+  o.totalReais = orderActiveReais(o);
+  o.totalCards = orderActiveCards(o);
+  persist();
+  toast(status === "separado" ? "Pedido separado." : "Pedido concluído. Faltantes atualizados.", "ok");
+}
+function returnSelectedFromOrder(id) {
+  const o = STATE.orders[id]; if (!o) return;
+  ensureOrderReturns(o);
+  const root = document.querySelector(`[data-order-id="${id}"]`);
+  if (!root) return;
+
+  const buyReturns = [];
+  root.querySelectorAll("[data-return-buy]").forEach(sel => {
+    const qty = Number(sel.value || 0);
+    const code = sel.getAttribute("data-return-buy");
+    const b = (o.buys || []).find(x => x.code === code);
+    if (!b || qty <= 0) return;
+    const max = orderActiveBuyQty(o, b);
+    buyReturns.push({ code, qty: Math.min(qty, max) });
+  });
+
+  const tradeReturns = [];
+  root.querySelectorAll("[data-return-trade]:checked").forEach(chk => {
+    const idx = Number(chk.getAttribute("data-return-trade-idx"));
+    const t = (o.trades || [])[idx];
+    if (!t || isTradeReturned(o, idx)) return;
+    tradeReturns.push({ idx, key: tradeKey(t, idx), trade: t });
+  });
+
+  const qtdBuy = buyReturns.reduce((a, x) => a + x.qty, 0);
+  if (!qtdBuy && !tradeReturns.length) { toast("Selecione pelo menos uma figurinha ou troca para devolver.", "warn"); return; }
+
+  const resumo = [];
+  if (buyReturns.length) resumo.push("compras: " + buyReturns.map(x => `${x.code} x${x.qty}`).join(", "));
+  if (tradeReturns.length) resumo.push("trocas: " + tradeReturns.map(x => `${x.trade.want}`).join(", "));
+  if (!confirm(`Devolver itens do pedido ${id}?\n\n${resumo.join("\n")}`)) return;
+
+  buyReturns.forEach(x => {
+    if (x.qty <= 0) return;
+    STATE.stock[x.code] = (STATE.stock[x.code] || 0) + x.qty;
+    o.returns.buys[x.code] = returnedBuyQty(o, x.code) + x.qty;
+  });
+
+  tradeReturns.forEach(x => {
+    const t = x.trade;
+    STATE.stock[t.want] = (STATE.stock[t.want] || 0) + 1;
+    t.give.forEach(g => STATE.falt[g] = "needed");
+    o.returns.trades[x.key] = true;
+  });
+
+  o.totalReais = orderActiveReais(o);
+  o.totalCards = orderActiveCards(o);
+  persist();
+  toast("Itens devolvidos. Estoque e trocas foram sincronizados.", "ok");
+}
+function cancelOrder(id) {
+  const o = STATE.orders[id]; if (!o) return;
+  ensureOrderReturns(o);
+  if (!confirm(`Cancelar o pedido ${id}? Apenas os itens ainda ativos serão restaurados; itens já devolvidos não serão somados novamente.`)) return;
+  (o.buys || []).forEach(b => {
+    const active = orderActiveBuyQty(o, b);
+    if (active > 0) STATE.stock[b.code] = (STATE.stock[b.code] || 0) + active;
+  });
+  (o.trades || []).forEach((t, idx) => {
+    if (isTradeReturned(o, idx)) return;
+    STATE.stock[t.want] = (STATE.stock[t.want] || 0) + 1;
+    t.give.forEach(g => STATE.falt[g] = "needed");
+  });
+  delete STATE.orders[id];
+  persist();
+  toast("Pedido cancelado e itens ativos restaurados.", "warn");
+}
+function resetStock() {
+  if (!confirm("Reiniciar TODO o estoque para o inicial e apagar TODOS os pedidos? Esta ação não pode ser desfeita.")) return;
+  STATE = SEED();
+  persist();
+  toast("Estoque reiniciado.", "warn");
+}
+function exportOrders() {
+  const data = JSON.stringify({ exportadoEm: new Date().toISOString(), pedidos: STATE.orders, estoque: STATE.stock, faltantes: STATE.falt }, null, 2);
+  const blob = new Blob([data], { type: "application/json" });
+  const a = document.createElement("a");
+  a.href = URL.createObjectURL(blob);
+  a.download = `pedidos-copa2026-${new Date().toISOString().slice(0, 10)}.json`;
+  a.click();
+  URL.revokeObjectURL(a.href);
+}
+
+/* ---------- DRAWER / MODAL CTRL ---------- */
+function openDrawer() { $("#cartScrim").classList.add("show"); $("#cartDrawer").classList.add("show"); renderCart(); }
+function closeDrawer() { $("#cartScrim").classList.remove("show"); $("#cartDrawer").classList.remove("show"); }
+function showModal(b) { $("#tradeModal").classList.toggle("show", b); }
+
+/* ---------- ICONS ---------- */
+function waSVG() { return `<svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor"><path d="M.057 24l1.687-6.163a11.867 11.867 0 01-1.587-5.946C.16 5.335 5.495 0 12.05 0a11.817 11.817 0 018.413 3.488 11.824 11.824 0 013.48 8.414c-.003 6.557-5.338 11.892-11.893 11.892a11.9 11.9 0 01-5.688-1.448L.057 24zm6.597-3.807c1.676.995 3.276 1.591 5.392 1.592 5.448 0 9.886-4.434 9.889-9.885.002-5.462-4.415-9.89-9.881-9.892-5.452 0-9.887 4.434-9.889 9.884a9.86 9.86 0 001.518 5.26l-.999 3.648 3.97-1.039zm11.387-5.464c-.074-.124-.272-.198-.57-.347-.297-.149-1.758-.868-2.031-.967-.272-.099-.47-.149-.669.149-.198.297-.768.967-.941 1.165-.173.198-.347.223-.644.074-.297-.149-1.255-.462-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.297-.347.446-.521.151-.172.2-.296.3-.495.099-.198.05-.372-.025-.521-.075-.148-.669-1.611-.916-2.206-.242-.579-.487-.501-.669-.51l-.57-.01c-.198 0-.52.074-.792.372s-1.04 1.016-1.04 2.479 1.065 2.876 1.213 3.074c.149.198 2.095 3.2 5.076 4.487.709.306 1.263.489 1.694.626.712.226 1.36.194 1.872.118.571-.085 1.758-.719 2.006-1.413.248-.695.248-1.29.173-1.414z"/></svg>`; }
+
+/* ---------- INIT ---------- */
+function init() {
+  // ano rodapé
+  $("#year").textContent = new Date().getFullYear();
+  // dados do dono
+  $$("[data-owner-nome]").forEach(e => e.textContent = CFG.dono.nome);
+  $$("[data-owner-fone]").forEach(e => e.textContent = CFG.dono.fonePretty);
+  $$("[data-owner-area]").forEach(e => e.textContent = CFG.dono.area);
+  // links WhatsApp estáticos
+  $$("[data-wa]").forEach(a => a.href = waLink());
+
+  // selects de filtro: seleções
+  const teamSel = $("#fTeam");
+  teamSel.innerHTML = `<option value="all">Todas as seleções</option>` +
+    D.order.filter(tc => Object.keys(D.estoqueInicial).some(c => st(c).team === tc))
+      .map(tc => `<option value="${tc}">${esc(D.teams[tc].nome)}</option>`).join("");
+
+  // eventos filtros
+  $("#fSearch").addEventListener("input", e => { filters.q = e.target.value; renderCatalog(); });
+  teamSel.addEventListener("change", e => { filters.team = e.target.value; renderCatalog(); });
+  $("#fTipo").addEventListener("change", e => { filters.tipo = e.target.value; renderCatalog(); });
+  $("#fAvail").addEventListener("change", e => { filters.onlyAvail = e.target.checked; renderCatalog(); });
+  $("#pickSearch").addEventListener("input", renderPicker);
+
+  loadCart();
+  Backend.init();
+  afterStateChange();
+  renderCart();
+
+  // FAB esconde perto do rodapé
+  const fab = $("#fab");
+  window.addEventListener("scroll", () => {
+    const nearBottom = window.innerHeight + window.scrollY > document.body.offsetHeight - 160;
+    fab.classList.toggle("hide", nearBottom);
+  }, { passive: true });
+}
+document.addEventListener("DOMContentLoaded", init);
+
+/* expõe handlers usados em onclick inline */
+Object.assign(window, {
+  addBuy, changeBuy, removeBuy, openTrade, togglePick, confirmTrade, removeTrade,
+  openDrawer, closeDrawer, showModal, openAdmin, closeAdmin, tryAdmin, setAdminTab,
+  setOrder, returnSelectedFromOrder, cancelOrder, resetStock, exportOrders, doCheckout, hideConfirm, openWA
+});
+</script>
+</body>
+</html>
