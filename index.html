@@ -763,12 +763,13 @@ body.overlay-open .card[data-tipo="time"]::before{display:none!important;animati
 "use strict";
 
 /* ---------- CONFIG FIREBASE ----------
-   Projeto: copa2026-4ada1. O sistema usa Firestore em tempo real para
+   Projeto: copa2026-4ada1. O sistema usa o Realtime Database em tempo real para
    sincronizar estoque, pedidos e devoluções. Caso o Firestore/Database
    não esteja disponível, cai automaticamente para localStorage.          */
 const FB_CONFIG = {
   apiKey: "AIzaSyB3ThjnCVhw8HN7gMBVE48CnuUuGg9SjM8",
   authDomain: "copa2026-4ada1.firebaseapp.com",
+  databaseURL: "https://copa2026-4ada1-default-rtdb.firebaseio.com",
   projectId: "copa2026-4ada1",
   storageBucket: "copa2026-4ada1.firebasestorage.app",
   messagingSenderId: "355163272269",
