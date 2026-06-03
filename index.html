@@ -313,6 +313,22 @@ section.block{padding:clamp(56px,8vw,84px) 0;scroll-margin-top:86px}
   box-shadow:-30px 0 60px -20px rgba(0,0,0,.8);transform:translateX(100%);transition:transform .3s cubic-bezier(.4,0,.2,1);
   display:flex;flex-direction:column}
 .drawer.show{transform:none}
+/* --- correção de empilhamento: cartas (blend-mode/3D) não devem vazar sobre os painéis --- */
+.scrim,.drawer,.modal{isolation:isolate}
+body.overlay-open{overflow:hidden}
+body.overlay-open .card-wrap{perspective:none}
+body.overlay-open .card{transform:none!important;will-change:auto;transition:none}
+body.overlay-open .card .sheen,
+body.overlay-open .card .glare,
+body.overlay-open .card[data-tipo="fwc"]::before,
+body.overlay-open .card[data-tipo="escudo"]::before,
+body.overlay-open .card[data-tipo="time"]::before{display:none!important;animation:none!important}
+/* selo de status do backend (admin) */
+.be-badge{font-size:11px;font-weight:800;padding:5px 10px;border-radius:99px;border:1px solid var(--brd);white-space:nowrap}
+.be-badge.be-firestore,.be-badge.be-firebase-db{background:rgba(45,212,167,.14);border-color:rgba(45,212,167,.45);color:var(--emerald)}
+.be-badge.be-local{background:rgba(233,185,73,.14);border-color:rgba(233,185,73,.45);color:var(--gold2)}
+.be-badge.be-memory{background:rgba(255,255,255,.06);color:var(--muted)}
+.owner-box.done{background:rgba(45,212,167,.12);border-color:rgba(45,212,167,.5)}
 .drawer-head{padding:20px;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid var(--brd);flex:none}
 .drawer-head h3{font-family:var(--ff-disp);font-weight:400;font-size:24px;letter-spacing:.5px;display:flex;align-items:center;gap:10px}
 .xbtn{width:38px;height:38px;border-radius:10px;display:grid;place-items:center;background:var(--panel);border:1px solid var(--brd);color:var(--muted);transition:.15s}
@@ -828,10 +844,10 @@ const Backend = {
           this.mode = "firebase-db";
           this.ref.on("value", snap => {
             const v = snap.val();
-            if (!v || !v.seeded) this.ref.set(STATE);
+            if (!v || !v.seeded) { try { this.ref.set(STATE); } catch (e) {} }
             else { STATE = normalize(v); afterStateChange(); }
             this.ready = true;
-          }, () => this.fallbackLocal());
+          }, err => { console.warn("[Firebase RTDB] erro de sincronização, usando armazenamento local:", err); this.fallbackLocal(); });
           return;
         }
 
@@ -840,13 +856,13 @@ const Backend = {
           this.mode = "firestore";
           this.unsub = this.ref.onSnapshot(doc => {
             const v = doc.exists ? doc.data() : null;
-            if (!v || !v.seeded) this.ref.set(STATE);
+            if (!v || !v.seeded) this.ref.set(STATE).catch(e => console.warn("[Firestore] falha ao gravar estado inicial:", e));
             else { STATE = normalize(v); afterStateChange(); }
             this.ready = true;
-          }, () => this.fallbackLocal());
+          }, err => { console.warn("[Firestore] erro de sincronização, usando armazenamento local:", err); this.fallbackLocal(); });
           return;
         }
-      } catch (e) { /* cai para localStorage */ }
+      } catch (e) { console.warn("[Firebase] não foi possível inicializar, usando armazenamento local:", e); }
     }
     this.fallbackLocal();
   },
@@ -867,8 +883,8 @@ const Backend = {
     this.ready = true;
   },
   persist() {
-    if (this.mode === "firebase-db" && this.ref) { try { this.ref.set(STATE); } catch (e) {} }
-    else if (this.mode === "firestore" && this.ref) { try { this.ref.set(STATE); } catch (e) {} }
+    if (this.mode === "firebase-db" && this.ref) { try { this.ref.set(STATE).catch(e => console.warn("[Firebase RTDB] falha ao gravar:", e)); } catch (e) { console.warn(e); } }
+    else if (this.mode === "firestore" && this.ref) { try { this.ref.set(STATE).catch(e => console.warn("[Firestore] falha ao gravar pedido/estado:", e)); } catch (e) { console.warn(e); } }
     else if (this.mode === "local") { try { localStorage.setItem(LS_STATE, JSON.stringify(STATE)); } catch (e) {} }
   }
 };
@@ -1288,30 +1304,47 @@ function doCheckout() {
   closeDrawer();
   showConfirm(order);
 }
-function showConfirm(order) {
-  const m = $("#confirmModal");
+function comprovanteMsg(order) {
   const reaisTxt = order.totalReais > 0 ? `R$ ${order.totalReais}` : "—";
   const linhas = [];
   if (order.buys.length) linhas.push("COMPRA: " + order.buys.map(b => `${b.code}${b.qty > 1 ? " x" + b.qty : ""}`).join(", "));
-  if (order.trades.length) linhas.push("TROCA: " + order.trades.map(t => `${t.want} (dando ${t.give.join("+")})`).join("; "));
-  const waMsg = `Pedido ${order.id}\nNome: ${order.cliente.nome}\nÁrea: ${order.cliente.area}\n${linhas.join("\n")}\nTotal a pagar: ${reaisTxt}`;
+  if (order.trades.length) linhas.push("TROCA: " + order.trades.map(t => `${t.want} (entrego ${t.give.join("+")})`).join("; "));
+  return `*COMPROVANTE DO PEDIDO ${order.id}*\nNome: ${order.cliente.nome}\nTelefone: ${order.cliente.fone}\nÁrea (Lince Tech): ${order.cliente.area}\n${linhas.join("\n")}\nTotal a pagar: ${reaisTxt}\n\nEstou enviando este comprovante para confirmar o pedido. Se já efetuei o pagamento, segue o comprovante de pagamento em anexo.`;
+}
+function showConfirm(order) {
+  const m = $("#confirmModal");
+  const reaisTxt = order.totalReais > 0 ? `R$ ${order.totalReais}` : "—";
   $("#confirmBody").innerHTML = `
-    <div style="text-align:center"><div style="font-size:50px">🎉</div>
-    <h3 style="font-family:var(--ff-disp);font-weight:400;font-size:26px;letter-spacing:.5px;margin:6px 0">Pedido enviado!</h3>
+    <div style="text-align:center"><div style="font-size:50px">🧾</div>
+    <h3 style="font-family:var(--ff-disp);font-weight:400;font-size:26px;letter-spacing:.5px;margin:6px 0">Pedido registrado!</h3>
     <p style="color:var(--muted);font-size:14px">Código <b style="color:var(--gold2)">${order.id}</b></p></div>
     <div class="csum" style="margin-top:18px;text-align:left">
       <div class="row"><span>Figurinhas</span><span class="v">${order.totalCards}</span></div>
       <div class="row"><span>A pagar (compras)</span><span class="v">${reaisTxt}</span></div>
       ${order.trades.length ? `<div class="row"><span>Você entrega na troca</span><span class="v">${order.trades.reduce((a,t)=>a+t.give.length,0)} figurinhas</span></div>` : ""}
     </div>
-    <div class="owner-box"><div class="t">Combine a entrega</div>
-      <div class="l">No próximo dia útil levo as figurinhas para firmar. Fale comigo pelo WhatsApp para combinar horário e local.</div></div>
-    <a class="btn btn-wa btn-block" style="margin-top:6px" href="${waLink(waMsg)}" target="_blank">
-      ${waSVG()} Combinar pelo WhatsApp</a>
-    <button class="btn btn-ghost btn-block" style="margin-top:10px" onclick="hideConfirm()">Fechar</button>`;
+    <div class="owner-box" id="avisoComprovante"><div class="t">⚠️ Falta 1 passo · obrigatório</div>
+      <div class="l">Para <b>confirmar</b> o pedido, envie o comprovante pelo WhatsApp para <b>Rodrigo</b>. Sem isso o pedido não é considerado fechado. A entrega é combinada para o próximo dia útil.</div></div>
+    <button class="btn btn-wa btn-block" style="margin-top:6px" onclick="enviarComprovante('${order.id}')">
+      ${waSVG()} Enviar comprovante no WhatsApp</button>
+    <button class="btn btn-ghost btn-block" id="btnFecharConfirm" style="margin-top:10px;display:none" onclick="hideConfirm()">Já enviei · fechar</button>`;
   m.classList.add("show");
+  syncOverlay();
 }
-function hideConfirm() { $("#confirmModal").classList.remove("show"); }
+function enviarComprovante(id) {
+  const o = STATE.orders[id]; if (!o) return;
+  window.open(waLink(comprovanteMsg(o)), "_blank");
+  o.comprovanteEnviado = true; persist();
+  const fechar = document.getElementById("btnFecharConfirm");
+  if (fechar) fechar.style.display = "";
+  const aviso = document.getElementById("avisoComprovante");
+  if (aviso) {
+    aviso.classList.add("done");
+    aviso.innerHTML = `<div class="t" style="color:var(--emerald)">✅ Comprovante em envio</div>
+      <div class="l">Abrimos o WhatsApp com os dados do pedido. Envie a mensagem (e o comprovante de pagamento, se houver) para confirmar. Você já pode fechar.</div>`;
+  }
+}
+function hideConfirm() { $("#confirmModal").classList.remove("show"); syncOverlay(); }
 
 /* ---------- ADMIN ---------- */
 let adminAuthed = false;
@@ -1320,15 +1353,21 @@ function openAdmin() {
   $("#adminScrim").classList.add("show");
   $("#adminDrawer").classList.add("show");
   renderAdmin();
+  syncOverlay();
   if (!adminAuthed) setTimeout(() => $("#adminPass") && $("#adminPass").focus(), 200);
 }
-function closeAdmin() { $("#adminScrim").classList.remove("show"); $("#adminDrawer").classList.remove("show"); }
+function closeAdmin() { $("#adminScrim").classList.remove("show"); $("#adminDrawer").classList.remove("show"); syncOverlay(); }
 function tryAdmin() {
   const v = $("#adminPass").value;
   if (v === CFG.adminPass) { adminAuthed = true; toast("Acesso liberado.", "ok"); renderAdmin(); }
   else { toast("Senha incorreta.", "err"); $("#adminPass").value = ""; $("#adminPass").classList.add("bad"); }
 }
 function setAdminTab(t) { adminTab = t; renderAdmin(); }
+function beLabel() {
+  if (Backend.mode === "firestore" || Backend.mode === "firebase-db") return "🟢 Sincronizado (Firebase)";
+  if (Backend.mode === "local") return "🟡 Local neste navegador";
+  return "⚪ Memória (sem persistência)";
+}
 function renderAdmin() {
   const body = $("#adminBody");
   if (!body) return;
@@ -1349,6 +1388,7 @@ function renderAdmin() {
   let html = `<div class="admin-toolbar">
       <button class="sbtn ghost" onclick="exportOrders()">⬇️ Exportar JSON</button>
       <button class="sbtn danger" onclick="resetStock()">♻️ Reiniciar estoque</button>
+      <span class="be-badge be-${Backend.mode}" title="Onde os pedidos estão sendo salvos">${beLabel()}</span>
       <div class="admin-stat"><span>Novos <b>${novos.length}</b></span><span>Separados <b>${seps.length}</b></span><span>Concluídos <b>${dones.length}</b></span></div>
     </div>
     <div class="atab">
@@ -1541,9 +1581,13 @@ function exportOrders() {
 }
 
 /* ---------- DRAWER / MODAL CTRL ---------- */
-function openDrawer() { $("#cartScrim").classList.add("show"); $("#cartDrawer").classList.add("show"); renderCart(); }
-function closeDrawer() { $("#cartScrim").classList.remove("show"); $("#cartDrawer").classList.remove("show"); }
-function showModal(b) { $("#tradeModal").classList.toggle("show", b); }
+function syncOverlay() {
+  const open = document.querySelector(".scrim.show, .drawer.show, .modal.show");
+  document.body.classList.toggle("overlay-open", !!open);
+}
+function openDrawer() { $("#cartScrim").classList.add("show"); $("#cartDrawer").classList.add("show"); renderCart(); syncOverlay(); }
+function closeDrawer() { $("#cartScrim").classList.remove("show"); $("#cartDrawer").classList.remove("show"); syncOverlay(); }
+function showModal(b) { $("#tradeModal").classList.toggle("show", b); syncOverlay(); }
 
 /* ---------- ICONS ---------- */
 function waSVG() { return `<svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor"><path d="M.057 24l1.687-6.163a11.867 11.867 0 01-1.587-5.946C.16 5.335 5.495 0 12.05 0a11.817 11.817 0 018.413 3.488 11.824 11.824 0 013.48 8.414c-.003 6.557-5.338 11.892-11.893 11.892a11.9 11.9 0 01-5.688-1.448L.057 24zm6.597-3.807c1.676.995 3.276 1.591 5.392 1.592 5.448 0 9.886-4.434 9.889-9.885.002-5.462-4.415-9.89-9.881-9.892-5.452 0-9.887 4.434-9.889 9.884a9.86 9.86 0 001.518 5.26l-.999 3.648 3.97-1.039zm11.387-5.464c-.074-.124-.272-.198-.57-.347-.297-.149-1.758-.868-2.031-.967-.272-.099-.47-.149-.669.149-.198.297-.768.967-.941 1.165-.173.198-.347.223-.644.074-.297-.149-1.255-.462-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.297-.347.446-.521.151-.172.2-.296.3-.495.099-.198.05-.372-.025-.521-.075-.148-.669-1.611-.916-2.206-.242-.579-.487-.501-.669-.51l-.57-.01c-.198 0-.52.074-.792.372s-1.04 1.016-1.04 2.479 1.065 2.876 1.213 3.074c.149.198 2.095 3.2 5.076 4.487.709.306 1.263.489 1.694.626.712.226 1.36.194 1.872.118.571-.085 1.758-.719 2.006-1.413.248-.695.248-1.29.173-1.414z"/></svg>`; }
@@ -1590,7 +1634,7 @@ document.addEventListener("DOMContentLoaded", init);
 Object.assign(window, {
   addBuy, changeBuy, removeBuy, openTrade, togglePick, confirmTrade, removeTrade,
   openDrawer, closeDrawer, showModal, openAdmin, closeAdmin, tryAdmin, setAdminTab,
-  setOrder, returnSelectedFromOrder, cancelOrder, resetStock, exportOrders, doCheckout, hideConfirm, openWA
+  setOrder, returnSelectedFromOrder, cancelOrder, resetStock, exportOrders, doCheckout, hideConfirm, enviarComprovante, openWA
 });
 </script>
 </body>
