@@ -375,6 +375,33 @@ body.overlay-open .card[data-tipo="time"]::before{display:none!important;animati
 .csum .row.tot{border-top:1px solid var(--brd);margin-top:7px;padding-top:11px;font-size:17px;font-weight:800;color:var(--ink)}
 .csum .row.tot .v{color:var(--gold2)}
 .csum .row .v{font-weight:700;color:var(--ink)}
+/* carrinho refinado */
+.cart-sec-head{display:flex;align-items:center;gap:9px;font-size:12.5px;font-weight:800;text-transform:uppercase;letter-spacing:.4px;margin:6px 0 11px}
+.cart-sec-head.buy{color:var(--gold2)} .cart-sec-head.trade{color:var(--emerald);margin-top:20px}
+.cart-chip{font-size:11px;font-weight:800;padding:2px 9px;border-radius:99px;background:var(--panel2);color:var(--ink)}
+.cart-sec-head.buy .cart-chip{background:rgba(233,185,73,.18);color:var(--gold2)}
+.cart-sec-head.trade .cart-chip{background:rgba(45,212,167,.16);color:var(--emerald)}
+.citem{position:relative;display:flex;gap:13px;padding:13px 40px 13px 13px;border:1px solid var(--brd);border-radius:14px;margin-bottom:11px;background:linear-gradient(180deg,var(--panel),var(--panel2));transition:.15s}
+.citem:hover{border-color:var(--brd2)}
+.citem.buy{border-left:3px solid var(--gold-d)} .citem.trade{border-left:3px solid var(--emerald-d)}
+.citem .ct{width:48px;height:64px;border-radius:9px;flex:none;display:grid;place-items:center;overflow:hidden;border:1px solid var(--brd2);position:relative}
+.citem .ci-main{flex:1;min-width:0}
+.citem .cc{font-weight:800;font-size:14.5px;display:flex;align-items:center;gap:8px;flex-wrap:wrap;line-height:1.2}
+.citem .cs{font-size:12px;color:var(--muted);font-weight:600;margin-top:4px}
+.ci-controls{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-top:12px;flex-wrap:wrap}
+.ci-price{display:flex;flex-direction:column;align-items:flex-end;line-height:1.15}
+.ci-unit{font-size:11px;color:var(--muted2);font-weight:600}
+.ci-price .pv{font-weight:800;color:var(--gold2);font-size:16px}
+.qty{display:flex;align-items:center;gap:4px;background:var(--bg3);border:1px solid var(--brd);border-radius:10px;padding:4px}
+.qty button{width:31px;height:31px;border-radius:8px;display:grid;place-items:center;font-weight:800;font-size:18px;color:var(--gold2);background:var(--panel);transition:.12s;cursor:pointer}
+.qty button:hover{background:var(--panel2)}
+.qty b{min-width:26px;text-align:center;font-weight:800;font-size:15px;color:var(--ink)}
+.ci-rm{position:absolute;top:10px;right:10px;width:27px;height:27px;border-radius:8px;display:grid;place-items:center;color:var(--muted2);background:var(--panel);border:1px solid var(--brd);font-size:12px;font-weight:800;transition:.15s;cursor:pointer}
+.ci-rm:hover{color:var(--danger);border-color:rgba(255,93,108,.45);background:rgba(255,93,108,.1)}
+.give-block{margin-top:11px;background:rgba(45,212,167,.07);border:1px solid rgba(45,212,167,.25);border-radius:10px;padding:9px 11px}
+.give-lab{font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:.4px;color:var(--emerald);display:block;margin-bottom:7px}
+.give-chips{display:flex;flex-wrap:wrap;gap:6px}
+.gv{font-size:11.5px;font-weight:700;background:var(--panel);border:1px solid rgba(45,212,167,.3);color:var(--ink);border-radius:7px;padding:4px 9px}
 
 /* form */
 .form-grp{margin-bottom:13px}
@@ -1023,12 +1050,18 @@ function waLink(extra) {
   return waTo(CFG.whatsapp, base);
 }
 function openWA(extra) { window.open(waLink(extra), "_blank"); }
+const EMO = {
+  receipt: String.fromCodePoint(0x1F4CB), person: String.fromCodePoint(0x1F464),
+  cart: String.fromCodePoint(0x1F6D2), swap: String.fromCodePoint(0x1F501),
+  money: String.fromCodePoint(0x1F4B0), ball: String.fromCodePoint(0x26BD),
+  hands: String.fromCodePoint(0x1F64C), smile: String.fromCodePoint(0x1F642), wave: String.fromCodePoint(0x1F44B)
+};
 const WA_MSGS = {
-  topo: "Olá! Cheguei pelo site das figurinhas da Copa 2026 e queria tirar uma dúvida. 🙂",
+  topo: "Olá! Cheguei pelo site das figurinhas da Copa 2026 e queria tirar uma dúvida. " + EMO.smile,
   como: "Olá! Quero entender melhor como funciona a compra e a troca das figurinhas da Copa 2026.",
   contato: "Olá Rodrigo! Quero falar diretamente sobre as figurinhas da Copa 2026.",
   cartDrawer: "Olá! Estou montando meu pedido no site e fiquei com uma dúvida antes de finalizar.",
-  fab: "Olá! Vim pelo site das figurinhas da Copa 2026. 👋"
+  fab: "Olá! Vim pelo site das figurinhas da Copa 2026. " + EMO.wave
 };
 function waMsgFor(el) {
   if (el.id && WA_MSGS[el.id]) return WA_MSGS[el.id];
@@ -1313,37 +1346,35 @@ function renderCart() {
   // compras
   const buys = Object.entries(CART.buys);
   if (buys.length) {
-    html += `<div class="osl" style="margin:4px 0 10px;font-size:12px;font-weight:800;color:var(--muted);text-transform:uppercase;letter-spacing:.4px">🛒 Comprar (${buys.reduce((a,[,q])=>a+q,0)})</div>`;
+    html += `<div class="cart-sec-head buy"><span>🛒 Comprar</span><span class="cart-chip">${buys.reduce((a,[,q])=>a+q,0)}</span></div>`;
     for (const [c, q] of buys) {
-      const s = st(c);
-      html += `<div class="citem">
+      const s = st(c), unit = stickerPrice(s);
+      html += `<div class="citem buy">
         <div class="ct">${ctMini(c)}</div>
         <div class="ci-main">
-          <div class="cc">${c} <span class="mode-tag buy">compra</span></div>
-          <div class="cs">${esc(teamOf(c).nome)} · ${esc(stickerName(c))} · ${esc(s.label)} · R$ ${stickerPrice(s)}/un</div>
+          <div class="cc">${esc(stickerName(c))} <span class="mode-tag buy">comprar</span></div>
+          <div class="cs">${c} · ${esc(teamOf(c).nome)} · ${esc(s.label)}</div>
+          <div class="ci-controls">
+            <div class="qty"><button onclick="changeBuy('${c}',-1)" aria-label="diminuir">−</button><b>${q}</b><button onclick="changeBuy('${c}',1)" aria-label="aumentar">+</button></div>
+            <div class="ci-price"><span class="ci-unit">R$ ${unit} cada</span><span class="pv">R$ ${q * unit}</span></div>
+          </div>
         </div>
-        <div class="ci-side">
-          <div class="qty"><button onclick="changeBuy('${c}',-1)">−</button><b>${q}</b><button onclick="changeBuy('${c}',1)">+</button></div>
-          <span class="pv">R$ ${q * stickerPrice(s)}</span>
-          <button class="rm" onclick="removeBuy('${c}')">remover</button>
-        </div></div>`;
+        <button class="ci-rm" onclick="removeBuy('${c}')" title="Remover" aria-label="Remover">✕</button></div>`;
     }
   }
   // trocas
   if (CART.trades.length) {
-    html += `<div class="osl" style="margin:16px 0 10px;font-size:12px;font-weight:800;color:var(--emerald);text-transform:uppercase;letter-spacing:.4px">🔁 Trocar (${CART.trades.length})</div>`;
+    html += `<div class="cart-sec-head trade"><span>🔁 Trocar</span><span class="cart-chip">${CART.trades.length}</span></div>`;
     for (const t of CART.trades) {
       const s = st(t.want);
-      html += `<div class="citem">
+      html += `<div class="citem trade">
         <div class="ct">${ctMini(t.want)}</div>
         <div class="ci-main">
-          <div class="cc">${t.want} <span class="mode-tag trade">troca</span></div>
-          <div class="cs">${esc(teamOf(t.want).nome)} · ${esc(stickerName(t.want))} · ${esc(s.label)} · custa ${stickerPower(s)}🔁</div>
-          <div class="give-list">${t.give.map(g => `<span class="gv">você dá ${g} · ${esc(stickerName(g))}</span>`).join("")}</div>
+          <div class="cc">${esc(stickerName(t.want))} <span class="mode-tag trade">troca</span></div>
+          <div class="cs">${t.want} · ${esc(teamOf(t.want).nome)} · você recebe</div>
+          <div class="give-block"><span class="give-lab">Você entrega ${t.give.length} figurinha${t.give.length === 1 ? "" : "s"}</span><div class="give-chips">${t.give.map(g => `<span class="gv">${g} · ${esc(stickerName(g))}</span>`).join("")}</div></div>
         </div>
-        <div class="ci-side">
-          <button class="rm" onclick="removeTrade('${t.id}')">remover</button>
-        </div></div>`;
+        <button class="ci-rm" onclick="removeTrade('${t.id}')" title="Remover" aria-label="Remover">✕</button></div>`;
     }
   }
   body.innerHTML = html;
@@ -1453,10 +1484,10 @@ function comprovanteMsg(order) {
   const cli = order.cliente || {};
   const seller = sellerOf(order);
   const L = [];
-  L.push("🧾 *COMPROVANTE DE PEDIDO*");
+  L.push(EMO.receipt + " *COMPROVANTE DE PEDIDO*");
   L.push("*" + order.id + "*");
   L.push("");
-  L.push("👤 *Cliente*");
+  L.push(EMO.person + " *Cliente*");
   L.push("• Nome: " + (cli.nome || "—"));
   L.push("• Telefone: " + (cli.fone || "—"));
   if (cli.tipo === "externo") {
@@ -1468,7 +1499,7 @@ function comprovanteMsg(order) {
   L.push("• Ponto de entrega: " + seller.local);
   L.push("");
   if (buys.length) {
-    L.push("🛒 *Compra*");
+    L.push(EMO.cart + " *Compra*");
     buys.forEach(b => {
       const unit = (b.reais != null ? Number(b.reais) : stickerPrice(b.code));
       L.push("• " + b.code + " " + stickerName(b.code) + (b.qty > 1 ? " (x" + b.qty + ")" : "") + " — R$ " + (unit * b.qty));
@@ -1476,17 +1507,17 @@ function comprovanteMsg(order) {
     L.push("");
   }
   if (trades.length) {
-    L.push("🔁 *Troca*");
+    L.push(EMO.swap + " *Troca*");
     trades.forEach(t => {
       L.push("• Quero: " + t.want + " " + stickerName(t.want));
       L.push("   entrego: " + (t.give || []).map(g => g + " " + stickerName(g)).join(", "));
     });
     L.push("");
   }
-  L.push("💰 *Total a pagar:* " + (order.totalReais > 0 ? "R$ " + order.totalReais : "só troca"));
-  L.push("🃏 *Figurinhas no pedido:* " + (order.totalCards || 0));
+  L.push(EMO.money + " *Total a pagar:* " + (order.totalReais > 0 ? "R$ " + order.totalReais : "só troca"));
+  L.push(EMO.ball + " *Figurinhas no pedido:* " + (order.totalCards || 0));
   L.push("");
-  L.push("Enviando este comprovante para *confirmar o pedido* com " + seller.nome.split(" ")[0] + ". Se já paguei, o comprovante de pagamento segue em anexo. 🙌");
+  L.push("Enviando este comprovante para *confirmar o pedido* com " + seller.nome.split(" ")[0] + ". Se já paguei, o comprovante de pagamento segue em anexo. " + EMO.hands);
   return L.join("\n");
 }
 function showConfirm(order) {
@@ -1653,7 +1684,7 @@ function orderHTML(o) {
     if (done) donePick++;
     const unit = (b.reais != null ? Number(b.reais) : stickerPrice(b.code));
     pickLines.push(`<label class="pick-line ${done ? "done" : ""}">
-      <input type="checkbox" ${done ? "checked" : ""} onchange="togglePick('${o.id}','${key}',this.checked,this)">
+      <input type="checkbox" ${done ? "checked" : ""} onchange="toggleSeparado('${o.id}','${key}',this.checked,this)">
       <span class="pk-code">${b.code}</span><span class="pk-name">${esc(stickerName(b.code))}</span>
       <span class="pk-tag buy">comprar${active > 1 ? " ×" + active : ""}</span><span class="pk-price">R$ ${unit * active}</span></label>`);
   });
@@ -1662,7 +1693,7 @@ function orderHTML(o) {
     const key = "t:" + idx, done = !!o.picked[key];
     if (done) donePick++;
     pickLines.push(`<label class="pick-line ${done ? "done" : ""}">
-      <input type="checkbox" ${done ? "checked" : ""} onchange="togglePick('${o.id}','${key}',this.checked,this)">
+      <input type="checkbox" ${done ? "checked" : ""} onchange="toggleSeparado('${o.id}','${key}',this.checked,this)">
       <span class="pk-code">${t.want}</span><span class="pk-name">${esc(stickerName(t.want))}</span>
       <span class="pk-tag trade">troca</span><span class="pk-price">entregar</span></label>`);
   });
@@ -1729,7 +1760,7 @@ function orderHTML(o) {
       <span class="otot">${activeReais > 0 ? "R$ " + activeReais : "Troca"} · ${activeCards} fig.</span></div>
   </div>`;
 }
-function togglePick(id, key, on, el) {
+function toggleSeparado(id, key, on, el) {
   const o = STATE.orders[id]; if (!o) return;
   if (!o.picked || typeof o.picked !== "object") o.picked = {};
   if (on) o.picked[key] = true; else delete o.picked[key];
@@ -1910,7 +1941,7 @@ document.addEventListener("DOMContentLoaded", init);
 Object.assign(window, {
   addBuy, changeBuy, removeBuy, openTrade, togglePick, confirmTrade, removeTrade,
   openDrawer, closeDrawer, showModal, openAdmin, closeAdmin, tryAdmin, logoutAdmin, setAdminTab,
-  setOrder, returnSelectedFromOrder, cancelOrder, resetStock, exportOrders, doCheckout, hideConfirm, enviarComprovante, openWA, setClienteTipo, togglePick
+  setOrder, returnSelectedFromOrder, cancelOrder, resetStock, exportOrders, doCheckout, hideConfirm, enviarComprovante, openWA, setClienteTipo, toggleSeparado
 });
 </script>
 </body>
