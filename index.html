@@ -692,8 +692,9 @@ details.loc-group[open] .loc-chev{transform:rotate(180deg)}
         <option value="fwc">FWC especiais · 9 em diante (R$3)</option>
         <option value="br">Brasil</option>
         <option value="coca">Coca-Cola</option>
+        <option value="faltam">⭐ Faltam para mim</option>
       </select></div>
-      <label class="toggle"><input id="fAvail" type="checkbox" checked><span class="sw"></span>Somente disponíveis</label>
+      <label class="toggle" id="availToggle"><input id="fAvail" type="checkbox" checked><span class="sw"></span>Somente disponíveis</label>
       <span class="chip-count" id="catCount"></span>
     </div>
     <div id="catalog"></div>
@@ -1155,6 +1156,41 @@ function inCartBuy(code) { return CART.buys[code] > 0; }
 function renderCatalog() {
   const host = $("#catalog");
   const q = filters.q.trim().toUpperCase();
+
+  const availLbl = $("#availToggle");
+  if (availLbl) availLbl.style.display = (filters.tipo === "faltam") ? "none" : "";
+
+  if (filters.tipo === "faltam") {
+    let fh = "", shown = 0, stillNeed = 0;
+    for (const tc of D.order) {
+      if (filters.team !== "all" && filters.team !== tc) continue;
+      const t = D.teams[tc];
+      let codes = sortCodes(D.faltantes.filter(c => st(c).team === tc));
+      if (q) codes = codes.filter(c => c.includes(q) || (t.nome || "").toUpperCase().includes(q) || stickerName(c).toUpperCase().includes(q));
+      if (!codes.length) continue;
+      const emblem = t.iso
+        ? `<div class="team-flag"><span class="fi fi-${t.iso}"></span></div>`
+        : `<div class="team-emblem ${tc === "CC" ? "coca" : ""}">${tc === "CC" ? "🥤" : "🏆"}</div>`;
+      fh += `<div class="falt-team"><div class="fh">${emblem}<h4>${esc(t.nome)}</h4></div><div class="falt-pills">`;
+      for (const c of codes) {
+        const status = STATE.falt[c] || "needed";
+        const cls = status === "needed" ? "need" : status;
+        const stTxt = status === "reservada" ? "reservada" : status === "obtida" ? "obtida" : "";
+        if (status === "needed") stillNeed++;
+        const s = st(c);
+        fh += `<span class="fpill ${cls}"><span class="d"></span>${c} <span class="fn">${esc(stickerName(c))}</span> <span class="pw">${stickerPower(s)}🔁</span>${stTxt ? `<span class="st">${stTxt}</span>` : ""}</span>`;
+        shown++;
+      }
+      fh += `</div></div>`;
+    }
+    const legend = `<div class="falt-legend" style="margin-bottom:16px"><span><span class="lg-dot lg-need"></span> Ainda preciso</span><span><span class="lg-dot lg-res"></span> Reservada</span><span><span class="lg-dot lg-got"></span> Já obtida</span></div>`;
+    host.innerHTML = shown
+      ? legend + fh
+      : `<div class="empty"><div class="big">🎉</div><b>Nada falta com esse filtro.</b><p style="margin-top:6px">Tente outro time ou limpe a busca.</p></div>`;
+    $("#catCount").innerHTML = `<b>${stillNeed}</b> ainda faltam`;
+    return;
+  }
+
   let shownCards = 0, shownTeams = 0;
   let html = "";
 
