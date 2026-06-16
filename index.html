@@ -622,6 +622,20 @@ details.loc-group[open] .loc-chev{transform:rotate(180deg)}
 .cc-opts.cc-opts-3{grid-template-columns:1fr 1fr 1fr}
 .cc-opt.out:hover{border-color:rgba(120,170,255,.55)}
 @media(max-width:560px){.ctipo.ctipo-3{grid-template-columns:1fr}.cc-opts.cc-opts-3{grid-template-columns:1fr}}
+/* promoção */
+.card .price .pleft{display:flex;align-items:center;gap:6px;flex-wrap:wrap;min-width:0}
+.card .price .v-old{font-size:11.5px;font-weight:700;color:rgba(255,255,255,.5);text-decoration:line-through}
+.promo-pct{font-size:9.5px;font-weight:900;letter-spacing:.3px;color:#fff;background:linear-gradient(180deg,#ff5d6c,#c81e3a);padding:2px 6px;border-radius:6px}
+.promo-banner{display:flex;align-items:center;gap:14px;margin:0 0 18px;padding:14px 18px;border-radius:14px;background:linear-gradient(120deg,rgba(200,30,58,.18),rgba(233,185,73,.12));border:1px solid rgba(255,93,108,.4)}
+.promo-banner .pb-tag{font-size:13px;font-weight:900;letter-spacing:.5px;color:#fff;background:linear-gradient(180deg,#ff5d6c,#c81e3a);padding:8px 12px;border-radius:10px;white-space:nowrap;box-shadow:0 6px 16px -6px rgba(200,30,58,.7)}
+.promo-banner .pb-txt{display:flex;flex-direction:column;line-height:1.3}
+.promo-banner .pb-txt b{font-size:15px;color:var(--ink)}
+.promo-banner .pb-txt span{font-size:12.5px;color:var(--muted);font-weight:600}
+.promo-tag-tbl{margin-left:auto;font-size:11px;font-weight:900;letter-spacing:.4px;color:#fff;background:linear-gradient(180deg,#ff5d6c,#c81e3a);padding:5px 10px;border-radius:99px}
+.tiers .pr{display:flex;flex-direction:column;align-items:flex-end;line-height:1.25}
+.tiers .pr s.old{font-size:11.5px;color:var(--muted2);font-weight:700}
+.tiers .pr .new{font-weight:800;color:var(--gold2);font-size:15px}
+@media(max-width:560px){.promo-banner{gap:11px;padding:12px 14px}.promo-banner .pb-txt b{font-size:14px}}
 </style>
 </head>
 <body>
@@ -680,18 +694,19 @@ details.loc-group[open] .loc-chev{transform:rotate(180deg)}
       <div><h2><span class="g">Catálogo</span> de repetidas</h2>
         <p>Estas são as figurinhas que tenho repetidas. O número disponível cai automaticamente conforme as cartas saem.</p></div>
     </div>
+    <div class="promo-banner"><span class="pb-tag">PROMO -50%</span><div class="pb-txt"><b>Tudo pela metade do preço!</b><span>Todas as figurinhas com 50% de desconto, por tempo limitado.</span></div></div>
     <div class="filters">
       <div class="field"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4-4"/></svg>
         <input id="fSearch" type="text" placeholder="Buscar por código ou país..."></div>
       <div class="field sel"><select id="fTeam"></select></div>
       <div class="field sel"><select id="fTipo">
         <option value="all">Todos os tipos</option>
-        <option value="comuns">Comuns (R$1)</option>
-        <option value="destaques">Destaques · escudo/seleção/craque (R$2)</option>
-        <option value="fwcr">FWC raras · 00 a 8 (R$4)</option>
-        <option value="fwc">FWC especiais · 9 em diante (R$3)</option>
+        <option value="comuns">Comuns (R$ 0,50)</option>
+        <option value="destaques">Destaques · escudo/seleção/craque (R$ 1)</option>
+        <option value="fwcr">FWC raras · 00 a 8 (R$ 2)</option>
+        <option value="fwc">FWC especiais · 9 em diante (R$ 1,50)</option>
         <option value="br">Brasil</option>
-        <option value="coca">Coca-Cola</option>
+        <option value="coca">Coca-Cola (R$ 1)</option>
         <option value="faltam">⭐ Faltam para mim</option>
       </select></div>
       <label class="toggle" id="availToggle"><input id="fAvail" type="checkbox" checked><span class="sw"></span>Somente disponíveis</label>
@@ -736,28 +751,28 @@ details.loc-group[open] .loc-chev{transform:rotate(180deg)}
     </div>
 
     <div class="tiers">
-      <div class="th"><span style="font-size:22px">💰</span><h4>Tabela de valores</h4></div>
+      <div class="th"><span style="font-size:22px">💰</span><h4>Tabela de valores</h4><span class="promo-tag-tbl">PROMO -50%</span></div>
       <div class="trow"><div class="ti t1">⚽</div>
         <div class="desc"><b>Jogador comum</b><small>A maioria das figurinhas dos times</small></div>
-        <div class="pr">R$ 1</div><div class="pw">1 figurinha 🔁</div></div>
+        <div class="pr"><s class="old">R$ 1</s><span class="new">R$ 0,50</span></div><div class="pw">1 figurinha 🔁</div></div>
       <div class="trow"><div class="ti t2">🇧🇷</div>
         <div class="desc"><b>Jogador do Brasil</b><small>Jogadores da seleção brasileira</small></div>
-        <div class="pr">R$ 2</div><div class="pw">2 figurinhas 🔁</div></div>
+        <div class="pr"><s class="old">R$ 2</s><span class="new">R$ 1</span></div><div class="pw">1 figurinha 🔁</div></div>
       <div class="trow"><div class="ti t2">🛡️</div>
-        <div class="desc"><b>Escudo e Seleção</b><small>Escudo (nº 1) e foto da seleção (nº 13). Os do Brasil custam R$ 3.</small></div>
-        <div class="pr">R$ 2–3</div><div class="pw">2 figurinhas 🔁</div></div>
+        <div class="desc"><b>Escudo e Seleção</b><small>Escudo (nº 1) e foto da seleção (nº 13). Os do Brasil custam R$ 1,50.</small></div>
+        <div class="pr"><s class="old">R$ 2–3</s><span class="new">R$ 1–1,50</span></div><div class="pw">1 figurinha 🔁</div></div>
       <div class="trow"><div class="ti t2">⭐</div>
-        <div class="desc"><b>Craque</b><small>Estrelas de fama mundial. Cristiano Ronaldo custa R$ 4.</small></div>
-        <div class="pr">R$ 2–4</div><div class="pw">2 figurinhas 🔁</div></div>
+        <div class="desc"><b>Craque</b><small>Estrelas de fama mundial. Cristiano Ronaldo custa R$ 2.</small></div>
+        <div class="pr"><s class="old">R$ 2–4</s><span class="new">R$ 1–2</span></div><div class="pw">1–2 figurinhas 🔁</div></div>
       <div class="trow"><div class="ti t3">💎</div>
         <div class="desc"><b>FWC rara · 00 a 8</b><small>Logo, emblemas, mascotes, bola e países-sede. As mais valiosas.</small></div>
-        <div class="pr">R$ 4</div><div class="pw">4 figurinhas 🔁</div></div>
+        <div class="pr"><s class="old">R$ 4</s><span class="new">R$ 2</span></div><div class="pw">2 figurinhas 🔁</div></div>
       <div class="trow"><div class="ti t3">🌟</div>
         <div class="desc"><b>FWC especial · 9+</b><small>Momentos históricos das Copas do Mundo</small></div>
-        <div class="pr">R$ 3</div><div class="pw">3 figurinhas 🔁</div></div>
+        <div class="pr"><s class="old">R$ 3</s><span class="new">R$ 1,50</span></div><div class="pw">2 figurinhas 🔁</div></div>
       <div class="trow"><div class="ti t2">🥤</div>
         <div class="desc"><b>Coca-Cola</b><small>Figurinhas extras da coleção Coca-Cola (14 no total)</small></div>
-        <div class="pr">R$ 2</div><div class="pw">2 figurinhas 🔁</div></div>
+        <div class="pr"><s class="old">R$ 2</s><span class="new">R$ 1</span></div><div class="pw">1 figurinha 🔁</div></div>
     </div>
 
     <div class="note"><span class="ni">📅</span><div>Independente de comprar ou trocar, <b>no próximo dia útil</b> após o pedido eu levo a figurinha para firmar a entrega, sempre presencialmente. Use o botão do WhatsApp para combinar.</div></div>
@@ -942,13 +957,26 @@ const $  = (s, r = document) => r.querySelector(s);
 const $$ = (s, r = document) => Array.from(r.querySelectorAll(s));
 const esc = s => String(s).replace(/[&<>"']/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
 const clone = o => JSON.parse(JSON.stringify(o));
-function stickerPrice(item) {
+const PROMO = { ativo: true, fator: 0.5, rotulo: "PROMO -50%" };
+function fmtReais(v) {
+  v = Math.round((Number(v) || 0) * 100) / 100;
+  return Number.isInteger(v) ? "R$ " + v : "R$ " + v.toFixed(2).replace(".", ",");
+}
+function stickerPriceFull(item) {
   const s = typeof item === "string" ? st(item) : item;
   return s ? Number(s.reais || s.tier || 0) : 0;
 }
-function stickerPower(item) {
+function stickerPowerFull(item) {
   const s = typeof item === "string" ? st(item) : item;
   return s ? Number(s.power || s.tier || 0) : 0;
+}
+function stickerPrice(item) {
+  const base = stickerPriceFull(item);
+  return PROMO.ativo ? Math.round(base * PROMO.fator * 100) / 100 : base;
+}
+function stickerPower(item) {
+  const base = stickerPowerFull(item);
+  return PROMO.ativo ? Math.ceil(base * PROMO.fator) : base;
 }
 const tierPrice = t => t;                 // fallback legado
 const tierPower = t => t;                 // fallback legado
@@ -1256,7 +1284,7 @@ function cardHTML(c, s, qty, out) {
         <div class="cname">${esc(teamOf(c).nome)}</div>
         <div class="player-name">${esc(stickerName(c))}</div>
         <div class="clabel">${esc(s.label)}</div>
-        <div class="price"><span class="v">R$ ${stickerPrice(s)}</span><span class="pw">ou ${stickerPower(s)} 🔁</span></div>
+        <div class="price"><span class="pleft">${PROMO.ativo ? `<span class="v-old">${fmtReais(stickerPriceFull(s))}</span>` : ""}<span class="v">${fmtReais(stickerPrice(s))}</span>${PROMO.ativo ? `<span class="promo-pct">-50%</span>` : ""}</span><span class="pw">ou ${stickerPower(s)} 🔁</span></div>
         ${out
           ? `<div class="out-tag">Esgotada</div>`
           : `<div class="stockline"><span class="qd"></span>${qty} ${qty === 1 ? "disponível" : "disponíveis"}</div>
@@ -1451,7 +1479,7 @@ function renderCart() {
           <div class="cs">${c} · ${esc(teamOf(c).nome)} · ${esc(s.label)}</div>
           <div class="ci-controls">
             <div class="qty"><button onclick="changeBuy('${c}',-1)" aria-label="diminuir">−</button><b>${q}</b><button onclick="changeBuy('${c}',1)" aria-label="aumentar">+</button></div>
-            <div class="ci-price"><span class="ci-unit">R$ ${unit} cada</span><span class="pv">R$ ${q * unit}</span></div>
+            <div class="ci-price"><span class="ci-unit">${fmtReais(unit)} cada</span><span class="pv">${fmtReais(q * unit)}</span></div>
           </div>
         </div>
         <button class="ci-rm" onclick="removeBuy('${c}')" title="Remover" aria-label="Remover">✕</button></div>`;
@@ -1479,7 +1507,7 @@ function renderCart() {
   $("#sumBuy").textContent = buys.reduce((a, [, q]) => a + q, 0);
   $("#sumTrade").textContent = CART.trades.length;
   $("#sumGive").textContent = giveTotal();
-  $("#sumReais").textContent = "R$ " + reais;
+  $("#sumReais").textContent = fmtReais(reais);
 }
 function ctMini(code) {
   const t = teamOf(code);
@@ -1657,7 +1685,7 @@ function comprovanteMsg(order) {
     L.push("*Compra*");
     buys.forEach(b => {
       const unit = (b.reais != null ? Number(b.reais) : stickerPrice(b.code));
-      L.push("- " + b.code + " " + stickerName(b.code) + (b.qty > 1 ? " (x" + b.qty + ")" : "") + " = R$ " + (unit * b.qty));
+      L.push("- " + b.code + " " + stickerName(b.code) + (b.qty > 1 ? " (x" + b.qty + ")" : "") + " = " + fmtReais(unit * b.qty));
     });
     L.push("");
   }
@@ -1669,7 +1697,7 @@ function comprovanteMsg(order) {
     });
     L.push("");
   }
-  L.push("*Total a pagar:* " + (order.totalReais > 0 ? "R$ " + order.totalReais : "somente troca"));
+  L.push("*Total a pagar:* " + (order.totalReais > 0 ? fmtReais(order.totalReais) : "somente troca"));
   L.push("*Figurinhas no pedido:* " + (order.totalCards || 0));
   L.push("");
   L.push("Enviando este comprovante para *confirmar o pedido* com " + seller.nome.split(" ")[0] + ". Se ja paguei, o comprovante de pagamento segue em anexo.");
@@ -1677,7 +1705,7 @@ function comprovanteMsg(order) {
 }
 function showConfirm(order) {
   const m = $("#confirmModal");
-  const reaisTxt = order.totalReais > 0 ? `R$ ${order.totalReais}` : "—";
+  const reaisTxt = order.totalReais > 0 ? fmtReais(order.totalReais) : "—";
   $("#confirmBody").innerHTML = `
     <div style="text-align:center"><div style="font-size:50px">🧾</div>
     <h3 style="font-family:var(--ff-disp);font-weight:400;font-size:26px;letter-spacing:.5px;margin:6px 0">Pedido registrado!</h3>
@@ -1844,7 +1872,7 @@ function orderHTML(o) {
     pickLines.push(`<label class="pick-line ${done ? "done" : ""}">
       <input type="checkbox" ${done ? "checked" : ""} onchange="toggleSeparado('${o.id}','${key}',this.checked,this)">
       <span class="pk-code">${b.code}</span><span class="pk-name">${esc(stickerName(b.code))}</span>
-      <span class="pk-tag buy">comprar${active > 1 ? " ×" + active : ""}</span><span class="pk-price">R$ ${unit * active}</span></label>`);
+      <span class="pk-tag buy">comprar${active > 1 ? " ×" + active : ""}</span><span class="pk-price">${fmtReais(unit * active)}</span></label>`);
   });
   (o.trades || []).forEach((t, idx) => {
     if (isTradeReturned(o, idx)) return;
@@ -1916,7 +1944,7 @@ function orderHTML(o) {
     </details>` : ""}
     <div class="oactions">${actions}
       <button class="sbtn danger" onclick="cancelOrder('${o.id}')">✖ Cancelar pedido</button>
-      <span class="otot">${activeReais > 0 ? "R$ " + activeReais : "Troca"} · ${activeCards} fig.</span></div>
+      <span class="otot">${activeReais > 0 ? fmtReais(activeReais) : "Troca"} · ${activeCards} fig.</span></div>
   </div>`;
 }
 let adminOpenLocais = new Set();
