@@ -691,6 +691,7 @@ details.loc-group[open] .loc-chev{transform:rotate(180deg)}
 .fpill.clk:hover{transform:translateY(-2px);border-color:rgba(124,77,189,.55)}
 .fpill.clk:focus-visible{outline:2px solid var(--gold2);outline-offset:2px}
 @media(max-width:620px){.chooser-grid{grid-template-columns:1fr}.choose-card{padding:22px 20px}.listing-switch button{font-size:12px;padding:10px 8px}.listing-switch button span{font-size:14px}}
+#priorityRep:empty,#priorityFalt:empty{display:none}
 </style>
 </head>
 <body>
@@ -782,6 +783,8 @@ details.loc-group[open] .loc-chev{transform:rotate(180deg)}
         <p>Estas são as figurinhas que tenho repetidas. O número disponível cai automaticamente conforme as cartas saem.</p></div>
     </div>
     <div class="promo-banner"><span class="pb-tag">PROMO -50%</span><div class="pb-txt"><b>Tudo pela metade do preço!</b><span>Todas as figurinhas com 50% de desconto, por tempo limitado.</span></div></div>
+    <div class="trade-min-banner"><span class="tm-tag">TROCA</span><div class="tm-txt"><b>Você me dá 1 figurinha e leva 2 das minhas repetidas</b><span>Tem alguma das figurinhas que eu preciso? Me entrega 1 e escolhe 2 das minhas repetidas pra levar. No Messi você leva 5, e na dos Estados Unidos, 10.</span></div></div>
+    <div id="priorityRep"></div>
     <div class="filters">
       <div class="field"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4-4"/></svg>
         <input id="fSearch" type="text" placeholder="Buscar por código ou país..."></div>
@@ -810,12 +813,13 @@ details.loc-group[open] .loc-chev{transform:rotate(180deg)}
       <div><h2>O que <span class="g">eu preciso</span></h2>
         <p>Estas são as figurinhas que faltam no meu álbum. Tem alguma? Toque nela para me entregar e escolher as repetidas que você leva.</p></div>
     </div>
-    <div class="trade-min-banner"><span class="tm-tag">TROCA</span><div class="tm-txt"><b>Você me dá 1 figurinha e leva 2 das minhas repetidas</b><span>Em qualquer figurinha desta lista que você tenha: me entrega 1 e escolhe 2 repetidas pra levar. No Messi você leva 5, e na dos Estados Unidos, 10.</span></div></div>
+    <div class="trade-min-banner"><span class="tm-tag">TROCA</span><div class="tm-txt"><b>Você me dá 1 figurinha e leva 2 das minhas repetidas</b><span>Tem alguma das figurinhas que eu preciso? Me entrega 1 e escolhe 2 das minhas repetidas pra levar. No Messi você leva 5, e na dos Estados Unidos, 10.</span></div></div>
     <div class="falt-legend">
       <span><span class="lg-dot lg-need"></span> Ainda preciso</span>
       <span><span class="lg-dot lg-res"></span> Reservada (em um pedido)</span>
       <span><span class="lg-dot lg-got"></span> Já obtida</span>
     </div>
+    <div id="priorityFalt"></div>
     <div id="faltam"></div>
   </div>
 </section>
@@ -1211,7 +1215,7 @@ function normalize(v) {
   };
 }
 function persist() { Backend.persist(); afterStateChange(); }
-function afterStateChange() { renderStats(); renderCatalog(); renderFaltam(); renderWanted(); renderAdmin(); }
+function afterStateChange() { renderStats(); renderCatalog(); renderFaltam(); renderPriority(); renderAdmin(); }
 
 function loadCart() {
   try { const r = localStorage.getItem(LS_CART); if (r) CART = JSON.parse(r); } catch (e) {}
@@ -1557,34 +1561,36 @@ function setListing(mode) {
 }
 
 /* ---------- FALTAM ---------- */
+const PIN_PRIORITY = ["ARG17", "FWC8"];
+function faltPill(c, big) {
+  const status = STATE.falt[c] || "needed";
+  const cls = status === "needed" ? "need" : status;
+  const stTxt = status === "reservada" ? "reservada" : status === "obtida" ? "obtida" : "";
+  const can = status === "needed";
+  const attrs = can ? `role="button" tabindex="0" onclick="openOffer('${c}')" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();openOffer('${c}')}"` : "";
+  return `<span class="fpill ${big ? "big " : ""}${cls}${can ? " clk" : ""}" ${attrs}><span class="d"></span>${c} <span class="fn">${esc(stickerName(c))}</span> <span class="pw">${can ? "leve " + offerBounty(c) + "🔁" : offerBounty(c) + "🔁"}</span>${stTxt ? `<span class="st">${stTxt}</span>` : ""}</span>`;
+}
+function priorityPills() {
+  const pinned = PIN_PRIORITY.filter(c => D.faltantes.includes(c));
+  if (!pinned.length) return "";
+  return `<div class="falt-team destaque"><div class="fh"><div class="team-emblem star">⭐</div><h4>Procuro com prioridade</h4></div><div class="falt-pills">${pinned.map(c => faltPill(c, true)).join("")}</div></div>`;
+}
+function renderPriority() {
+  const html = priorityPills();
+  [$("#priorityRep"), $("#priorityFalt")].forEach(el => { if (el) el.innerHTML = html; });
+}
 function renderFaltam() {
   const host = $("#faltam");
-  const PIN = ["ARG17", "FWC8"];
+  if (!host) return;
   let html = "";
-  const pill = (c, big) => {
-    const status = STATE.falt[c] || "needed";
-    const cls = status === "needed" ? "need" : status;
-    const stTxt = status === "reservada" ? "reservada" : status === "obtida" ? "obtida" : "";
-    const can = status === "needed";
-    const attrs = can ? `role="button" tabindex="0" onclick="openOffer('${c}')" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();openOffer('${c}')}"` : "";
-    return `<span class="fpill ${big ? "big " : ""}${cls}${can ? " clk" : ""}" ${attrs}><span class="d"></span>${c} <span class="fn">${esc(stickerName(c))}</span> <span class="pw">${can ? "leve " + offerBounty(c) + "🔁" : offerBounty(c) + "🔁"}</span>${stTxt ? `<span class="st">${stTxt}</span>` : ""}</span>`;
-  };
-  const pinned = PIN.filter(c => D.faltantes.includes(c));
-  if (pinned.length) {
-    html += `<div class="falt-team destaque"><div class="fh"><div class="team-emblem star">⭐</div><h4>Procuro com prioridade</h4></div><div class="falt-pills">`;
-    for (const c of pinned) html += pill(c, true);
-    html += `</div></div>`;
-  }
   for (const tc of D.order) {
-    const codes = sortCodes(D.faltantes.filter(c => st(c).team === tc && !PIN.includes(c)));
+    const codes = sortCodes(D.faltantes.filter(c => st(c).team === tc && !PIN_PRIORITY.includes(c)));
     if (!codes.length) continue;
     const t = D.teams[tc];
     const emblem = t.iso
       ? `<div class="team-flag"><span class="fi fi-${t.iso}"></span></div>`
       : `<div class="team-emblem ${tc === "CC" ? "coca" : ""}">${tc === "CC" ? "🥤" : "🏆"}</div>`;
-    html += `<div class="falt-team"><div class="fh">${emblem}<h4>${esc(t.nome)}</h4></div><div class="falt-pills">`;
-    for (const c of codes) html += pill(c, false);
-    html += `</div></div>`;
+    html += `<div class="falt-team"><div class="fh">${emblem}<h4>${esc(t.nome)}</h4></div><div class="falt-pills">${codes.map(c => faltPill(c, false)).join("")}</div></div>`;
   }
   host.innerHTML = html || `<div class="empty"><div class="big">🎉</div><b>Álbum completo!</b></div>`;
 }
