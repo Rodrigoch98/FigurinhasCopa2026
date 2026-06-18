@@ -526,6 +526,14 @@ body.overlay-open .card[data-tipo="time"]::before{display:none!important;animati
 .pick-line .pk-tag.buy{background:rgba(233,185,73,.16);color:var(--gold2)}
 .pick-line .pk-tag.trade{background:rgba(45,212,167,.14);color:var(--emerald)}
 .pick-line .pk-tag.offer{background:rgba(124,77,189,.2);color:#cdb4f2}
+.fail-modes{display:flex;flex-direction:column;gap:8px;margin-top:12px}
+.fail-mode{display:flex;gap:10px;align-items:flex-start;padding:11px 12px;border:1px solid var(--brd);border-radius:12px;background:var(--bg3);cursor:pointer}
+.fail-mode input{margin-top:3px;flex:none}
+.fail-mode span{display:flex;flex-direction:column;gap:2px;font-size:13.5px}
+.fail-mode small{color:var(--muted);font-size:11.5px}
+.fail-note{background:var(--bg3);border:1px solid var(--brd);border-radius:12px;padding:14px;color:var(--muted);font-size:13px;line-height:1.5}
+.fail-pick-head{font-size:12.5px;color:var(--muted);margin-bottom:8px}
+.fail-list{display:flex;flex-direction:column;gap:6px}
 .pick-line .pk-price{font-size:12px;font-weight:800;color:var(--muted);flex:none;min-width:48px;text-align:right}
 .pick-line.done{background:rgba(45,212,167,.08);border-color:rgba(45,212,167,.4)}
 .pick-line.done .pk-code,.pick-line.done .pk-name{text-decoration:line-through;opacity:.55}
@@ -1024,6 +1032,25 @@ details.loc-group[open] .loc-chev{transform:rotate(180deg)}
 <div class="modal" id="confirmModal">
   <div class="modal-card" style="width:min(460px,100%)">
     <div class="modal-body" id="confirmBody" style="padding:26px"></div>
+  </div>
+</div>
+
+<!-- MODAL AVISO DE FALHA / CANCELAMENTO -->
+<div class="modal" id="failModal">
+  <div class="modal-card">
+    <div class="modal-head">
+      <h3>💬 Avisar comprador</h3>
+      <p>O que aconteceu com o pedido <b id="failOrderId"></b>? A mensagem é montada e aberta no WhatsApp do comprador.</p>
+      <div class="fail-modes">
+        <label class="fail-mode"><input type="radio" name="failMode" value="partial" checked onchange="setFailMode('partial')"><span><b>Algumas figurinhas não foram separadas</b><small>marque abaixo quais faltaram — o resto do pedido é mantido</small></span></label>
+        <label class="fail-mode"><input type="radio" name="failMode" value="full" onchange="setFailMode('full')"><span><b>Pedido cancelado totalmente</b><small>avisa que o pedido inteiro não foi concluído</small></span></label>
+      </div>
+    </div>
+    <div class="modal-body" id="failBody"></div>
+    <div class="modal-foot" style="display:flex;gap:10px">
+      <button class="btn btn-ghost" style="flex:1" onclick="showFail(false)">Cancelar</button>
+      <button class="btn btn-emerald" style="flex:1.4" id="confirmFail" onclick="confirmFailNotice()">Abrir WhatsApp</button>
+    </div>
   </div>
 </div>
 
@@ -2012,22 +2039,35 @@ function comprovanteMsg(order) {
   return L.join("\n");
 }
 function waCliente(o, msg) { return waTo("55" + ((o.cliente && o.cliente.fone) || "").replace(/\D/g, ""), msg); }
-function avisoFalhaMsg(o) {
+function avisoFalhaMsg(o, opts) {
+  opts = opts || {};
   const cli = o.cliente || {};
   const nome1 = (cli.nome || "").split(" ")[0] || "tudo bem";
   const r = (CFG.sellers || {}).rodrigo || {}, rf = (CFG.sellers || {}).rafael || {};
   const sep = "------------------------------";
+  const faltaram = (opts.faltaram || []).filter(Boolean);
+  const full = opts.full || faltaram.length === 0;
   const L = [];
   L.push("*AVISO SOBRE SEU PEDIDO*");
   L.push("_Figurinhas da Copa 2026_");
   L.push("Pedido: *" + o.id + "*");
   L.push(sep);
   L.push("Olá " + nome1 + "!");
-  L.push("Tivemos um problema com o seu pedido e ele (ou parte dele) não pôde ser concluído desta vez.");
-  L.push("Isso costuma acontecer por uma falha técnica ou porque alguma figurinha saiu do estoque enquanto o pedido era processado.");
-  L.push(sep);
-  L.push("*O que fazer agora*");
-  L.push("Você pode refazer o pedido normalmente pelo site, é rápido e leva só um minuto.");
+  if (full) {
+    L.push("Tivemos um problema e o seu pedido não pôde ser concluído desta vez.");
+    L.push("Isso costuma acontecer por uma falha técnica ou porque alguma figurinha saiu do estoque enquanto o pedido era processado.");
+    L.push(sep);
+    L.push("*O que fazer agora*");
+    L.push("Você pode refazer o pedido normalmente pelo site, é rápido e leva só um minuto.");
+  } else {
+    L.push("Quase tudo certo, mas algumas figurinhas não puderam ser separadas desta vez:");
+    faltaram.forEach(c => L.push("- " + c + " · " + stickerName(c)));
+    L.push("Isso costuma acontecer por uma falha técnica ou porque a figurinha saiu do estoque enquanto o pedido era processado.");
+    L.push(sep);
+    L.push("*O que fazer agora*");
+    L.push("O restante do seu pedido está mantido e segue para entrega normalmente.");
+    L.push("Se quiser, dá para tentar essas figurinhas de novo pelo site.");
+  }
   L.push("Se o erro continuar, fale com a gente:");
   if (r.nome) L.push("- " + r.nome + ": " + (r.fonePretty || ""));
   if (rf.nome) L.push("- " + rf.nome + ": " + (rf.fonePretty || ""));
@@ -2055,8 +2095,64 @@ function avisoSeparadoMsg(o) {
   L.push("Qualquer dúvida, é só responder por aqui. Até breve!");
   return L.join("\n");
 }
-function avisarFalha(id) { const o = STATE.orders[id]; if (!o) return; window.open(waCliente(o, avisoFalhaMsg(o)), "_blank"); }
+function avisarFalha(id) { openFailNotice(id); }
 function avisarSeparado(id) { const o = STATE.orders[id]; if (!o) return; window.open(waCliente(o, avisoSeparadoMsg(o)), "_blank"); }
+let FAILNOTICE = { id: null, mode: "partial", picked: {} };
+function failNoticeItems(o) {
+  const items = [];
+  (o.buys || []).forEach(b => { const q = orderActiveBuyQty(o, b); if (q > 0) items.push({ code: b.code, tag: "comprar" + (q > 1 ? " ×" + q : ""), cls: "buy" }); });
+  (o.trades || []).forEach((t, i) => { if (!isTradeReturned(o, i)) items.push({ code: t.want, tag: "troca", cls: "trade" }); });
+  (o.offers || []).forEach(of => (of.want || []).forEach(c => items.push({ code: c, tag: "oferta", cls: "offer" })));
+  return items;
+}
+function openFailNotice(id) {
+  const o = STATE.orders[id]; if (!o) return;
+  FAILNOTICE = { id, mode: "partial", picked: {} };
+  $("#failOrderId").textContent = id;
+  const r0 = document.querySelector('input[name="failMode"][value="partial"]'); if (r0) r0.checked = true;
+  renderFailNotice();
+  showFail(true);
+}
+function setFailMode(m) { FAILNOTICE.mode = m; renderFailNotice(); }
+function toggleFailPick(code, on) { if (on) FAILNOTICE.picked[code] = true; else delete FAILNOTICE.picked[code]; updateFailBtn(); }
+function renderFailNotice() {
+  const o = STATE.orders[FAILNOTICE.id]; if (!o) return;
+  const host = $("#failBody");
+  if (FAILNOTICE.mode === "full") {
+    host.innerHTML = `<div class="fail-note">A mensagem vai avisar que o <b>pedido inteiro</b> não pôde ser concluído e que a pessoa pode tentar de novo pelo site.</div>`;
+    updateFailBtn(); return;
+  }
+  const items = failNoticeItems(o);
+  if (!items.length) { host.innerHTML = `<div class="fail-note">Este pedido não tem figurinhas ativas para marcar.</div>`; updateFailBtn(); return; }
+  let html = `<div class="fail-pick-head">Marque as figurinhas que <b>não foram separadas</b>:</div><div class="fail-list">`;
+  items.forEach(it => {
+    const on = !!FAILNOTICE.picked[it.code];
+    html += `<label class="pick-line ${on ? "done" : ""}"><input type="checkbox" ${on ? "checked" : ""} onchange="toggleFailPick('${it.code}',this.checked)"><span class="pk-code">${it.code}</span><span class="pk-name">${esc(stickerName(it.code))}</span><span class="pk-tag ${it.cls}">${it.tag}</span></label>`;
+  });
+  html += `</div>`;
+  host.innerHTML = html;
+  updateFailBtn();
+}
+function updateFailBtn() {
+  const btn = $("#confirmFail"); if (!btn) return;
+  const partial = FAILNOTICE.mode === "partial";
+  const n = Object.keys(FAILNOTICE.picked).length;
+  btn.disabled = partial && n === 0;
+  btn.textContent = partial ? (n ? "Abrir WhatsApp (" + n + ")" : "Marque as figurinhas") : "Abrir WhatsApp";
+}
+function confirmFailNotice() {
+  const o = STATE.orders[FAILNOTICE.id]; if (!o) return;
+  let msg;
+  if (FAILNOTICE.mode === "full") msg = avisoFalhaMsg(o, { full: true });
+  else {
+    const faltaram = Object.keys(FAILNOTICE.picked);
+    if (!faltaram.length) { toast("Marque pelo menos uma figurinha.", "warn"); return; }
+    msg = avisoFalhaMsg(o, { faltaram });
+  }
+  window.open(waCliente(o, msg), "_blank");
+  showFail(false);
+}
+function showFail(b) { $("#failModal").classList.toggle("show", b); syncOverlay(); }
 function showConfirm(order) {
   const m = $("#confirmModal");
   const reaisTxt = order.totalReais > 0 ? fmtReais(order.totalReais) : "—";
@@ -2409,13 +2505,16 @@ function returnSelectedFromOrder(id) {
   o.totalCards = orderActiveCards(o);
   persist();
   toast("Itens devolvidos. Estoque e trocas foram sincronizados.", "ok");
-  if (confirm("Avisar o comprador sobre essa alteração/falha pelo WhatsApp?")) { try { window.open(waCliente(o, avisoFalhaMsg(o)), "_blank"); } catch (e) {} }
+  if (confirm("Avisar o comprador sobre essa alteração/falha pelo WhatsApp?")) {
+    const faltaram = buyReturns.filter(x => x.qty > 0).map(x => x.code).concat(tradeReturns.map(x => x.trade.want));
+    try { window.open(waCliente(o, avisoFalhaMsg(o, { faltaram })), "_blank"); } catch (e) {}
+  }
 }
 function cancelOrder(id) {
   const o = STATE.orders[id]; if (!o) return;
   ensureOrderReturns(o);
   if (!confirm(`Cancelar o pedido ${id}? Apenas os itens ainda ativos serão restaurados; itens já devolvidos não serão somados novamente.`)) return;
-  if (confirm("Enviar aviso de falha/cancelamento ao comprador pelo WhatsApp?")) { try { window.open(waCliente(o, avisoFalhaMsg(o)), "_blank"); } catch (e) {} }
+  if (confirm("Enviar aviso de cancelamento total ao comprador pelo WhatsApp?")) { try { window.open(waCliente(o, avisoFalhaMsg(o, { full: true })), "_blank"); } catch (e) {} }
   (o.buys || []).forEach(b => {
     const active = orderActiveBuyQty(o, b);
     if (active > 0) STATE.stock[b.code] = (STATE.stock[b.code] || 0) + active;
@@ -2521,7 +2620,7 @@ Object.assign(window, {
   addBuy, changeBuy, removeBuy, openTrade, togglePick, confirmTrade, removeTrade,
   openOffer, toggleOffer, confirmOffer, removeOffer, showOffer, setListing,
   openDrawer, closeDrawer, showModal, openAdmin, closeAdmin, tryAdmin, logoutAdmin, setAdminTab,
-  setOrder, returnSelectedFromOrder, cancelOrder, resetStock, exportOrders, doCheckout, hideConfirm, enviarComprovante, openWA, setClienteTipo, toggleSeparado, contactPick, contactReset, onLocToggle, avisarFalha, avisarSeparado
+  setOrder, returnSelectedFromOrder, cancelOrder, resetStock, exportOrders, doCheckout, hideConfirm, enviarComprovante, openWA, setClienteTipo, toggleSeparado, contactPick, contactReset, onLocToggle, avisarFalha, avisarSeparado, openFailNotice, setFailMode, toggleFailPick, confirmFailNotice, showFail
 });
 </script>
 </body>
